@@ -31,3 +31,33 @@ sudo apt-get install ca-certificates
 
 sudo apt-get install software-properties-common
 sudo apt-get install nginx
+
+# DOWNLOAD SEPIA
+
+#mkdir ~/SEPIA
+#cd ~/SEPIA
+#wget ...
+
+# SCRIPTS ACCESS
+
+find . -name "*sh" -exec chmod +x {} \;
+chmod +x elasticsearch/bin/elasticsearch
+#chmod +x *.sh
+#chmod +x assist/*.sh
+#chmod +x teach/*.sh
+#chmod +x chat/*.sh
+#chmod +x elasticsearch/*.sh
+
+# SETUP SEPIA
+
+#cd elasticsearch
+#./run.sh
+#sleep 12
+#cd ..
+#cd sepia-assist-server
+#java -jar sepia-assist-v2.0.x.jar setup --my
+#cd ..
+#cd elasticsearch
+#./shutdown.sh
+#sleep 3
+#cd ..
