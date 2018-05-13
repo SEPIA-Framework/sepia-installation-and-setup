@@ -42,11 +42,6 @@ sudo apt-get install nginx
 
 find . -name "*sh" -exec chmod +x {} \;
 chmod +x elasticsearch/bin/elasticsearch
-#chmod +x *.sh
-#chmod +x assist/*.sh
-#chmod +x teach/*.sh
-#chmod +x chat/*.sh
-#chmod +x elasticsearch/*.sh
 
 # SETUP SEPIA
 
