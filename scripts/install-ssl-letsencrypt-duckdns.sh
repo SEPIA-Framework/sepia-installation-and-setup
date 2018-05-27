@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # INSTALL CERTBOT FOR LET'S ENCRYPT
 
@@ -11,8 +11,8 @@ sudo apt-get install certbot
 # CALL CERTBOT WITH DNS CHALLENGE
 
 # The SEPIA folder
-SEPIA_FOLDER="~/SEPIA"
+SEPIA_FOLDER=~/SEPIA
 
-# Get domain variable (DOMAIN) set via SEPIA DuckDNS setup
-source $SEPIA_FOLDER/letsencrypt/duck-dns-settings.sh
-certbot certonly --manual --preferred-challenges=dns --manual-auth-hook $SEPIA_FOLDER/letsencrypt/auth-hook.sh --manual-cleanup-hook $SEPIA_FOLDER/letsencrypt/cleanup-hook.sh -d $DOMAIN
+# Run certbot script
+cd $SEPIA_FOLDER/letsencrypt
+./run-certbot-duckdns.sh
