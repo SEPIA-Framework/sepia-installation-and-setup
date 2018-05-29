@@ -6,7 +6,7 @@
 SEPIA_FOLDER=~/SEPIA
 
 # Get domain variable (DOMAIN) set via SEPIA DuckDNS setup
-echo "Loding settings from $SEPIA_FOLDER/letsencrypt/duck-dns-settings.sh"
+echo "Loading settings from $SEPIA_FOLDER/letsencrypt/duck-dns-settings.sh"
 cd $SEPIA_FOLDER/letsencrypt
 source duck-dns-settings.sh
 if [ -n "$DOMAIN" ]

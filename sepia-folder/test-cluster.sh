@@ -9,7 +9,7 @@ echo -e '\n\n-----Chat API - WebSocket Server-----\n'
 curl -X GET http://localhost:20723/ping
 
 echo -e '\n\n-----Database: Elasticsearch-----\n'
-curl -X GET http://localhost:20724
+curl -X GET http://localhost:20724/_cluster/health?pretty
 
 echo -e '\nAll done, please check output for errors!\n'
 
