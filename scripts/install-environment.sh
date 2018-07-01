@@ -36,6 +36,13 @@ echo 'Installing nginx reverse-proxy ...'
 sudo apt-get install software-properties-common
 sudo apt-get install nginx
 
+# DOWNLOAD ELASTICSEARCH
+
+#mkdir ~/SEPIA/tmp
+#cd ~/SEPIA/tmp
+#wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.3.3.zip
+#unzip ....
+
 # INSTALL SEPIA
 
 #create folder (usually done before getting this file)
