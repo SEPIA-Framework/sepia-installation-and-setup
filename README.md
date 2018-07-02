@@ -1,13 +1,15 @@
-# sepia-installation-and-setup
+# Installation + Setup Tools and Bundles
 
 This repository includes instructions, scripts, tools and files to install, setup and run SEPIA on Windows, Mac, Raspian (Raspberry Pi) and other Linux systems.  
 You can choose one of the release packages below to get right into the game :-)  
-Downloads can be found on the release page: https://github.com/SEPIA-Framework/sepia-installation-and-setup/releases
 
-# SEPIA Framework - Custom release package
+Downloads can be found on the release page: https://github.com/SEPIA-Framework/sepia-installation-and-setup/releases  
+For the source code of every component in a bundle please browse the project page: https://github.com/SEPIA-Framework
 
-This package includes everything you need to get started with the SEPIA-Framework and your own, personal, open-source voice-assistant on Windows, Mac and Linux.
-NOTE: Setup and scripts included in this package assume you are using the framework with default settings (server ports etc.) in "custom" mode.
+# SEPIA Framework - Custom release bundle
+
+This bundle includes everything you need to get started with the SEPIA-Framework and your own, personal, open-source voice-assistant on Windows, Mac and Linux.
+NOTE: Setup and scripts included in this bundle assume you are using the framework with default settings (server ports etc.) in "custom" mode.
 
 ## Quick start
 
