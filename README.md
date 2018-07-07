@@ -37,7 +37,7 @@ Creating your own web-server with SSL encryption will also make sure that you ca
 * If you want to get started quickly (2min) without any additional configuration you can use the SEPIA Java reverse-proxy and a neat little tool called "ngrok" to create a temporary, secure web-server:
   * Download and extract ngrok for your OS: https://ngrok.com/download
   * Start the SEPIA reverse-proxy with one of the scripts inside the "sepia-reverse-proxy"-folder
-  * Call `./ngrok http 20726` (or '.\ngrok.exe http 20726' in Windows) and you will get a HTTPS URL for your SEPIA server
+  * Call `./ngrok http 20726` (or `.\ngrok.exe http 20726` in Windows) and you will get a HTTPS URL for your SEPIA server
   * Use this URL as hostname ([your-ngrok-url]/sepia) in your SEPIA web-app: [your-ngrok-url]/sepia/assist/app/index.html (or in the official, public web-app: https://sepia-framework.github.io/app/index.html)
 * TO BE CONTINUED ...
 
