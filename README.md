@@ -33,10 +33,22 @@ Creating your own web-server with SSL encryption will also make sure that you ca
 * On the "Authentication" page choose "LOCAL-HOST-20721" as server and login with your admin account.
 * Go to "User-Management", choose an email (can be fake, but a real address could come in handy later for password reset etc.) then press "put on whitelist", add a password and finally press "create". Note the message at the bottom indicating your new ID.
 * You should now be able to log-in with your new account (use the ID received during "create" or the email you chose).
-* To upgrade you local server to a full-blown web-server we recommend to use Nginx (https://de.wikipedia.org/wiki/Nginx). There are some scripts included to make your life easier but a detailed tutorial is in preparation.
+* To upgrade you local server to a full-blown web-server with SSL we recommend to use Nginx (https://de.wikipedia.org/wiki/Nginx) and Letsencrypt. There are some scripts included to make your life easier but a detailed tutorial is in preparation.
+* If you want to get started quickly (2min) without any additional configuration you can use the SEPIA Java reverse-proxy and a neat little tool called "ngrok" to create a temporary, secure web-server:
+  * Download and extract ngrok for your OS: https://ngrok.com/download
+  * Start the SEPIA reverse-proxy with one of the scripts inside the "sepia-reverse-proxy"-folder
+  * Call `./ngrok http 20726` (or '.\ngrok.exe http 20726' in Windows) and you will get a HTTPS URL for your SEPIA server
+  * Use this URL as hostname ([your-ngrok-url]/sepia) in your SEPIA web-app: [your-ngrok-url]/sepia/assist/app/index.html (or in the official, public web-app: https://sepia-framework.github.io/app/index.html)
 * TO BE CONTINUED ...
 
 ## Version history
+
+### v2.0.1a - 2018.07.07
+
+* Updated assist-server to v2.0.1 (smaller bugfixes)
+* Added SEPIA Reverse-Proxy, a tiny JAVA proxy for the custom-bundle. This will save you the installation of a 3rt-party proxy and it works well with ngrok ;-)
+* Updated SEPIA HTML client to v0.11.4 (better hostname handling)
+* Updated core-tools to v2.0.1 and replaced 'connection-check.jar' with 'tools-*.jar connection-check'
 
 ### v2.0.0a - 2018.07.02
 

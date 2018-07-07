@@ -2,6 +2,7 @@
 setlocal enabledelayedexpansion
 cd sepia-assist-server
 FOR /F "delims=|" %%I IN ('DIR "sepia-assist-*.jar" /B /O:D') DO SET JAR_NAME=%%I
+FOR /F "delims=|" %%I IN ('DIR "tools-*.jar" /B /O:D') DO SET TOOLS_JAR=%%I
 echo. 
 echo Welcome to the SEPIA framework!
 echo. 
@@ -24,7 +25,7 @@ if "%option%" == "0" (
 )
 if "%option%" == "1" (
 	echo Checking Elasticsearch access...
-	java -jar connection-check.jar httpGetJson -url=http://localhost:20724 -maxTries=3 -waitBetween=1000
+	java -jar %TOOLS_JAR% connection-check httpGetJson -url=http://localhost:20724 -maxTries=3 -waitBetween=1000
 	set exitcode=!errorlevel!
 	if "!exitcode!" == "0" (
 		java -jar %JAR_NAME% setup --my
@@ -50,7 +51,7 @@ if "%option%" == "4" (
 	cd..\..
 	cd sepia-assist-server
 	REM timeout 12
-	java -jar connection-check.jar httpGetJson -url=http://localhost:20724 -maxTries=25 -waitBetween=2000
+	java -jar %TOOLS_JAR% connection-check httpGetJson -url=http://localhost:20724 -maxTries=25 -waitBetween=2000
 	goto enteroption
 )
 :nooption
