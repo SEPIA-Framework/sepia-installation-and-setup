@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 #add digital key for PPA
 apt-get install -y dirmngr debconf-utils
@@ -14,3 +15,6 @@ echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | 
 mkdir -p /usr/share/man/man1
 apt-get update && \
 apt-get install -y oracle-java8-installer oracle-java8-set-default
+
+echo 'DONE - For the Oracle Java license please see: http://www.java.com/license'
+java -version

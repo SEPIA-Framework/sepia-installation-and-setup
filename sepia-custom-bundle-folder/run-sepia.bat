@@ -5,7 +5,7 @@ start /MIN "Elasticsearch" elasticsearch.bat
 cd..\..
 REM timeout 12
 cd sepia-assist-server
-FOR /F "delims=|" %%I IN ('DIR "tools-*.jar" /B /O:D') DO SET TOOLS_JAR=%%I
+FOR /F "delims=|" %%I IN ('DIR "sepia-core-tools-*.jar" /B /O:D') DO SET TOOLS_JAR=%%I
 java -jar %TOOLS_JAR% connection-check httpGetJson -url=http://localhost:20724 -maxTries=25 -waitBetween=2000
 echo # Starting SEPIA Assist-Server, please wait ...
 start /b "SEPIA-Assist" run.bat > nul

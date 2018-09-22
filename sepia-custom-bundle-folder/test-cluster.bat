@@ -1,6 +1,6 @@
 @echo off
 cd sepia-assist-server
-FOR /F "delims=|" %%I IN ('DIR "tools-*.jar" /B /O:D') DO SET TOOLS_JAR=%%I
+FOR /F "delims=|" %%I IN ('DIR "sepia-core-tools-*.jar" /B /O:D') DO SET TOOLS_JAR=%%I
 echo. 
 echo Checking Elasticsearch access ...
 java -jar %TOOLS_JAR% connection-check httpGetJson -url=http://localhost:20724 -maxTries=3 -waitBetween=1000

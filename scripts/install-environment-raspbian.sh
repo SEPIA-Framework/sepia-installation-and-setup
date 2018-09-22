@@ -2,8 +2,8 @@
 
 get_latest_release() {
 	curl --silent "https://api.github.com/repos/$1/releases/latest" | # Get latest release from GitHub api
-		grep '"tag_name":' |                                            # Get tag line
-		sed -E 's/.*"([^"]+)".*/\1/'                                    # Pluck JSON value
+		grep '"tag_name":' |                                          # Get tag line
+		sed -E 's/.*"([^"]+)".*/\1/'                                  # Pluck JSON value
 }
 
 echo ""
@@ -16,9 +16,9 @@ echo "More help can be found here: https://github.com/SEPIA-Framework/sepia-docs
 while true; do
 	echo ""
 	echo "Please choose your step:"
-	echo "1: Install Oracle Java 1.8"
+	echo "1: Install Oracle Java 8"
 	echo "2: Update server-clock for precise timers"
-	echo "3: Install NGINX reverse-proxy (required for web-server with SSL)"
+	echo "3: Install NGINX reverse-proxy (alternative to SEPIA Reverse-Proxy)"
 	echo "4: Download SEPIA Custom-Bundle"
 	echo "5: Extract SEPIA Custom-Bundle"
 	echo "6: Set access to SEPIA scripts and DONE"

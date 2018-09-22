@@ -50,7 +50,7 @@ RUN echo "Building SEPIA-Home (custom bundle) ..." && \
 	git clone https://github.com/SEPIA-Framework/sepia-admin-tools.git && \
 #
 #	Build all modules and copy client and admin-tools
-	cd sepia-core-tools-java && mvn install && cd .. && \
+	cd sepia-core-tools-java && mvn install && cp -r target/release/. ~/SEPIA/sepia-assist-server/ && cd .. && \
 	cd sepia-websocket-server-java && mvn install && cp -r target/release/. ~/SEPIA/sepia-websocket-server-java/ && cd .. && \
 	cd sepia-assist-server && mvn install && cp -r target/release/. ~/SEPIA/sepia-assist-server/ && cd .. && \
 	cd sepia-teach-server && mvn install && cp -r target/release/. ~/SEPIA/sepia-teach-server/ && cd .. && \

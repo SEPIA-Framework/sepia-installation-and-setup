@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 cd sepia-assist-server
 FOR /F "delims=|" %%I IN ('DIR "sepia-assist-*.jar" /B /O:D') DO SET JAR_NAME=%%I
-FOR /F "delims=|" %%I IN ('DIR "tools-*.jar" /B /O:D') DO SET TOOLS_JAR=%%I
+FOR /F "delims=|" %%I IN ('DIR "sepia-core-tools-*.jar" /B /O:D') DO SET TOOLS_JAR=%%I
 echo. 
 echo Welcome to the SEPIA framework!
 echo. 

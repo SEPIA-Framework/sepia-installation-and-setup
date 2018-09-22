@@ -20,7 +20,7 @@ git clone https://github.com/SEPIA-Framework/sepia-html-client-app.git
 git clone https://github.com/SEPIA-Framework/sepia-admin-tools.git
 
 #build all modules and copy client and admin-tools
-cd sepia-core-tools-java && mvn install && cd ..
+cd sepia-core-tools-java && mvn install && cp -r target/release/. ~/SEPIA/sepia-assist-server/ && cd ..
 cd sepia-websocket-server-java && mvn install && cp -r target/release/. ~/SEPIA/sepia-websocket-server-java/ && cd ..
 cd sepia-assist-server && mvn install && cp -r target/release/. ~/SEPIA/sepia-assist-server/ && cd ..
 cd sepia-teach-server && mvn install && cp -r target/release/. ~/SEPIA/sepia-teach-server/ && cd ..
