@@ -1,12 +1,12 @@
 #!/bin/bash
 #
+# make scripts executable
+find . -name "*.sh" -exec chmod +x {} \;
+chmod +x elasticsearch/bin/elasticsearch
+#
 # get name of main server JAR file (latest version)
 cd sepia-assist-server
 JAR_NAME=$(ls | grep "^sepia-assist.*jar" | tail -n 1)
-#
-# make scripts executable
-find . -name "*sh" -exec chmod +x {} \;
-chmod +x elasticsearch/bin/elasticsearch
 #
 # start interactive setup
 echo ""
