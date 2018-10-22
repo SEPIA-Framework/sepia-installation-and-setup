@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# CALL CERTBOT WITH DNS CHALLENGE
-
 # The SEPIA folder
 SEPIA_FOLDER=~/SEPIA
 

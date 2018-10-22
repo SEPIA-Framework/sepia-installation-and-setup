@@ -1,3 +1,4 @@
 #!/bin/bash
 cd sepia-reverse-proxy
-./run.sh
+# TODO: auto-test for SSL cert and choose proper start script
+./run_no_ssl.sh

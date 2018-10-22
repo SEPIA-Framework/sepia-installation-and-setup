@@ -1,6 +1,14 @@
 #!/bin/bash
+#
+# get name of main server JAR file (latest version)
 cd sepia-assist-server
 JAR_NAME=$(ls | grep "^sepia-assist.*jar" | tail -n 1)
+#
+# make scripts executable
+find . -name "*sh" -exec chmod +x {} \;
+chmod +x elasticsearch/bin/elasticsearch
+#
+# start interactive setup
 echo ""
 echo "Welcome to the SEPIA framework!"
 echo ""
@@ -8,10 +16,13 @@ echo "This little script will help you with the configuration of your server."
 echo "If you are here for the first time please take 5 minutes to read the (MIT) license agreement, especially the part about 'no-warranty' ^_^."
 echo "You can find the license file in your download folder, in the SEPIA app or on one of the SEPIA pages, e.g.:"
 echo "https://github.com/SEPIA-Framework/sepia-assist-server"
+echo ""
+echo "If you don't know what to do next read the guide at:"
+echo "https://github.com/SEPIA-Framework/sepia-installation-and-setup#quick-start"
 while true; do
 	echo ""
 	echo "What would you like to do next?"
-	echo "1: Setup all components (except dynamic DNS)"
+	echo "1: Setup all components (except dynamic DNS). Note: requires step 4."
 	echo "2: Define new admin and assistant passwords"
 	echo "3: Setup dynamic DNS with DuckDNS"
 	echo "4: Start Elasticsearch"
