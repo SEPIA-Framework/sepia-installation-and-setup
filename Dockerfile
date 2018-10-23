@@ -12,7 +12,7 @@ RUN apt-get update && \
 #
 #	Get packages
 	apt-get install -y --no-install-recommends \
-        git wget curl nano unzip \
+        git wget curl nano unzip zip \
 		openjdk-8-jdk-headless ca-certificates-java maven && \
 #
 #   Clean up
