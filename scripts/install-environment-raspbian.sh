@@ -78,8 +78,8 @@ while true; do
 		#mkdir ~/tmp
 		cd ~/tmp
 		SEPIA_VERSION=$(get_latest_release "SEPIA-Framework/sepia-installation-and-setup")
-		#curl --silent "https://api.github.com/repos/SEPIA-Framework/sepia-installation-and-setup/releases/latest" | jq -r '.assets[] | select(.name == "SEPIA_custom-bundle.zip").browser_download_url'
-		wget "https://github.com/SEPIA-Framework/sepia-installation-and-setup/releases/download/${SEPIA_VERSION}/SEPIA_custom-bundle.zip"
+		#curl --silent "https://api.github.com/repos/SEPIA-Framework/sepia-installation-and-setup/releases/latest" | jq -r '.assets[] | select(.name == "SEPIA-Home.zip").browser_download_url'
+		wget "https://github.com/SEPIA-Framework/sepia-installation-and-setup/releases/download/${SEPIA_VERSION}/SEPIA-Home.zip"
 
 	elif [ $option = "5" ] 
 	then
@@ -87,7 +87,7 @@ while true; do
 		
 		mkdir ~/SEPIA
 		cd ~/tmp
-		unzip SEPIA_custom-bundle.zip -d ~/SEPIA
+		unzip SEPIA-Home.zip -d ~/SEPIA
 
 	elif [ $option = "6" ] 
 	then	
@@ -95,7 +95,7 @@ while true; do
 		
 		#set scripts access
 		cd ~/SEPIA
-		find . -name "*sh" -exec chmod +x {} \;
+		find . -name "*.sh" -exec chmod +x {} \;
 		chmod +x elasticsearch/bin/elasticsearch
 		
 		#done
@@ -106,10 +106,3 @@ while true; do
 		echo "Not an option, please try again."
 	fi
 done
-
-# DOWNLOAD ELASTICSEARCH (included in SEPIA custom-bundle)
-
-#mkdir ~/SEPIA/tmp
-#cd ~/SEPIA/tmp
-#wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.3.3.zip
-#unzip ....

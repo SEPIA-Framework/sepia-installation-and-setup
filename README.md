@@ -6,7 +6,7 @@ You can choose one of the release packages below to get right into the game :-)
 Downloads can be found on the release page: https://github.com/SEPIA-Framework/sepia-installation-and-setup/releases  
 For the source code of every component in a bundle please browse the project page: https://github.com/SEPIA-Framework
 
-# SEPIA Framework - Custom release bundle (SEPIA-Home)
+# SEPIA-Home - SEPIA Framework release bundle for private home server
 
 This bundle includes everything you need to get started with the SEPIA-Framework and your own, personal, open-source voice-assistant on Windows, Mac and Linux.  
 NOTE: Setup and scripts included in this bundle assume you are using the framework with default settings (server ports etc.) in "custom" mode.
@@ -16,13 +16,14 @@ NOTE: Setup and scripts included in this bundle assume you are using the framewo
 If you are using Raspian for Raspberry Pi check out the more detailed [guide](https://github.com/SEPIA-Framework/sepia-docs/wiki/Installation#raspberry-pi-3) including a help script.  
   
 * Make sure you have at least Java 8 installed (tested extensively with [Oracle Java 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html) but OpenJDK 8+ should work as well)
-* Optionally update your local clock for precise timers, e.g.: with `sudo apt-get install ntpdate` and `sudo ntpdate -u ntp.ubuntu.com`
-* Place the content of the custom release bundle in any folder you like. On Linux "~/SEPIA/" is recommended if you want to use the scripts to setup a web-server later.
-* Run setup.bat (Windows) or setup.sh (Mac, Linux) to setup your SEPIA servers
+* Optionally update your local clock for precise timers (Linux), e.g.: with `sudo apt-get install ntpdate` and `sudo ntpdate -u ntp.ubuntu.com`
+* Place the content of the SEPIA-Home bundle in any folder you like. On Linux "~/SEPIA/" is recommended (`unzip SEPIA-Home.zip -d ~/SEPIA`) if you want to use the scripts to setup a web-server later.
+* Run `setup.bat` (Windows) or `bash setup.sh` (Mac, Linux) to setup your SEPIA servers
 * Inside the setup choose 4 to start Elasticsearch and then 1 to setup the SEPIA-Framework. Remember the passwords you set! You can skip the other options for now.
 * If everything worked out (check console for errors) you can use "run-sepia" (.bat for Windows, .sh for Linux/Mac) to start all servers
 * Check with test-cluster.bat/test-cluster.sh if everything started as planned. If not check sepia-*/log.out for errors.
-* You should be able to reach the web-app of SEPIA via: http://localhost:20721/app/index.html (you can use your local network IP as well instead of 'localhost'). Works best with Chrome or Chromium browser.
+* You should be able to reach the web-app of SEPIA via: http://localhost:20721/app/index.html (or the server IP instead of 'localhost').
+* If your browser is not on the same machine replace 'localhost' (similar to the previous step) in the hostname field during login with the IP of your server (e.g. localhost -> 192.168.0.10).
 * For testing purposes (only!) you can use the admin-acount to log-in, by default the ID is "admin@sepia.localhost" or "uid1003" (don't use the "assistant" account). The password has been set during setup.
   
 NOTE: Using the web-app via "localhost" will limit the functionality of some features like the speech-recognition, geo-location and notifications due to security reasons (browser restriction, requires HTTPS to work).
@@ -51,13 +52,33 @@ Since everything in SEPIA is open-source you can always build the whole framewor
 A first draft of the requirements to do so can be found [here](https://github.com/SEPIA-Framework/sepia-docs/wiki/Requirements).  
   
 There is a [Dockerfile](https://github.com/SEPIA-Framework/sepia-installation-and-setup/blob/master/Dockerfile) that describes all steps to build SEPIA-Home (custom bundle release) on Debian9 (tested with amd64).  
-There is also a build script doing the same (except installing Java):  
+There is also a build script doing the same (and even a bit more, except installing Java). You can run it in Linux (needs sudo):  
 ```
 wget https://raw.githubusercontent.com/SEPIA-Framework/sepia-installation-and-setup/master/build_sepia_home_release_apt.sh
-bash build_sepia_home_release_apt.sh
+sudo bash build_sepia_home_release_apt.sh
 ```
+You can also build the dev branch if you want to test the latest changes (may have more bugs or other issues ^^):  
+```
+sudo bash build_sepia_home_release_apt.sh dev
+```
+You will get a ZIP-file in the end with the new release build (as well).
 
 ## Version history
+
+### v2.1.0a - 2018.10.26
+
+Updated assist-server to v2.1.0 with numerous improvements, e.g.:
+* Added smart home NLU, parameters (device, room) and service BETA via openHAB integration (currently testing Hue lights)
+* Updated news service and exported the hard-coded outlet data to external .json file for easier editing and fixing
+* Updated Bundesliga soccer service with data of new season
+* Updated and improved setup scripts (e.g. for admin password reset)
+* Fixes in NLU and parameter extractions (e.g. for location parameter)
+* Improved handling of internal error with proper client message
+Other changes:
+* Upgraded dependencies, mainly: Java Spark (2.5.4 -> 2.8.0) and Jetty Server (9.3 -> 9.4)
+* Updated SEPIA Reverse-Proxy to use external properties file and added some features
+* Added new menues to Admin-Tools (e.g. smart home configuration and speech recognition)
+* Many smaller bugfixes
 
 ### v2.0.1a - 2018.07.07
 
