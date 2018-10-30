@@ -16,7 +16,7 @@ echo "More help can be found here: https://github.com/SEPIA-Framework/sepia-docs
 while true; do
 	echo ""
 	echo "Please choose your step:"
-	echo "1: Install Oracle Java 8"
+	echo "1: Install Oracle Java 8 (OpenJDK might work too)"
 	echo "2: Update server-clock for precise timers"
 	echo "3: Install NGINX reverse-proxy (alternative to SEPIA Reverse-Proxy)"
 	echo "4: Download SEPIA Custom-Bundle"
