@@ -5,4 +5,4 @@ REM echo Making backup of log-file
 copy log.out "logs\backup_%NOW%.out" > nul
 del log.out > nul
 echo Running SEPIA Chat (%JAR_NAME%) - Date: %NOW% >> log.out 2>&1
-java -jar -Xms200m -Xmx200m %JAR_NAME% --my >> log.out 2>&1
+java -Dfile.encoding=utf-8 -jar -Xms200m -Xmx200m %JAR_NAME% --my >> log.out 2>&1

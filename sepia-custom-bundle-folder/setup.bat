@@ -28,21 +28,21 @@ if "%option%" == "0" (
 )
 if "%option%" == "1" (
 	echo Checking Elasticsearch access...
-	java -jar %TOOLS_JAR% connection-check httpGetJson -url=http://localhost:20724 -maxTries=3 -waitBetween=1000
+	java -Dfile.encoding=utf-8 -jar %TOOLS_JAR% connection-check httpGetJson -url=http://localhost:20724 -maxTries=3 -waitBetween=1000
 	set exitcode=!errorlevel!
 	if "!exitcode!" == "0" (
-		java -jar %JAR_NAME% setup --my
+		java -Dfile.encoding=utf-8 -jar %JAR_NAME% setup --my
 		goto bottom
 	) else (
 		goto noelastic
 	)
 )
 if "%option%" == "2" (
-	java -jar %JAR_NAME% setup accounts --my
+	java -Dfile.encoding=utf-8 -jar %JAR_NAME% setup accounts --my
 	goto bottom
 )
 if "%option%" == "3" (
-	java -jar %JAR_NAME% setup duckdns --my
+	java -Dfile.encoding=utf-8 -jar %JAR_NAME% setup duckdns --my
 	echo DONE. Please restart 'SEPIA assist server' to activate DuckDNS worker!
 	goto bottom
 )
@@ -54,7 +54,7 @@ if "%option%" == "4" (
 	cd..\..
 	cd sepia-assist-server
 	REM timeout 12
-	java -jar %TOOLS_JAR% connection-check httpGetJson -url=http://localhost:20724 -maxTries=25 -waitBetween=2000
+	java -Dfile.encoding=utf-8 -jar %TOOLS_JAR% connection-check httpGetJson -url=http://localhost:20724 -maxTries=25 -waitBetween=2000
 	goto enteroption
 )
 :nooption
