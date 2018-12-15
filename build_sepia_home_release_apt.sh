@@ -3,7 +3,7 @@ set -e
 
 #check packages (except Java)
 apt-get update
-apt-get install -y wget maven zip unzip git curl
+apt-get install -y wget maven zip unzip git curl procps
 
 #backup if folder exists
 if [ -d "$HOME/SEPIA" ]; then

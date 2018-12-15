@@ -7,21 +7,20 @@ get_latest_release() {
 }
 
 echo ""
-echo "Welcome to the SEPIA framework!"
+echo "Welcome to the SEPIA-Framework!"
 echo ""
-echo "This little script will help you to setup your environment and download SEPIA."
-echo "If you are using a fresh Raspbian (Stretch) installation please follow all points step-by-step and make sure they complete successfully."
+echo "This little script will help you to setup your environment and download SEPIA-Home."
+echo "If you are using a fresh Raspbian (Stretch) installation please follow steps 1 to 4 and make sure they complete successfully."
 echo "If you know what you are doing feel free to skip some steps as needed ;-)"
 echo "More help can be found here: https://github.com/SEPIA-Framework/sepia-docs/wiki"
 while true; do
 	echo ""
-	echo "Please choose your step:"
-	echo "1: Install Oracle Java 8 (OpenJDK might work too)"
-	echo "2: Update server-clock for precise timers"
-	echo "3: Install NGINX reverse-proxy (alternative to SEPIA Reverse-Proxy)"
-	echo "4: Download SEPIA Custom-Bundle"
-	echo "5: Extract SEPIA Custom-Bundle"
-	echo "6: Set access to SEPIA scripts and DONE"
+	echo "Please choose next step:"
+	echo "1: Install Oracle Java 8 (or try 1b: Install OpenJDK 9)"
+	echo "2: Install missing packages and update server-clock for precise timers"
+	echo "3: Download SEPIA-Home bundle"
+	echo "4: Extract SEPIA-Home to ~/SEPIA and set access to scripts"
+	echo "5: Optional: Install NGINX reverse-proxy (alternative to SEPIA Reverse-Proxy)"
 	echo ""
 	read -p "Enter a number plz (0 to exit): " option
 	echo ""
@@ -30,7 +29,7 @@ while true; do
 		break
 	elif [ $option = "1" ]
 	then
-		# INSTALL JAVA
+		# INSTALL ORACLE JAVA
 
 		#add digital key for PPA
 		echo 'Installing Oracle Java 8 ...'
@@ -49,48 +48,44 @@ while true; do
 		sudo apt-get install oracle-java8-set-default
 		echo 'Done'
 		java -version
+	
+	elif [ $option = "1b" ]
+	then
+		# INSTALL OPENJDK JAVA
+
+		sudo apt-get update
+		sudo apt-get install -y openjdk-9-jre-headless
+		echo 'Done'
+		java -version
 
 	elif [ $option = "2" ] 
 	then
+		# INSTALL zip, unzip, curl, procps, ca-certificates
+		sudo apt-get install -y zip unzip curl procps ca-certificates
+		
 		# UPDATE TIME SYNC
-
 		echo 'Installing ntpdate to sync time ...'
-		sudo apt-get install ntpdate
+		sudo apt-get install -y ntpdate
 		sudo ntpdate -u ntp.ubuntu.com
 
 	elif [ $option = "3" ] 
 	then
-		# INSTALL CA-CERTIFICATES (usually already there)
-
-		sudo apt-get install ca-certificates
-
-		# INSTALL NGINX
-
-		echo 'Installing nginx reverse-proxy ...'
-		sudo apt-get install software-properties-common
-		sudo apt-get install nginx
-
-	elif [ $option = "4" ] 
-	then
 		# DOWNLOAD SEPIA Custom-Bundle
 
 		#create tmp folder (usually done before getting this file)
-		#mkdir ~/tmp
-		cd ~/tmp
+		mkdir -p ~/SEPIA/tmp
+		cd ~/SEPIA/tmp
 		SEPIA_VERSION=$(get_latest_release "SEPIA-Framework/sepia-installation-and-setup")
 		#curl --silent "https://api.github.com/repos/SEPIA-Framework/sepia-installation-and-setup/releases/latest" | jq -r '.assets[] | select(.name == "SEPIA-Home.zip").browser_download_url'
 		wget "https://github.com/SEPIA-Framework/sepia-installation-and-setup/releases/download/${SEPIA_VERSION}/SEPIA-Home.zip"
 
-	elif [ $option = "5" ] 
+	elif [ $option = "4" ] 
 	then
-		# EXTRACT SEPIA Custom-Bundle
+		# EXTRACT SEPIA-Home bundle
 		
-		mkdir ~/SEPIA
-		cd ~/tmp
+		cd ~/SEPIA/tmp
 		unzip SEPIA-Home.zip -d ~/SEPIA
-
-	elif [ $option = "6" ] 
-	then	
+		
 		# SET SCRIPT ACCESS AND DONE
 		
 		#set scripts access
@@ -99,9 +94,17 @@ while true; do
 		chmod +x elasticsearch/bin/elasticsearch
 		
 		#done
-		echo "DONE :-) If you saw no errors you can now continue with 'cd ~/SEPIA' and run the './setup.sh'".
-		break
-		
+		echo ""
+		echo "DONE :-) If you saw no errors you can exit now and continue with 'cd ~/SEPIA' and './setup.sh'".
+
+	elif [ $option = "5" ] 
+	then
+		# INSTALL NGINX
+
+		echo 'Installing nginx reverse-proxy ...'
+		sudo apt-get install software-properties-common
+		sudo apt-get install nginx
+
 	else
 		echo "Not an option, please try again."
 	fi
