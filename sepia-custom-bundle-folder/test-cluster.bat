@@ -38,6 +38,7 @@ if "%exitcode%" == "0" (
 	echo KO
 )
 echo. 
-echo DONE
+echo DONE.
+echo If all looks OK you should be able to reach your SEPIA server via: %computername%.local
 pause
 exit

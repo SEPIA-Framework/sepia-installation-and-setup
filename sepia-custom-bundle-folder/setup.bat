@@ -13,6 +13,8 @@ echo https://github.com/SEPIA-Framework/sepia-assist-server
 echo.
 echo If you don't know what to do next read the guide at:
 echo https://github.com/SEPIA-Framework/sepia-installation-and-setup#quick-start
+echo.
+echo Typically for a new installation what you should do is (4) then (1) to setup the database and create the admin and assistant accounts.
 :enteroption
 echo. 
 echo What would you like to do next?

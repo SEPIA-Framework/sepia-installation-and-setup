@@ -11,5 +11,6 @@ curl -X GET http://localhost:20723/ping
 echo -e '\n\n-----Database: Elasticsearch-----\n'
 curl -X GET http://localhost:20724/_cluster/health?pretty
 
-echo -e '\nAll done, please check output for errors!\n'
+echo -e '\nDONE. Please check output for errors!\n'
+echo -e "If all looks good you should be able to reach your SEPIA server via: $(hostname).local"
 

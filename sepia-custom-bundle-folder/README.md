@@ -1,6 +1,10 @@
-# SEPIA custom-bundle folder
+# SEPIA-Home
 
 This is the base folder for the SEPIA-Home (aka custom release) bundle. It contains all the start and setup scripts and certain configurations to operate your SEPIA-Framework.
+
+## How to get started
+
+Check-out the installation guide: https://github.com/SEPIA-Framework/sepia-installation-and-setup
 
 ## How to create a SEPIA-Home bundle release
 
