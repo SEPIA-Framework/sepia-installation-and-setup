@@ -38,7 +38,7 @@ Creating your own web-server with SSL encryption will also make sure that you ca
 * On the "Authentication" page choose "LOCAL-HOST-20721" as server and login with your admin account.
 * Go to "User-Management", choose an email (can be fake, but a real address could come in handy later for password reset etc.) then press "put on whitelist", add a password and finally press "create". Note the message at the bottom indicating your new ID.
 * You should now be able to log-in with your new account (use the ID received during "create" or the email you chose).
-* To upgrade you local server to a full-blown web-server with SSL we recommend to use [Nginx](https://de.wikipedia.org/wiki/Nginx) and [Letsencrypt](https://letsencrypt.org/). There are some scripts included in the release bundle to make your life easier but a detailed tutorial is in preparation.
+* To upgrade you local server to a full-blown web-server with SSL we recommend to use [Nginx](https://de.wikipedia.org/wiki/Nginx) (or the integrated SEPIA-Proxy) and [Letsencrypt](https://letsencrypt.org/). There are some scripts included in the release bundle to make your life easier, to get started check the Wiki entry [here](https://github.com/SEPIA-Framework/sepia-docs/wiki/SSL-for-your-Server).
 * If you want to get started quickly (2min) without any additional configuration you can use the included SEPIA Reverse-Proxy (Java) and a neat little tool called "ngrok" to create a temporary, secure web-server:
   * Download and extract ngrok for your OS: https://ngrok.com/download
   * Start the SEPIA Reverse-Proxy with one of the scripts inside the "sepia-reverse-proxy"-folder
@@ -64,6 +64,56 @@ sudo bash build_sepia_home_release_apt.sh dev
 You will get a ZIP-file in the end with the new release build (as well).
 
 ## Version history
+
+### v2.1.3 - 2018.12.16
+
+Updated client to v0.15.2 with following changes:
+* Added drag & drop module and applied it to shopping and to-do list for sorting (activate via long-press on item check-button)
+* Added 3-states support for to-do lists (similar to Kanban-cards: open/in-progress/done)
+* Updated to-do/shopping list design and list context-menu in general
+* Updated tutorial with new list features and generally more info
+* Added a help and support button to settings menu (pointing to SEPIA docs page)
+* Improved alarms during AlwaysOn-mode
+* Introduced smart-microphone toggle (enable in settings) that auto-activates mic on voice based questions (beta)
+* Added new skins 'Study', 'Odyssey1', 'Odyssey2', 'Professional' (with less rounded corners ^^), reworked 'NeoSepiaDark' and changed old one to 'Malachite', updated 'Grid' and tweaked other styles
+* Fixed some bugs in GPS event handling
+* Improved handling of large lists to show them more often in 'big-results'-view and sorted time-events by date
+* Split Alarms/Timers button in shortcuts into 2 buttons
+* Introduced upper limit for maximal visible chat entries (to improve performance)
+* Added mood indicator to AlwaysOn-mode avatar (mouth angle ^_^)
+* Improved hotkeys/gamepad config menu
+* Reworked AudioRecorder module to support different recorder types
+* Introduced new WakeTriggers module and added new config options (e.g. (dis)allow remote hotkey)
+* Improved file reader to handle array-buffers so that we can import WebAssembly code
+* Added Porcupine JS wake-word tool as 'xtension' and beta-test view to experiment with 'Hey SEPIA' (access from settings)
+* Added embedded module with (very) basic offline NLU and services (currently only used for demo-mode e.g. to load a demo list)
+* Updated demo mode with offline custom buttons
+* Fixed a bug that crashed app when a Bluetooth devices was (dis)connected
+Updated Assist-server to v2.1.4:
+* Read more than 10 lists with one request (handle paging in service)
+* Improved lists NLU ('show me my A and B lists'), radio NLU ('play radio with songs of BAND'), time/date and location parameters
+* Updated news-outlets, Wired Germany will close down end of 2018 :-(
+Other changes:
+* Improved installation scripts
+
+### v2.1.2 - 2018.11.xx (internal version)
+
+Updated client to v0.14.3 with some nice upgrades, e.g.:
+* Define custom button for your own commands via the Teach-UI
+* Add music stream commands via Teach-UI
+* Always-On view with animated avatar and controls (beta)
+* Power-events e.g. open AO-mode on power plugin
+* Gamepad and hotkey support for remote microphone trigger and other controls (beta)
+* Design update of quick-access menu (bottom left) and additional smaller changes (skins etc.)
+* Fixed bug where radio won't turn off via voice
+* Fixed a bug that prevented timer stop via voice
+* Many smaller fixes
+Other changes:
+* Teach-server update to v2.0.2 with custom buttons support for personal commands
+* Assist-server update to v2.1.3 with reworked radio stations (external, curated file), time/date answers and fixes
+* Admin-Tools support for server URL parameters
+* Added server backup script (Unix) and updated Windows setup and run
+* Fixed a UTF-8 encoding bug for Windows
 
 ### v2.1.0a - 2018.10.26
 
