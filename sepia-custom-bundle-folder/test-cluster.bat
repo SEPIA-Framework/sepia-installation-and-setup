@@ -40,5 +40,6 @@ if "%exitcode%" == "0" (
 echo. 
 echo DONE.
 echo If all looks OK you should be able to reach your SEPIA server via: %computername%.local
+echo Example: %computername%.local:20721/tools/index.html
 pause
 exit
