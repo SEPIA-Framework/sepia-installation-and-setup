@@ -77,7 +77,8 @@ New additions and changes:
 * Completely rebuilt the SEPIA Admin-Tools (on top of the ByteMind Web-App template) and renamed them to SEPIA Control-HUB (internally) :-)
 * Added a web-based code editor called Code-UI to the Control-HUB (following in the footsteps of the Teach-UI ^^) that can be used to code and upload custom Smart-Services to the SEPIA core server and plugins to a SEPIA Mesh-Node.
 * The code editor can load services and plugins directly from the new [SEPIA Extensions repository](https://github.com/SEPIA-Framework/sepia-extensions). You can thik of it as some kind of "skill store light", contributions welcome ;-)
-* Not part of this release bundle but useful to build and test Smart-Services: [The new SEPIA Java SDK](https://github.com/SEPIA-Framework/sepia-sdk-java).
+* Not part of this release bundle but useful to build and test Smart-Services: [The new SEPIA Java SDK](https://github.com/SEPIA-Framework/sepia-sdk-java).  
+
 Updated Assist-server to v2.2.0:
 * Many internal changes to support the new Java SDK, the rebuilt Control-HUB and the Code-UI
 * Implemented the feature to add "real" custom answers (multi language + variation) right inside a service. Previously they had to be defined in the assistant database. This will make it easier to deliver high quality dialog with the SDK.
@@ -87,6 +88,7 @@ Updated Assist-server to v2.2.0:
 * Added a limited-size cache for custom commands (saves some database calls)
 * Fixes and clean-ups all over the place
 * Updated SEPIA core tools to v2.2.0  
+
 Updated client to v0.16.0:
 * Added new 'plugin' command (mesh_node_plugin) to the Teach-UI to easily interface with SEPIA Mesh-Nodes (see above)
 * Fixed link-cards for dark skins and HTML link colors
@@ -118,11 +120,13 @@ Updated client to v0.15.2 with following changes:
 * Added Porcupine JS wake-word tool as 'xtension' and beta-test view to experiment with 'Hey SEPIA' (access from settings)
 * Added embedded module with (very) basic offline NLU and services (currently only used for demo-mode e.g. to load a demo list)
 * Updated demo mode with offline custom buttons
-* Fixed a bug that crashed app when a Bluetooth devices was (dis)connected
+* Fixed a bug that crashed app when a Bluetooth devices was (dis)connected  
+
 Updated Assist-server to v2.1.4:
 * Read more than 10 lists with one request (handle paging in service)
 * Improved lists NLU ('show me my A and B lists'), radio NLU ('play radio with songs of BAND'), time/date and location parameters
-* Updated news-outlets, Wired Germany will close down end of 2018 :-(
+* Updated news-outlets, Wired Germany will close down end of 2018 :-(  
+
 Other changes:
 * Improved installation scripts
 
@@ -137,7 +141,8 @@ Updated client to v0.14.3 with some nice upgrades, e.g.:
 * Design update of quick-access menu (bottom left) and additional smaller changes (skins etc.)
 * Fixed bug where radio won't turn off via voice
 * Fixed a bug that prevented timer stop via voice
-* Many smaller fixes
+* Many smaller fixes  
+
 Other changes:
 * Teach-server update to v2.0.2 with custom buttons support for personal commands
 * Assist-server update to v2.1.3 with reworked radio stations (external, curated file), time/date answers and fixes
@@ -153,7 +158,8 @@ Updated assist-server to v2.1.0 with numerous improvements, e.g.:
 * Updated Bundesliga soccer service with data of new season
 * Updated and improved setup scripts (e.g. for admin password reset)
 * Fixes in NLU and parameter extractions (e.g. for location parameter)
-* Improved handling of internal error with proper client message
+* Improved handling of internal error with proper client message  
+
 Other changes:
 * Upgraded dependencies, mainly: Java Spark (2.5.4 -> 2.8.0) and Jetty Server (9.3 -> 9.4)
 * Updated SEPIA Reverse-Proxy to use external properties file and added some features
