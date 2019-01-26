@@ -76,18 +76,19 @@ New additions and changes:
 * Added [SEPIA Mesh-Node server](https://github.com/SEPIA-Framework/sepia-mesh-nodes) to the SEPIA-Home bundle: A small, lightweight server that can be distributed in your network to run tasks securely triggered from anywhere using SEPIA.
 * Completely rebuilt the SEPIA Admin-Tools (on top of the ByteMind Web-App template) and renamed them to SEPIA Control-HUB (internally) :-)
 * Added a web-based code editor called Code-UI to the Control-HUB (following in the footsteps of the Teach-UI ^^) that can be used to code and upload custom Smart-Services to the SEPIA core server and plugins to a SEPIA Mesh-Node.
-* The code editor can load services and plugins directly from the new [SEPIA Extensions repository](https://github.com/SEPIA-Framework/sepia-extensions). You can thik of it as some kind of "skill store light", contributions welcome ;-)
-* Not part of this release bundle but useful to build and test Smart-Services: [The new SEPIA Java SDK](https://github.com/SEPIA-Framework/sepia-sdk-java).  
+* The code editor can load services and plugins directly from the new [SEPIA Extensions repository](https://github.com/SEPIA-Framework/sepia-extensions). You can think of it as some kind of "skill store light", contributions welcome ;-)
+* Introduced [the new SEPIA Java SDK](https://github.com/SEPIA-Framework/sepia-sdk-java) to build, test and upload Smart-Services (standalone, download separately).  
 
 Updated Assist-server to v2.2.0:
 * Many internal changes to support the new Java SDK, the rebuilt Control-HUB and the Code-UI
 * Implemented the feature to add "real" custom answers (multi language + variation) right inside a service. Previously they had to be defined in the assistant database. This will make it easier to deliver high quality dialog with the SDK.
 * Added a Mesh-Node connector to handle calls to Mesh-Node Plugins like a service with parameters (this enables the new 'plugin' command in the Teach-UI, see below)
+* Tweaked settings endpoint to write changes submitted by Control-HUB permanently to the active config-file (previously they were lost after restart)
 * Improvements in 'Number' and 'DateAndTime' parameters
 * Improved 'Alarm' service to better handle "this event is in the past" cases
 * Added a limited-size cache for custom commands (saves some database calls)
 * Fixes and clean-ups all over the place
-* Updated SEPIA core tools to v2.2.0  
+* Updated SEPIA core tools to v2.2.0 (this applies to all core servers)  
 
 Updated client to v0.16.0:
 * Added new 'plugin' command (mesh_node_plugin) to the Teach-UI to easily interface with SEPIA Mesh-Nodes (see above)
