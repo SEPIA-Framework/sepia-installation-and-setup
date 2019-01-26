@@ -50,7 +50,7 @@ cd sepia-websocket-server-java && mvn install && cp -r target/release/. ~/SEPIA/
 cd sepia-assist-server && mvn install && cp -r target/release/. ~/SEPIA/sepia-assist-server/ && cd ..
 cd sepia-teach-server && mvn install && cp -r target/release/. ~/SEPIA/sepia-teach-server/ && cd ..
 cd sepia-reverse-proxy && mvn install && cp -r target/release/. ~/SEPIA/sepia-reverse-proxy/ && cd ..
-cd sepia-mesh-nodes && mvn install && cp -r target/release/. ~/SEPIA/sepia-mesh-nodes/ && cd ..
+cd sepia-mesh-nodes/java && mvn install && cp -r target/release/. ~/SEPIA/sepia-mesh-nodes/ && cd ../..
 mkdir -p sepia-assist-server/Xtensions/WebContent/app
 cp -r sepia-html-client-app/www/. ~/SEPIA/sepia-assist-server/Xtensions/WebContent/app/
 mkdir -p sepia-assist-server/Xtensions/WebContent/tools
