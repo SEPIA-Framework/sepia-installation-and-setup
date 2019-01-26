@@ -5,4 +5,6 @@ REM echo Making backup of log-file
 copy log.out "logs\backup_%NOW%.out" > nul
 del log.out > nul
 echo Running SEPIA Mesh-Node (%JAR_NAME%) - Date: %NOW% >> log.out 2>&1
+echo Running SEPIA Mesh-Node (%JAR_NAME%) - Started: %NOW%
+echo Close the window to shutdown this mesh-node
 java -Dfile.encoding=utf-8 -jar -Xms24m -Xmx24m %JAR_NAME% --my >> log.out 2>&1
