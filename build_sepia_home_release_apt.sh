@@ -16,25 +16,30 @@ fi
 mkdir -p ~/SEPIA/tmp
 cd ~/SEPIA/tmp
 
-wget -O sepia-custom-bundle-folder.zip https://github.com/SEPIA-Framework/sepia-installation-and-setup/blob/master/sepia-custom-bundle-folder.zip?raw=true
-unzip -n sepia-custom-bundle-folder.zip -d ~/SEPIA
-
 if [ -z "$1" ]; then
+	echo "Fetching master bundle folder zip..."
+	wget -O sepia-custom-bundle-folder.zip https://github.com/SEPIA-Framework/sepia-installation-and-setup/blob/master/sepia-custom-bundle-folder.zip?raw=true
+	unzip -n sepia-custom-bundle-folder.zip -d ~/SEPIA
 	echo "Cloning master branches..."
 	git clone https://github.com/SEPIA-Framework/sepia-core-tools-java.git
 	git clone https://github.com/SEPIA-Framework/sepia-websocket-server-java.git
 	git clone https://github.com/SEPIA-Framework/sepia-assist-server.git
 	git clone https://github.com/SEPIA-Framework/sepia-teach-server.git
 	git clone https://github.com/SEPIA-Framework/sepia-reverse-proxy.git
+	git clone https://github.com/SEPIA-Framework/sepia-mesh-nodes.git
 	git clone https://github.com/SEPIA-Framework/sepia-html-client-app.git
 	git clone https://github.com/SEPIA-Framework/sepia-admin-tools.git
 else
+	echo "Fetching $1 bundle folder zip..."
+	wget -O sepia-custom-bundle-folder.zip https://github.com/SEPIA-Framework/sepia-installation-and-setup/blob/$1/sepia-custom-bundle-folder.zip?raw=true
+	unzip -n sepia-custom-bundle-folder.zip -d ~/SEPIA
 	echo "Cloning $1 branches..."
 	git clone --single-branch -b $1 https://github.com/SEPIA-Framework/sepia-core-tools-java.git
 	git clone --single-branch -b $1 https://github.com/SEPIA-Framework/sepia-websocket-server-java.git
 	git clone --single-branch -b $1 https://github.com/SEPIA-Framework/sepia-assist-server.git
 	git clone --single-branch -b $1 https://github.com/SEPIA-Framework/sepia-teach-server.git
 	git clone --single-branch -b $1 https://github.com/SEPIA-Framework/sepia-reverse-proxy.git
+	git clone --single-branch -b $1 https://github.com/SEPIA-Framework/sepia-mesh-nodes.git
 	git clone --single-branch -b $1 https://github.com/SEPIA-Framework/sepia-html-client-app.git
 	git clone --single-branch -b $1 https://github.com/SEPIA-Framework/sepia-admin-tools.git
 fi
@@ -45,6 +50,7 @@ cd sepia-websocket-server-java && mvn install && cp -r target/release/. ~/SEPIA/
 cd sepia-assist-server && mvn install && cp -r target/release/. ~/SEPIA/sepia-assist-server/ && cd ..
 cd sepia-teach-server && mvn install && cp -r target/release/. ~/SEPIA/sepia-teach-server/ && cd ..
 cd sepia-reverse-proxy && mvn install && cp -r target/release/. ~/SEPIA/sepia-reverse-proxy/ && cd ..
+cd sepia-mesh-nodes && mvn install && cp -r target/release/. ~/SEPIA/sepia-mesh-nodes/ && cd ..
 mkdir -p sepia-assist-server/Xtensions/WebContent/app
 cp -r sepia-html-client-app/www/. ~/SEPIA/sepia-assist-server/Xtensions/WebContent/app/
 mkdir -p sepia-assist-server/Xtensions/WebContent/tools
