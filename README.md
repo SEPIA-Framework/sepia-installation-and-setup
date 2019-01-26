@@ -21,29 +21,34 @@ If you are using Raspian for Raspberry Pi check out the more detailed [guide](ht
 * Run `setup.bat` (Windows) or `bash setup.sh` (Mac, Linux) to setup your SEPIA servers
 * Inside the setup choose 4 to start Elasticsearch and then 1 to setup the SEPIA-Framework. Remember the passwords you set! You can skip the other options for now.
 * If everything worked out (check console for errors) you can use "run-sepia" (.bat for Windows, .sh for Linux/Mac) to start all servers
-* Check with test-cluster.bat/test-cluster.sh if everything started as planned. If not check sepia-*/log.out for errors.
+* The run-script will ping the servers to see if everything started as planned. You can repeat this test with test-cluster.bat/test-cluster.sh to make sure. If you see errors check sepia-*/log.out.
 * You should be able to reach the web-app of SEPIA via: http://localhost:20721/app/index.html (or the server IP instead of 'localhost').
 * If your browser is not on the same machine replace 'localhost' (similar to the previous step) in the hostname field during login with the IP of your server (e.g. localhost -> 192.168.0.10).
 * For testing purposes (only!) you can use the admin-acount to log-in, by default the ID is "admin@sepia.localhost" or "uid1003" (don't use the "assistant" account). The password has been set during setup.
   
-NOTE: Using the web-app via "localhost" will limit the functionality of some features like the speech-recognition, geo-location and notifications due to security reasons (browser restriction, requires HTTPS to work).
-See "Next steps" below for further instructions on how to setup your own HTTPS web-server.
+NOTE: Using the web-app via "localhost" will (depending on the browser) limit the functionality of some features like the speech-recognition, geo-location and notifications due to security reasons (browser restriction, requires HTTPS to work).
+See "Secure server" below for further instructions on how to setup your own HTTPS web-server.
 
 ## Next steps
 
-If your local tests worked well it is time to create your own (non-admin) account and scale up your server to make sure your it can be reached from outside your private network.
-Creating your own web-server with SSL encryption will also make sure that you can use all features of the app without problems.
+If your local tests worked well it is time to create your own (non-admin) account:
 
-* To create new users use the SEPIA admin/developer tools page: http://localhost:20721/tools/index.html (registration via e-mail is possible but not fully implemented in the client yet in v2.0.0).
-* On the "Authentication" page choose "LOCAL-HOST-20721" as server and login with your admin account.
-* Go to "User-Management", choose an email (can be fake, but a real address could come in handy later for password reset etc.) then press "put on whitelist", add a password and finally press "create". Note the message at the bottom indicating your new ID.
+* To create new users use the SEPIA tools page (aka Control-HUB): http://localhost:20721/tools/index.html (registration via 'real' e-mail is possible in theory but not fully implemented in the clients right now).
+* Login to the Control-HUB using your admin account. By extending the login-box you can check if the right server is selected it should look like this 'http://localhost:20721' or this 'http://192.168.0.10:20721' for example.
+* Open the menu (top-left) and go to the "User Management" page. Choose an email (can be fake, but a real address could come in handy later for password reset etc.) then press "put on whitelist", add a password and finally press "create". Note the message in the result-box indicating your new ID.
 * You should now be able to log-in with your new account (use the ID received during "create" or the email you chose).
-* To upgrade you local server to a full-blown web-server with SSL we recommend to use [Nginx](https://de.wikipedia.org/wiki/Nginx) (or the integrated SEPIA-Proxy) and [Letsencrypt](https://letsencrypt.org/). There are some scripts included in the release bundle to make your life easier, to get started check the Wiki entry [here](https://github.com/SEPIA-Framework/sepia-docs/wiki/SSL-for-your-Server).
-* If you want to get started quickly (2min) without any additional configuration you can use the included SEPIA Reverse-Proxy (Java) and a neat little tool called "ngrok" to create a temporary, secure web-server:
-  * Download and extract ngrok for your OS: https://ngrok.com/download
-  * Start the SEPIA Reverse-Proxy with one of the scripts inside the "sepia-reverse-proxy"-folder
-  * Call `./ngrok http 20726` (or `.\ngrok.exe http 20726` in Windows) and you will get a HTTPS URL for your SEPIA server
-  * Use this URL as hostname ([your-ngrok-url]/sepia) in your SEPIA web-app: [your-ngrok-url]/sepia/assist/app/index.html (or in the official, public web-app: https://sepia-framework.github.io/app/index.html)
+
+## Secure server
+
+Creating your own web-server with SSL encryption will make sure that you can use all features of the app without problems and will also make your server reachable from outside your network (e.g. when you're using the mobile app and want to check your shopping-list inside a supermarket).
+To upgrade you local server to a full-blown web-server with SSL it is recommended to use [Nginx](https://de.wikipedia.org/wiki/Nginx) or the integrated SEPIA-Proxy and [Letsencrypt](https://letsencrypt.org/). There are some scripts included in the SEPIA-Home release to make your life easier, to get started check the Wiki entry [here](https://github.com/SEPIA-Framework/sepia-docs/wiki/SSL-for-your-Server).  
+  
+If you want a super-fast (2min), zero-configuration solution you can use the included SEPIA Reverse-Proxy (Java) together with a neat little tool called "ngrok" to create a temporary, secure web-server:
+* Download and extract ngrok for your OS: https://ngrok.com/download
+* Start the SEPIA Reverse-Proxy with one of the scripts inside the "sepia-reverse-proxy"-folder
+* Call `./ngrok http 20726` (or `.\ngrok.exe http 20726` in Windows) and you will get a HTTPS URL for your SEPIA server
+* Use this URL as hostname ([your-ngrok-url]/sepia) in your SEPIA web-app: [your-ngrok-url]/sepia/assist/app/index.html (or in the official, public web-app: https://sepia-framework.github.io/app/index.html)
+* ***The drawback:*** your ngrok-server will expire after a while (~7h) and you need to manually restart it. In this process your URL will change as well.
 * TO BE CONTINUED ...
 
 ## Build-your-own release (for experts)
@@ -64,6 +69,31 @@ sudo bash build_sepia_home_release_apt.sh dev
 You will get a ZIP-file in the end with the new release build (as well).
 
 ## Version history
+
+### v2.2.0 - 2019.01.??
+
+New additions and changes:
+* Added [SEPIA Mesh-Node server](https://github.com/SEPIA-Framework/sepia-mesh-nodes) to the SEPIA-Home bundle: A small, lightweight server that can be distributed in your network to run tasks securely triggered from anywhere using SEPIA.
+* Completely rebuilt the SEPIA Admin-Tools (on top of the ByteMind Web-App template) and renamed them to SEPIA Control-HUB (internally) :-)
+* Added a web-based code editor called Code-UI to the Control-HUB (following in the footsteps of the Teach-UI ^^) that can be used to code and upload custom Smart-Services to the SEPIA core server and plugins to a SEPIA Mesh-Node.
+* The code editor can load services and plugins directly from the new [SEPIA Extensions repository](https://github.com/SEPIA-Framework/sepia-extensions). You can thik of it as some kind of "skill store light", contributions welcome ;-)
+* Not part of this release bundle but useful to build and test Smart-Services: [The new SEPIA Java SDK](https://github.com/SEPIA-Framework/sepia-sdk-java).
+Updated Assist-server to v2.2.0:
+* Many internal changes to support the new Java SDK, the rebuilt Control-HUB and the Code-UI
+* Implemented the feature to add "real" custom answers (multi language + variation) right inside a service. Previously they had to be defined in the assistant database. This will make it easier to deliver high quality dialog with the SDK.
+* Added a Mesh-Node connector to handle calls to Mesh-Node Plugins like a service with parameters (this enables the new 'plugin' command in the Teach-UI, see below)
+* Improvements in 'Number' and 'DateAndTime' parameters
+* Improved 'Alarm' service to better handle "this event is in the past" cases
+* Added a limited-size cache for custom commands (saves some database calls)
+* Fixes and clean-ups all over the place
+* Updated SEPIA core tools to v2.2.0  
+Updated client to v0.16.0:
+* Added new 'plugin' command (mesh_node_plugin) to the Teach-UI to easily interface with SEPIA Mesh-Nodes (see above)
+* Fixed link-cards for dark skins and HTML link colors
+* Improved demo-mode
+* Fixed a bug in the mic-reset function
+* Fixed a bug in Teach-UI for unsupported commands
+* ...  
 
 ### v2.1.3 - 2018.12.16
 
