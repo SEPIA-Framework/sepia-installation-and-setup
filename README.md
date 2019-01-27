@@ -92,11 +92,14 @@ Updated Assist-server to v2.2.0:
 
 Updated client to v0.16.0:
 * Added new 'plugin' command (mesh_node_plugin) to the Teach-UI to easily interface with SEPIA Mesh-Nodes (see above)
+* Added speech-to-text output to AlwaysOn-mode
+* Automatically close await-dialog state (yellow mic) after 15s
+* Improved my-view automatic refresh (e.g. after wake-up from background)
 * Fixed link-cards for dark skins and HTML link colors
+* Added ACTION "switch_language" to experiment with custom services in non-default languages
 * Improved demo-mode
 * Fixed a bug in the mic-reset function
 * Fixed a bug in Teach-UI for unsupported commands
-* ...  
 
 ### v2.1.3 - 2018.12.16
 
