@@ -96,6 +96,7 @@ Updated client to v0.16.0:
 * Automatically close await-dialog state (yellow mic) after 15s
 * Improved my-view automatic refresh (e.g. after wake-up from background)
 * Fixed link-cards for dark skins and HTML link colors
+* Added skin 'Nightlife'
 * Added ACTION "switch_language" to experiment with custom services in non-default languages
 * Improved demo-mode
 * Fixed a bug in the mic-reset function
