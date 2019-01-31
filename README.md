@@ -70,7 +70,7 @@ You will get a ZIP-file in the end with the new release build (as well).
 
 ## Version history
 
-### v2.2.0 - 2019.01.??
+### v2.2.0 - 2019.01.31
 
 New additions and changes:
 * Added [SEPIA Mesh-Node server](https://github.com/SEPIA-Framework/sepia-mesh-nodes) to the SEPIA-Home bundle: A small, lightweight server that can be distributed in your network to run tasks securely triggered from anywhere using SEPIA.
