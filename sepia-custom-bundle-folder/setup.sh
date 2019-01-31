@@ -68,7 +68,7 @@ while true; do
 		echo "Cronjob suggestions:"
 		echo ""
 		echo '@reboot sleep 60 && ~/SEPIA/on-reboot.sh;'
-		echo '30 4 1-31/2 * * ~/SEPIA/restart-sepia.sh > ~/SEPIA/restart.log'
+		echo '30 4 1-31/2 * * ~/SEPIA/cronjob.sh;'
 	else
 		echo "Not an option, please try again."
 	fi
