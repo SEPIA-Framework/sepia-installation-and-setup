@@ -87,6 +87,7 @@ Updated Assist-server to v2.2.0:
 * Improvements in 'Number' and 'DateAndTime' parameters
 * Improved 'Alarm' service to better handle "this event is in the past" cases
 * Added a limited-size cache for custom commands (saves some database calls)
+* Improved Java 9+ support
 * Fixes and clean-ups all over the place
 * Updated SEPIA core tools to v2.2.0 (this applies to all core servers)  
 
@@ -97,6 +98,7 @@ Updated client to v0.16.0:
 * Improved my-view automatic refresh (e.g. after wake-up from background)
 * Fixed link-cards for dark skins and HTML link colors
 * Added skin 'Nightlife'
+* Translated tutorial to German (and added language support to Frames)
 * Added ACTION "switch_language" to experiment with custom services in non-default languages
 * Improved demo-mode
 * Fixed a bug in the mic-reset function
