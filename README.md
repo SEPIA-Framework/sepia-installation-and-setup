@@ -70,6 +70,37 @@ You will get a ZIP-file in the end with the new release build (as well).
 
 ## Version history
 
+### v2.2.1 - 2019.03.24
+
+Updated client to v0.17.0:
+* Added support for Bluetooth LE beacons to be used as remote control triggers
+* Added [Node.js CLEXI](https://www.npmjs.com/package/clexi) integration to handle BLE support on e.g. Desktop browsers
+* Improved remote control settings (aka gamepad settings) to support BLE beacons
+* Added new client-controls function including new Teach-UI command (use e.g. to control volume or call Mesh-Nodes and CLEXI form client)
+* New wake-word settings, fixed wake-word for AO-mode, proper settings storing and auto-load of engine
+* Store and load selected voice (per language)
+* New 'view' URL parameter to e.g. launch Always-On mode ('aomode') directly on start
+* New 'isTiny' URL parameter to be able to handle very small screens (e.g. 240x240) via sepiaFW-style-tiny.css file
+* New Always-On animations (mouth). AO-mode can be activated via double-tap on SEPIA label (center top)
+* UX tweaks (mic press stops alarm, bigger shortcuts button area etc.) and skin improvements
+* Renamed 'Chatty reminders' to 'Well-being reminders' (and made them opt-in by default) ;-)
+* New idle-time action queue (used e.g. in client-control to get voice feedback on error)
+* Custom environmental variable during AO-mode: avatar_display (use for services)
+* Fixed a bug in Chrome TTS and other minor bug- and UX-fixes
+  
+Updated Assist-server to v2.2.1:
+* Added client-controls service and client-function parameter to handle e.g. volume control, toggle settings and AO-mode, trigger a Mesh-Node or CLEXI call from client and more
+* Imroved RSS feed reader, updated ROME tools and fixed news-outlets
+* Improved some NLU parameters (e.g. radio station and location)
+  
+Updated Mesh-Node to v0.9.9:
+* Added PIN and localhost security options to plugins
+  
+Notable mentions:
+* SEPIA STT-Server has been updated with new english Kaldi model
+* Smaller fixes to the SEPIA control HUB
+* A [browser plugin](https://chrome.google.com/webstore/detail/sepia-framework-tools/gbdjpbipoaacccffgemiflnhfldahopp) has been release to improve the SEPIA client running in Chromium kiosk mode
+
 ### v2.2.0 - 2019.01.31
 
 New additions and changes:
