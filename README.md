@@ -70,6 +70,69 @@ You will get a ZIP-file in the end with the new release build (as well).
 
 ## Version history
 
+### v2.2.2 - 2019.05.29
+
+Updated client to v0.18.0:
+* Improved my-view updates
+* Improved handling of well-being/pro-active notifications (e.g.: inform server of received notes to prevent duplicated messages, deliver when active, etc.)
+* Improved reconnect behaviour after lost connection
+* Added new 'music-search' and 'media' function to client-controls with Android MEDIA_BUTTON Intent support
+* Added selector for default music app including YouTube, Spotify, Apple Music (Browser/Mobile) and VLC (Android only)
+* Added music-search as link-card type and added support for YouTube embedded videos (including stop and next command interface)
+* Improved list scrolling on footer minimize-click
+* Added server version check and incompatability warning to start-up sequence 
+* Added new skins "Spots" and "DarkCanary"
+* Added new context menu for cards to link and timer cards with buttons like 'share' and 'copy' (link)
+* Added 'add to Android calendar' and 'add to Android alarms' buttons to timer cards
+* Improved link-cards
+* Filled Teach-UI help button with many examples and info for each command
+* Added Teach-UI support for flex-parameters in sentence_connect (see new help for more info)
+* Added new platform_controls command to Teach-UI (one sentence - device dependent actions like URL-call or Android-Intent)
+* Added new client info to server requests (deviceId, platform, default music app etc.)
+* Fixed and imroved 'Hey SEPIA' code (still some smaller issues left)
+* Added Android ASSIST Intent listener to allow SEPIA to become default system assistant (long-press on home button)
+* Added Android Intent plugin
+* Added Android navigation bar plugin for colored soft-keys (bottom of screen)
+* Improved audio player animation
+* Improvements to pop-up messages
+* Fixed some issues related to active chat-channel and messages
+* New and upgraded implementation for universal deeplinks (e.g. share reminders, requests, links, etc.)
+* Added onActive and onBeforeActive event queue
+* Added button to store/load app settings to/from account after login
+* Support for follow-up messages from server (received after initial service 'completion')
+* Updated CLEXI client library to v0.8.0 (with support for CLEXI http events)
+* Added CLEXI connection status indicator
+  
+Updated Assist-server to v2.2.2:
+* New MediaControls parameter and improved ClientControls service to handle 'next song', 'stop music', (improved) 'volume', etc.
+* Added dynamic select parameter to ServiceBuilder to easily add choose-one-of questions to any service
+* Added SpotifyApi and iTunesApi classes to handle music search requests
+* New service: MusicSearch with parameters for song, artist, service, playlist, genre and support for music search link-cards
+* New service: PlatformControls (see client Teach-UI for more info)
+* Improved cards and URL actions in some services (location, direction, music, etc.)
+* Tweaked WebSearch service to better handle YouTube
+* Added flex-parameter support to sentence matcher (see client Teach-UI for more info)
+* Updated news outlets
+* Added deviceId, platform and custom data to NluInput (for things like default music app etc.)
+* Added support for 'recently triggered pro-active notification' to events manager
+* Improved NLU and several parameters, e.g. action, number, list sub-type, date/time
+* Improved link-cards with new type and brand options (e.g. to distinguish music links and web-search)
+* Added support to store and read app settings (per user-id and device-id)
+* Added follow-up message support (delayed assistant answers etc.) for duplex connections (e.g. with default WebSocket client)
+* Improved RSS feed reader (again! less errors finally and improved backup check for outdated content)
+* Moved basic Elasticsearch interface to core-tools
+  
+Updated WebSocket Chat-Server to v1.1.1:
+* Support for follow-up messages (see assist-server and client for more info)
+* Moved code for channel management endpoint to new ChannelManager class
+* Improved SocketChannel with JSON import/export of data
+* Preparations for improved channel create/join support
+  
+Updated Core-tools to v2.2.1:
+* Added new content to CMD, PARAMETERS and CLIENTS
+* Improved Connectors (e.g. http GET with headers and better encoding)
+* Moved Elasticsearch interface from assist-server package
+
 ### v2.2.1 - 2019.03.24
 
 Updated client to v0.17.0:
