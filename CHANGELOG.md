@@ -14,10 +14,10 @@ Updated client to v0.18.0:
 * Filled Teach-UI help button with many examples and info for each command
 * Added Teach-UI support for flex-parameters in sentence_connect (see new help for more info)
 * Added new platform_controls command to Teach-UI (one sentence - device dependent actions like URL-call or Android-Intent)
-* Improved reconnect behaviour after lost connection
-* Added server version check and incompatability warning to start-up sequence 
+* Improved reconnect behavior after lost connection
+* Added server version check and incompatibility warning to start-up sequence 
 * Added new client info to server requests (deviceId, platform, default music app etc.)
-* Fixed and imroved 'Hey SEPIA' code (still some smaller issues left)
+* Fixed and improved 'Hey SEPIA' code (still some smaller issues left)
 * Added Android ASSIST Intent listener to allow SEPIA to become default system assistant (long-press on home button)
 * Added Android Intent plugin
 * Added Android navigation bar plugin for colored soft-keys (bottom of screen)
