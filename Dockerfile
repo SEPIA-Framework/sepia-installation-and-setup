@@ -82,7 +82,7 @@ RUN echo "Building SEPIA-Home (custom bundle) ..." && \
 #	Setup SEPIA
 #	NOTE: This has to be done (e.g. by sharing external config folder) before server can run without error
 #	e.g.: 
-#	0 - Create shared folder:				export SEPIA_SHARE=/home/[my-user]/sepia-home-share && mkdir -p $SEPIA_SHARE
+#	0 - Create shared folder:				export SEPIA_SHARE=/home/[my-user]/sepia-share && mkdir -p $SEPIA_SHARE
 #	1 - Copy SEPIA folder from container:	sudo docker run --rm --name=sepia_home -p 20726:20726 -it -v $SEPIA_SHARE:/home/admin/sepia-backup sepia/home:test cp -r /home/admin/SEPIA /home/admin/sepia-backup
 #	2 - Run setup with shared folder:		sudo docker run --rm --name=sepia_home -p 20726:20726 -it -v $SEPIA_SHARE/SEPIA:/home/admin/SEPIA sepia/home:test bash setup.sh
 #	3 - Run server:							sudo docker run --rm --name=sepia_home -p 20726:20726 -d -v $SEPIA_SHARE/SEPIA:/home/admin/SEPIA sepia/home:test
