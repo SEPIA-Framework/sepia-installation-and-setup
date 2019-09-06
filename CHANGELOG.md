@@ -82,6 +82,7 @@ All servers:
 Other tools:
 * Added code for [Microbit BLE Beacon remote](sepia-microbit-projects)
 * Updated Teach-Server to v2.0.3 to include new core-tools v2.2.2 and thus javaspark v2.9.1 (no other code changes)
+* Updated SDK to support new SEPIA-Home release and added 'WorkoutHelperDemo' service to demonstrate pro-active background messages and database access
 * Updated reverse-proxy to v0.3.2 to include security fix for undertow-core v2.0.23
 * Updated Mesh-Node to v0.9.10 to include new core-tools v2.2.2 and thus javaspark v2.9.1
 * Updated browser extension to v0.6.2 to exclude localhost, local domains and SEPIA path from showing navbar
