@@ -1,5 +1,91 @@
 ## Release history and changelog
 
+### v2.3.0 - 2019.09.xx
+
+Updated client to v0.19.0:
+* Partially reworked and greatly improved messenger features and UI to support channel create, join, invite (via URL), missed messages, history and more
+* Added option to change login password from settings menu (via old password)
+* Improved messaging between devices with same login but different device-ID
+* Improved handling of SEPIA universal links when posted inside SEPIA chat channels
+* Improved UX and security when interacting with SEPIA in group chats (public SEPIA messages will not automatically execute actions or play music anymore)
+* Keep keyboard open in mobile apps when 'send'-button is pressed
+* Forget last command after 60s (to prevent 'I just told you' kind of SEPIA comments after long idle time)
+* Automatically select user-preferred color scheme (read from OS) and set light or dark skin when no skin was selected before
+* Optimized 'switch-language' action 
+* Renamed 'saythis' button to 'broadcast'
+* New 'updateData' message-event handler to support arbitrary data exchange with chat-server via WebSocket connection
+* Fixed a rare crash due to outdated splash-screen plugin in Android
+* Improved data store/load script to reduce number of writes
+* Added onChatOutputHandler for views like AO-Mode (e.g. see SEPIA answer as text in AO)
+* Added pause/resume client control for audio players and tweaked YouTube music to properly pause audio when STT is activated
+* Added support for new input command 'i18n:XY' to dynamically set input language (e.g. 'i18n:de Guten Tag' will trigger the German 'Hello' even when app language is english)
+* New share-menu activated by a long-press on the sender name in a chat message
+* Made BLE Beacon remote URL more flexible
+* Improved auto-scaling below 300px window width and tweaked tiny-mode
+* New launcher.html page to configure launch-options and automatically redirect (handy for app in browser kiosk-mode)
+* Reactivated 'application/ld+json' tag in index.html
+* Set Android target SDK to 28 (Android 9.0) and improved support including new 'network security config'
+* Minor UI, bug and style fixes
+  
+Updated Control-HUB (admin-tools) to v1.2.1:
+* Core-settings page now allows to write assist-server settings (key-value pairs) directly to config file and reload server remotely. This e.g. allows to quickly add API keys etc.
+* Smart-home page now allows to load smart-home HUB info data from server (via improved server-config endpoint)
+* Added 'delete user' function and button to user-management page
+* Fixed channel create function to support new chat-server version
+* Get channel history statistics and force database clean-up from chat-settings page
+* Style tweaks and more info texts
+* Added correct version number to help-page
+  
+Updated Assist-server to v2.3.0:
+* Introduced new SmartHomeHub interface and config settings to make integration of hubs like ioBroker, FHEM and HomeAssistant easier
+* Adjusted openHAB integration to use new SmartHomeHub interface
+* Updated radio-stations and news-outlets lists
+* Fixed OpenLigaWorker and service to support new season of German Bundesliga
+* Added background tasks and task-manager support (schedule, check, cancel, etc.) to services (via 'ServiceBuilder.runOnceInBackground') and improved data-storage for services (e.g. via 'ServiceBuilder.readServiceDataForUser')
+* Improved and enabled (previously dormant) NLU-parameter 'Language' and tweaked dictionary service
+* Added 'LanguageSwitcher' service to support commands like "switch language to German"
+* Improved smart home device intent (NLU) to recognize devices more generally (e.g. "status of my XY 1" -> device=XY 1)
+* Improved 'no_result' answer when using 'sentence_connect' command (e.g. via Teach-UI) and tweaked internal service redirect
+* Tweaked 'reminders' NLU ("remind me to/remember ...")
+* Added inputModifiers to InterpretatonChain and implemented new i18n-modifier to be able to switch input language on-the-fly (e.g to share SEPIA links independent of user language)
+* Added meta data to OPEN_LINK command to better handle 'linkshare' (note: 'linkshare' is a special chat input cmd, e.g. type: "linkshare https://twitter.com/sepia_fw")
+* Improved 'AuthEndpoint' to support password change via old password (or superuser) and tweaked 'delete' user procedure
+* Improved 'ConfigServer' endpoint to support editing server settings file (assist.xy.properties) directly, e.g. via SEPIA Control-HUB
+* Implemented server restart method and added endpoint option to 'ConfigServer' (it will try to shutdown client and workers as clean as possible and reload settings)
+* Fixed code in GeoCoding and Weather API to make them more stable
+* Adjustments in SEPIA WebSocket client to support chat-server update (including device-ID message routing)
+* Updated and added new Elasticsearch database mappings for chat (channels, users, messages) and added test-method to server start that will add missing ES indices automatically
+  
+Updated WebSocket Chat-Server to v1.2.0:
+* Re-organized and improved code, e.g. to get better access to all the message handlers (create channel, join, auth, etc.)
+* New and improved methods/handlers/endpoints for channel create, join, delete
+* New database interfaces and implementations (Elasticsearch) for channel-data (store/load created channels), channel-users (store/load missed events) and channel messages (store/load channel history)
+* New settings in config file for database modules (in-memory and Elasticsearch) and options like 'store_messages_per_channel' or 'max_channels_per_user' etc.
+* Automatic clean-up in background of old messages (e.g. when 'store_messages_per_channel' threshold is reached), see config option 'channel_clean_up_schedule_delay'
+* Broadcast 'missed message' event to online users when in different channel and store events for offline users to inform them later on login
+* Improved message routing by including sender and receiver device-IDs (especially useful when multiple devices run on same account, e.g. smart-speaker in living-room and kitchen etc.)
+* Improved handling of channel-ID in combination with channel-name
+* New 'updateData' message-event handler to support arbitrary data exchange with clients via WebSocket connection
+* Added server-ID to each socket-message (in case we expand the cluster later)
+* New endpoints 'getAvailableChannels', 'getChannelHistoryStatistic' and 'removeOutdatedChannelMessages'
+  
+Updated Core-tools to v2.2.2:
+* Added run-single-task and schedule-task methods to 'ThreadManager'
+* Added range-match to 'EsQueryBuilder' (e.g. to find all entries older than xy-timestamp)
+* Created 'LruCache' class (last-recently-used cache)
+* Updated javaspark up to v2.9.1
+* Updated fasterxml.jackson.core to 2.9.9.2
+  
+All servers:
+* 'localName' of server is now also used as server-ID and device-ID if one is required (e.g. for load-balancing of cluster or broadcasting info to chat channels)
+  
+Other tools:
+* Added code for [Microbit BLE Beacon remote](sepia-microbit-projects)
+* Updated Teach-Server to v2.0.3 to include new core-tools v2.2.2 and thus javaspark v2.9.1 (no other code changes)
+* Updated reverse-proxy to v0.3.2 to include security fix for undertow-core v2.0.23
+* Updated Mesh-Node to v0.9.10 to include new core-tools v2.2.2 and thus javaspark v2.9.1
+* Updated browser extension to v0.6.2 to exclude localhost, local domains and SEPIA path from showing navbar
+
 ### v2.2.2 - 2019.05.31
 
 Updated client to v0.18.0:
