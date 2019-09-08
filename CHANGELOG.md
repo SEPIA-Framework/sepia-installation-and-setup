@@ -1,6 +1,6 @@
 ## Release history and changelog
 
-### v2.3.0 - 2019.09.xx
+### v2.3.0 - 2019.09.08
 
 Updated client to v0.19.0:
 * Partially reworked and greatly improved messenger features and UI to support channel create, join, invite (via URL), missed messages, history and more
