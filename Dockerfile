@@ -3,9 +3,15 @@ FROM debian:stretch-slim
 # Default to UTF-8 file.encoding
 ENV LANG C.UTF-8
 
-# Get all packages, install Java OpenJDK 8 and create a user
+# Get all packages, install Java OpenJDK 11 and create a user
 
-RUN apt-get update && \
+RUN echo 'Installing SEPIA-Home...' && \
+#
+#	Add Debian backports
+	echo 'deb http://ftp.debian.org/debian stretch-backports main' | tee /etc/apt/sources.list.d/stretch-backports.list &&\
+#
+#	Update packages
+	apt-get update && \
 #
 #	Fix for Debian9 slim to be able to install Java
 	mkdir -p /usr/share/man/man1 &&\
@@ -13,7 +19,7 @@ RUN apt-get update && \
 #	Get packages
 	apt-get install -y --no-install-recommends \
         git wget curl nano unzip zip procps \
-		openjdk-8-jdk-headless ca-certificates-java maven && \
+		openjdk-11-jdk-headless ca-certificates-java maven && \
 #
 #   Clean up
     apt-get clean && apt-get autoclean && apt-get autoremove -y && \
@@ -24,7 +30,7 @@ RUN apt-get update && \
 
 # Set JAVA_HOME path ... just in case
 
-ENV JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
+ENV JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
 ENV PATH="${JAVA_HOME}:${PATH}"
 
 # Build SEPIA-Home (custom-bundle, single-server, SBC version)
@@ -72,7 +78,15 @@ RUN echo "Building SEPIA-Home (custom bundle) ..." && \
 	find . -iname "*.sh" -exec chmod +x {} \; && \
 	rm -r ~/SEPIA/tmp
 	# we could also remove maven here and maybe some other packages
+#
+#	Setup SEPIA
+#	NOTE: This has to be done (e.g. by sharing external config folder) before server can run without error
+#	e.g.: 
+#	0 - Create shared folder:				export SEPIA_SHARE=/home/[my-user]/sepia-share && mkdir -p $SEPIA_SHARE
+#	1 - Copy SEPIA folder from container:	sudo docker run --rm --name=sepia_home -p 20726:20726 -it -v $SEPIA_SHARE:/home/admin/sepia-backup sepia/home:test cp -r /home/admin/SEPIA /home/admin/sepia-backup
+#	2 - Run setup with shared folder:		sudo docker run --rm --name=sepia_home -p 20726:20726 -it -v $SEPIA_SHARE/SEPIA:/home/admin/SEPIA sepia/home:test bash setup.sh
+#	3 - Run server:							sudo docker run --rm --name=sepia_home -p 20726:20726 -d -v $SEPIA_SHARE/SEPIA:/home/admin/SEPIA sepia/home:test
 
 # Start
 WORKDIR /home/admin/SEPIA
-CMD bash run-sepia.sh && cat
+CMD bash on-docker.sh
