@@ -1,5 +1,65 @@
 ## Release history and changelog
 
+### v2.3.1 - 2019.10.14
+
+Updated client to v0.19.1:
+* Custom-buttons (defined via Teach-UI) work properly now in group-chats
+* Show a colored bell in AO mode to indicate 'you have a message in another channel'
+* Fixed some bugs related to channel-history feature, e.g. a few seconds scrolling-lock and missing/wrong day tags in chat
+* Improved audio-events tracking and handling in connection to 'hey SEPIA' wake-word
+* Added option to allow/prevent wake-word while music is playing (default: prevent, to avoid audio artifacts in some mobile clients)
+* Improved audio recorder performance and stability and fixed dynamic downsampling
+* Fixed some issues with YouTube player (sometimes 'pause music' wasn't working)
+* Added 'env' URL parameter to be able to set custom value for 'environment' variable (client info sent to server)
+* Fixed deprecated code in iOS audio processing to make build process work again (iOS 12.4, Swift 5 - native ASR still broken, but restored open-source ASR support)
+* Improved some error messages after failed login
+* Prevent multiple queued follow-up messages of same 'type' (only one will show)
+* Prevent chat names that look like user IDs to prevent accidental private messages to wrong receiver
+* Prevent auto-scrolling of chat when hidden channel-status message was added
+* Updated jquery to 3.4.1
+* Added library for voice-activity-detection (VAD, though it is not used yet)
+  
+Updated Control-HUB (admin-tools) to v1.2.2:
+* Updated smart home settings with new device and room options
+* Implemented remote-action on 'assistant' page
+* Added info message for new temporary 'login blocked' feature and fixed a bug with 'new login'
+* Updated jquery to 3.4.1
+  
+Updated Assist-server to v2.3.1:
+* Made NLU interpretation-chain configurable via properties file entry 'nlu_interpretation_chain'
+* Introduced 'getWebApiResult' as new interpretation-step to easily integrate different NLU servers (example chain entry for SEPIA Python bridge: `getPersonalCommand, WEB:http://127.0.0.1:20731/nlu/get_nlu_result, ...`)
+* Introduced abstract class 'WebApiParameter' to easily integrate custom parameter handlers that use different NLU servers
+* Improved JSON import/export methods for 'NluInput', 'NluResult' and 'User' classes and added optional 'custom_data' fields to better serve new web API NLU options
+* Introduced 'addCustomTriggerSentence' variations in 'ServiceInfo' to support predefined parameters (raw, normalized or extracted)
+* Introduced optional input tags '<i_raw>', '<i_norm>' and '<i_ext>' to 'Interview' module to control how a predefined parameter should be handled
+* Updated 'SmartDevice' and 'Room' parameters with new types (tv, fridge, oven, office, ...)
+* Updated news outlets with 'Hackaday' RSS feed
+* NLU tweaks ("pause music", "switch to german", ...)
+* Fixed and improved 'remote-action' endpoint
+* Added security feature to natively protect selected accounts from brute-force attacks by blocking login temporarily after too many failed attempts. Add accounts via properties file entry 'protected_accounts_list'
+* Added option to deactivate security policy and sandbox via cmd arguments 'nosecuritypolicy' and 'nosandbox'
+* Code clean-ups
+  
+Updated WebSocket Chat-Server to v1.2.1:
+* Fixed and improved 'remote-action' handler
+* Fixed a bug in sorting of channel history by timestamp
+  
+Updated Core-tools to v2.2.3:
+* Redesigned ENVIRONMENTS class to better reflect possible client types
+* Added method to get parameters from command-summary string
+* Code tweaks
+  
+Updated SDK to v0.9.12:
+* Support new SEPIA-Home release v2.3.1
+* Added 'PythonBridgeDemo' service to demonstrate SEPIA Python bridge and new NLU web-API options
+* Updated 'WorkoutHelperDemo' to demonstrate new options for 'addCustomTriggerSentence' with predefined parameters
+* Updated readme to emphasize JDK dependency
+* Updated FasterXML/jackson core to 2.9.10 to include latest security fix 
+  
+Other tools:
+* Updated Teach-Server to v2.0.4 to include core-tools v2.2.3 and fixed version number
+* Updated Mesh-Node to v0.9.11 to include new core-tools v2.2.3 and fixed version number
+  
 ### v2.3.0 - 2019.09.08
 
 Updated client to v0.19.0:
