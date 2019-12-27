@@ -1,5 +1,75 @@
 ## Release history and changelog
 
+### v2.4.0 - 2019.12.XX
+
+Updated client to v0.20.0:
+* Integrated SEPIA Control HUB into settings frontpage of app (will show when user has certain role, e.g. 'tinkerer' or 'smarthomeadmin')
+* New setting for preferred temperature unit (Celsius/Fahrenheit) that can be accessed in services via user account or device settings
+* Added new page for 'device local site' to set a specific location for the client like 'home:living-room' that can be read by any smart service on the server
+* Load up to 16 custom command buttons to my-view by default (up from 10)
+* Load services config of Teach-UI from new teach-server endpoint
+* Added a help button for extended login box that redirects to SEPIA docs
+* Auto-assign a 'dark-skin' or 'light-skin' class when selecting a skin to better handle certain CSS rules
+* Basic post-message interface for apps that run inside IFrames (to be extended soon)
+* Tweaked TTS voice selection indicator depending on platform
+* Added 'env' parameter to launcher page
+  
+Updated Control-HUB (admin-tools) to v1.3.0:
+* Added post-message interface to load tools in IFrame and login user (used for example in client app to show Control HUB and auto-login user)
+* Smart home: Uses new 'integrations' endpoint of assist-server to communicate with HUBs instead of calling them from client (in addition: HUB host URLs must match server setting now to prevent unsafe HTTP calls)
+* Smart home: Completely reworked device cards and interface (new options, hide/filter devices, auto-refresh, test button, etc. ...) and added Test-HUB for experiments
+* Smart home: Support for a total of 11 device types (lights, shutters, thermostats, etc.) and 14 room types (bath, office, living-room, etc.)
+* Smart home: Allow device names with numbers in brackets that will be skipped in assistant answers, e.g. name='Bed Light (2)' -> answer: 'your Bed Light is set to ...'
+* Smart home: Added extended device settings for experts to fine-adjust state type and set commands
+* Assistant testing: Added two new buttons to call 'understand' and 'interview' server endpoints
+* STT: Added test button to extract personal commands as (anonymous) training data for language models
+  
+Updated Assist-server to v2.4.0:
+* Added new server endpoints 'understand' (improved version of 'interpret') and 'interview' (shows either intent summary or indicates missing info including question)
+* Completely reworked 'SmartHomeHub' interface to improve HUB communication and make it easier to integrate new HUBs (register methods, generalized set values, more sepia-xy tags, common search and filter methods, etc. ...)
+* Added FHEM smart home HUB support (config name 'fhem') and a Test-HUB for experimenting (config name 'test')
+* Improved 'SmartHomeHubConnector' service and whole smart home methods + NLU to handle a total of 11 device types (lights, shutters, thermostats, etc.) and 14 room types (bath, office, living-room, etc.)
+* Added NLU support for device number and room number (e.g.: "set light 2 in bath 2 to 70%") and changed 'SmartDeviceValue' result type from 'Number' to own format
+* Added optional reply parameter to smart home service
+* Added settings for smart home HUB basic authentication ('smarthome_hub_auth_type', e.g. 'Basic' and 'smarthome_hub_auth_data', e.g. base64 encoded 'username:password')
+* New server endpoint for integrations ('integrations/*/*') and first implementation for direct smart home HUB communication (send commands to HUBs like FHEM directly without using the NLU + smart service)
+* Questions inside a service can now use wildcards to access previously defined parameters from 'resultInfo' (example dialog: User: "Set light" - Sepia: "Set <1> to what?")
+* Added new 'unit_pref_temp' (temperature unit) property to user account
+* Services have access to new 'device local site' and 'user preferred temperature unit' (both used in smart home service for example)
+* Added temperature convert method (C <-> F) to Number parameter and automatically convert between units in smart home service (depending on user pref. and device state type)
+* Added 'ServiceRequirements' class and 'getRequirements' to 'ServiceInterface' to better handle SEPIA version conflicts in the future
+* New server endpoint ('web-content-index/[web-server-folder]') and settings (see example folders in 'Xtensions/WebContent/') to generate directory listings of web-server content
+* Added 'Size Radio' channel and fixed 'EgoFM' streams
+* Support for Elasticsearch Authorization via 'db_elastic_auth_type/data' setting
+* Tweaked 'getConfig' server endpoint to show even less sensitive data from properties file (passwords and keys show as 'HIDDEN')
+* Added device-ID to Elasticsearch mapping for personal commands
+* Several code clean-ups, improvements, NLU tweaks and bug fixes
+  
+Updated WebSocket Chat-Server to v1.2.2:
+* Added Eclipse Paho MQTT client and SEPIA classes (SepiaMqttClient, SepiaMqttClientOptions, SepiaMqttMessage)
+* Support for Elasticsearch Authorization via 'db_elastic_auth_type/data' setting
+  
+Updated Teach-Server to v2.1.0:
+* Support for Elasticsearch Authorization via 'db_elastic_auth_type/data' setting
+* New endpoint 'getTeachUiServices' and services file (Xtensions/TeachUi/services/common.json) to be able to load Teach-UI configuration from server
+* Added command 'smartdevice' to Teach-UI config with examples
+* New endpoint 'getAllCustomSentencesAsTrainingData' to be able to extract data for speech recognition language model
+* Optionally add device-ID to custom commands for future 'per-device' command selection
+  
+Updated Core-tools to v2.2.4:
+* New user role 'smarthomeadmin' (user that has access to smart home HUB config) and 'tinkerer' (a user that likes to see more detailed configuration options ^_^)
+* New CoreEndpoints method 'getWebContentIndex' to index web-server folder and build interactive file list
+* Updated Connectors with more control of headers and added 'headers' map to 'HttpClientResult' for 'apacheHttpGET' method to get direct access to result headers
+* Added support for 'Authorization' header to Elasticsearch class via 'auth_type' and 'auth_data' settings
+* New method 'readFileModifyAndCache' in FileAndStreams class to read a file line-by-line, optionally modify each line and keep result in cache (handy for settings files etc.)
+* New decimal format number converters 'stringToNumber' and 'numberToString' to read numbers and get a number string in specific format more easily (uses new common default decimal format)
+* Added deviceId as field to Command and SentenceBuilder classes
+* Added 'getKeys' and better 'prettyPrint' to JSON class
+* New 'Is.typeEqual' and 'Is.typeEqualIgnoreCase' methods
+* Added 'modifyThread' permission to SandboxSecurityPolicy to avoid errors with Paho MQTT client
+* Tweaked 'httpSuccess' method in Connectors to optionally give cleaner result
+* Updated fasterxml.jackson.core (again!) to apply latest security fix
+  
 ### v2.3.1 - 2019.10.14
 
 Updated client to v0.19.1:
