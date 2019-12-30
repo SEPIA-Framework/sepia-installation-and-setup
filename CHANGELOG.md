@@ -1,6 +1,6 @@
 ## Release history and changelog
 
-### v2.4.0 - 2019.12.XX
+### v2.4.0 - 2019.12.30
 
 Updated client to v0.20.0:
 * Integrated SEPIA Control HUB into settings frontpage of app (will show when user has certain role, e.g. 'tinkerer' or 'smarthomeadmin')
