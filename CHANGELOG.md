@@ -22,6 +22,7 @@ Updated Control-HUB (admin-tools) to v1.3.0:
 * Smart home: Allow device names with numbers in brackets that will be skipped in assistant answers, e.g. name='Bed Light (2)' -> answer: 'your Bed Light is set to ...'
 * Smart home: Added extended device settings for experts to fine-adjust state type and set commands
 * Assistant testing: Added two new buttons to call 'understand' and 'interview' server endpoints
+* Core settings: Show persistant settings as editable list
 * STT: Added test button to extract personal commands as (anonymous) training data for language models
   
 Updated Assist-server to v2.4.0:
@@ -69,6 +70,10 @@ Updated Core-tools to v2.2.4:
 * Added 'modifyThread' permission to SandboxSecurityPolicy to avoid errors with Paho MQTT client
 * Tweaked 'httpSuccess' method in Connectors to optionally give cleaner result
 * Updated fasterxml.jackson.core (again!) to apply latest security fix
+  
+Other tools:
+* Updated SDK to v0.9.20 to support new SEPIA-Home release and added 'MqttDemo' service to demonstrate how to publish service results to a MQTT broker
+* Updated Mesh-Node to v0.9.12 to include new core-tools v2.2.4
   
 ### v2.3.1 - 2019.10.14
 
