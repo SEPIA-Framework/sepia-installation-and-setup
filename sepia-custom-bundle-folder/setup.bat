@@ -1,5 +1,13 @@
 @echo off
 setlocal enabledelayedexpansion
+SET thispath=%~dp0
+IF EXIST "java\version" (
+	set /p javalocal=<java\version
+	echo Found local Java version: !javalocal!
+	echo.
+	SET JAVA_HOME=!thispath!java\!javalocal!
+	SET PATH=!JAVA_HOME!\bin;!PATH!
+)
 cd sepia-assist-server
 FOR /F "delims=|" %%I IN ('DIR "sepia-assist-*.jar" /B /O:D') DO SET JAR_NAME=%%I
 FOR /F "delims=|" %%I IN ('DIR "sepia-core-tools-*.jar" /B /O:D') DO SET TOOLS_JAR=%%I

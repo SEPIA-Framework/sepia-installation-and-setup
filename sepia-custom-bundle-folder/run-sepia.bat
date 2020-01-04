@@ -1,4 +1,14 @@
 @echo off
+set thispath=%~dp0
+SETLOCAL EnableDelayedExpansion
+IF EXIST "java\version" (
+	set /p javalocal=<java\version
+	echo Found local Java version: !javalocal!
+	echo.
+	set JAVA_HOME=!thispath!java\!javalocal!
+	set PATH=!JAVA_HOME!\bin;!PATH!
+)
+SETLOCAL DisableDelayedExpansion
 echo # Checking Elasticsearch access...
 cd sepia-assist-server
 FOR /F "delims=|" %%I IN ('DIR "sepia-core-tools-*.jar" /B /O:D') DO SET TOOLS_JAR=%%I
