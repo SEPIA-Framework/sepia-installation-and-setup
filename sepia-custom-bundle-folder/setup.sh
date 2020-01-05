@@ -4,6 +4,14 @@
 find . -name "*.sh" -exec chmod +x {} \;
 chmod +x elasticsearch/bin/elasticsearch
 #
+# set local Java path
+if [ -f "java/version" ]; then
+    new_java_home=$(cat java/version)
+    export JAVA_HOME=$(pwd)/java/$new_java_home
+    export PATH=$JAVA_HOME/bin:$PATH
+	echo "Found local Java version: $JAVA_HOME"
+fi
+#
 # get name of main server JAR file (latest version)
 cd sepia-assist-server
 JAR_NAME=$(ls | grep "^sepia-assist.*jar" | tail -n 1)
