@@ -26,8 +26,9 @@ If you are using Raspian for Raspberry Pi check out the more detailed [guide](ht
 * If your browser is not on the same machine replace 'localhost' (similar to the previous step) in the hostname field during login with the IP of your server (e.g. localhost -> 192.168.0.10).
 * For testing purposes (only!) you can use the admin-acount to log-in, by default the ID is "admin@sepia.localhost" or "uid1003" (don't use the "assistant" account). The password has been set during setup.
   
-NOTE: Using the web-app via "localhost" will (depending on the browser) limit the functionality of some features like the speech-recognition, geo-location and notifications due to security reasons (browser restriction, requires HTTPS to work).
-See "Secure server" below for further instructions on how to setup your own HTTPS web-server.
+NOTE: Using the web-app via "localhost" or local network IPs will (depending on the browser) limit the functionality of some features like the speech-recognition, geo-location and notifications due to security reasons (browser restriction, requires HTTPS to work).
+See "Secure server" below for further instructions on how to set up your own HTTPS web-server, BUT if you are just using your own local servers there is another solution that will work fine. You can add exceptions 
+to your browser as well :-) see [this guide](https://github.com/SEPIA-Framework/sepia-docs/wiki/Set-up-web-browser-to-treat-your-local-IP-as-secure-origin).
 
 ## Next steps
 
