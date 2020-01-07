@@ -7,4 +7,4 @@ You can download an installer as well but for our local version choose a ZIP or 
   
 NOTE: During start SEPIA will search the folder defined in `[SEPIA]/java/version` for a valid JAVA version!
   
-TODO: Add download scripts and implement local version check in setup/start/... for Linux and Mac
+TODO: Add download scripts and implement local version check in setup/start/test/... for Mac
