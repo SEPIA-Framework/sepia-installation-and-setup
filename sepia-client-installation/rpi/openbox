@@ -33,4 +33,4 @@ fi
 # with display:
 #chromium-browser --user-data-dir=$chromedatadir --alsa-output-device=default --allow-insecure-localhost --autoplay-policy=no-user-gesture-required --disable-infobars --enable-features=OverlayScrollbar --hide-scrollbars --kiosk 'http://localhost:8080/sepia/index.html?isApp=true&isHeadless=true'
 # headless:
-xvfb-run chromium-browser --user-data-dir=$chromedatadir --alsa-output-device=default --allow-insecure-localhost --autoplay-policy=no-user-gesture-required --disable-infobars --enable-features=OverlayScrollbar --hide-scrollbars --kiosk 'http://localhost:8080/sepia/index.html?isApp=true&isHeadless=true'
+xvfb-run chromium-browser --disable-features=VizDisplayCompositor --user-data-dir=$chromedatadir --alsa-output-device=default --allow-insecure-localhost --autoplay-policy=no-user-gesture-required --disable-infobars --enable-features=OverlayScrollbar --hide-scrollbars --kiosk 'http://localhost:8080/sepia/index.html?isApp=true&isHeadless=true'
