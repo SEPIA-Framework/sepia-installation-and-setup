@@ -1,0 +1,14 @@
+{
+	"hostname": "localhost",
+	"id": "clexi-123",
+	"port": 8080,
+	"ssl": false,
+	"logger": {
+		"level": "error"
+	},
+	"xtensions": [
+		"clexi-broadcaster",
+		"clexi-http-events",
+		"ble-beacon-scanner"
+	]
+}

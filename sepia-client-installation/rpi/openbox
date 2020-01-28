@@ -1,0 +1,36 @@
+# Disable any form of screen saver / screen blanking / power management
+xset s off
+xset s noblank
+xset -dpms
+
+# Allow quitting the X server with CTRL-ATL-Backspace
+setxkbmap -option terminate:ctrl_alt_bksp
+
+# Notify user
+headphone_count=$(amixer scontrols | grep "Headphone" | wc -l)
+if [ $headphone_count -gt 0 ];
+then
+    amixer sset 'Headphone' 80%
+fi
+espeak-ng "Hello friend! I'll be right there, just a second."
+
+# Start CLEXI
+cd ~/clexi
+pkill -f "clexi-server.js"
+sleep 2
+nohup node --title=clexi-server.js server.js &> log.out&
+sleep 2
+
+# Start Chromium in kiosk mode
+chromedatadir=~/sepia/chromium
+if [ -f "$chromedatadir/Default/Preferences" ]; then
+    sed -i 's/"exited_cleanly":false/"exited_cleanly":true/' $chromedatadir/'Local State'
+    sed -i 's/"exited_cleanly":false/"exited_cleanly":true/; s/"exit_type":"[^"]\+"/"exit_type":"Normal"/' $chromedatadir/Default/Preferences
+    sed -i 's/"notifications":{}/"notifications":{"http:\/\/localhost:8080,*":{"last_modified":"13224291659276737","setting":1}}/' $chromedatadir/Default/Preferences
+    sed -i 's/"geolocation":{}/"geolocation":{"http:\/\/localhost:8080,http:\/\/localhost:8080":{"last_modified":"13224291716729005","setting":1}}/' $chromedatadir/Default/Preferences
+    sed -i 's/"media_stream_mic":{}/"media_stream_mic":{"http:\/\/localhost:8080,*":{"last_modified":"13224291643099497","setting":1}}/' $chromedatadir/Default/Preferences
+fi
+# with display:
+#chromium-browser --user-data-dir=$chromedatadir --alsa-output-device=default --allow-insecure-localhost --autoplay-policy=no-user-gesture-required --disable-infobars --enable-features=OverlayScrollbar --hide-scrollbars --kiosk 'http://localhost:8080/sepia/index.html?isApp=true&isHeadless=true'
+# headless:
+xvfb-run chromium-browser --user-data-dir=$chromedatadir --alsa-output-device=default --allow-insecure-localhost --autoplay-policy=no-user-gesture-required --disable-infobars --enable-features=OverlayScrollbar --hide-scrollbars --kiosk 'http://localhost:8080/sepia/index.html?isApp=true&isHeadless=true'
