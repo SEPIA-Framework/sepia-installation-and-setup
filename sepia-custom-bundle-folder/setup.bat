@@ -30,6 +30,8 @@ echo 1: Setup all components (except dynamic DNS). Note: requires step 4.
 echo 2: Define new admin and assistant passwords
 echo 3: Setup dynamic DNS with DuckDNS
 echo 4: Start Elasticsearch
+echo 5: Install TTS engine and voices
+echo 6: Install Java locally in SEPIA folder
 echo. 
 set /p option="Enter a number plz (0 to exit): "
 echo. 
@@ -65,6 +67,18 @@ if "%option%" == "4" (
 	cd sepia-assist-server
 	REM timeout 12
 	java -Dfile.encoding=utf-8 -jar %TOOLS_JAR% connection-check httpGetJson -url=http://localhost:20724 -maxTries=25 -waitBetween=2000
+	goto enteroption
+)
+if "%option%" == "5" (
+	echo Please check the README file located in the folder 'sepia-assist-server\Xtensions\TTS\espeak-ng\'. Basically you need to install espeak-ng and copy the files from 'programs' to 'Xtensions\TTS\espeak-ng\'.
+	echo.
+	pause
+	goto enteroption
+)
+if "%option%" == "6" (
+	echo Please go to the folder 'java' and run the script for your specific platform. Afterwards restart this setup and check if local Java is indicated at start.
+	echo.
+	pause
 	goto enteroption
 )
 :nooption

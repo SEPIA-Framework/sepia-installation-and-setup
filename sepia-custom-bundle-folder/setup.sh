@@ -69,6 +69,8 @@ while true; do
 	echo "4: Start Elasticsearch"
 	echo "5: Set hostname of this machine to 'sepia-home' (works e.g. for Debian/Raspian Linux)"
 	echo "6: Suggest cronjobs for server (open cronjobs manually with 'crontab -e' and copy/paste lines)"
+	echo "7: Install TTS engine and voices"
+	echo "8: Install Java locally in SEPIA folder"
 	echo ""
 	if [ -z "$option" ]; then
 		read -p "Enter a number plz (0 to exit): " option
@@ -124,6 +126,23 @@ while true; do
 		echo ""
 		echo '@reboot sleep 60 && ~/SEPIA/on-reboot.sh;'
 		echo '30 4 1-31/2 * * ~/SEPIA/cronjob.sh;'
+	elif [ $option = "7" ] 
+	then
+		echo "Installing TTS engine and voices:"
+		mkdir -p tmp/deb
+		cd tmp/deb
+		sudo apt-get install -y espeak-ng espeak-ng-espeak
+		sudo apt-get install -y --no-install-recommends flite-dev flite libttspico-data
+		wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_armhf.deb
+		wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_armhf.deb
+		# apt-get install -f ./libttspico0_1.0+git20130326-9_armhf.deb ./libttspico-utils_1.0+git20130326-9_armhf.deb
+		sudo dpkg -i libttspico0_1.0+git20130326-9_armhf.deb
+		sudo dpkg -i libttspico-utils_1.0+git20130326-9_armhf.deb
+		cd ../..
+		rm -rf tmp
+	elif [ $option = "8" ] 
+	then
+		echo "Please go to the folder 'java' and run the script for your specific platform. Afterwards restart this setup and check if local Java is indicated at start."
 	else
 		echo "Not an option, please try again."
 	fi

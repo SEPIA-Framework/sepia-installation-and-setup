@@ -2,8 +2,10 @@
 echo ""
 echo "Welcome to nginx setup for SEPIA"
 echo "What would you like to do?"
-echo "1: Setup nginx without SSL certificate (for testing)"
+echo "0: Install nginx"
+echo "1: Setup nginx without SSL certificate (for testing or local networks)"
 echo "2: Setup nginx with Let's Encrypt SSL certificate (requires successful SEPIA SSL setup)"
+echo "3: Clean up and remove ALL old SEPIA configs from nginx (use this before switching from HTTP to HTTPS or vice versa)"
 echo ""
 read -p 'Enter a number plz (CTRL+C to exit): ' option
 echo ""
@@ -11,7 +13,11 @@ echo ""
 # The SEPIA folder
 SEPIA_FOLDER=~/SEPIA
 
-if [ $option = "1" ]
+if [ $option = "0" ]
+then
+	sudo apt-get install -y nginx
+	echo "DONE."
+elif [ $option = "1" ]
 then
 	echo "Copying $SEPIA_FOLDER/nginx/sites-available/sepia-fw-http.conf to /etc/nginx/sites-enabled/ ..."
 	cd $SEPIA_FOLDER/nginx/sites-available
@@ -22,7 +28,8 @@ then
 	
 	echo ""
 	ip=$(ifconfig eth0 | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
-	echo "You should be able to reach the server now at e.g.: http://$ip:9090"
+	echo "You should be able to reach the server now at e.g.: http://$ip:20726"
+	echo "In your SEPIA client you can use the host name: http://$ip:20726/sepia or http://$(hostname).local:20726/sepia"
 	
 	echo "DONE."
 elif [ $option = "2" ] 
@@ -65,6 +72,9 @@ then
 	else
 		echo "Setup aborted. EXIT."
 	fi
+elif [ $option = "3" ] 
+then
+	sudo rm -f /etc/nginx/sites-enabled/sepia-fw-*
 else
 	echo "Not an option, please start again."
 fi
