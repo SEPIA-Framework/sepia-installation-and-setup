@@ -1,6 +1,6 @@
 # SEPIA Client Installation
 
-## Raspberry Pi - Raspian Buster - USB Mic
+## Raspberry Pi - Raspian Buster - USB Mic - Speakers via audio jack
 
 ### Install Raspbian Buster Lite
 
@@ -25,12 +25,12 @@ network={
 * connect via SSH with RPi
 * if required finish your RPi setup with `sudo raspi-config` (for headless client set up auto-login after boot later)
 * create installation folder `mkdir -p ~/install` and switch to directory `cd ~/install`
-* wget ...
-* unzip ...
-* bash ...
-* TBD
+* wget https://github.com/SEPIA-Framework/sepia-installation-and-setup/raw/dev/sepia-client-installation/sepia_client_rpi_raspbian_buster.zip (TODO: REPLACE WITH MASTER)
+* unzip sepia_client_rpi_raspbian_buster.zip
+* bash install_sepia_client.sh
+* TBD ...
 
-## Raspberry Pi - Raspian Buster - ReSpeaker 2 Mic HAT
+## Raspberry Pi - Raspian Buster - ReSpeaker 2 Mic HAT - Speakers via ReSpeaker audio jack
 
 Identical to USB Mic version just run the ReSpeaker installation first:
 * wget ...
