@@ -5,21 +5,24 @@ get_latest_release() {
 		grep '"tag_name":' |                                          # Get tag line
 		sed -E 's/.*"([^"]+)".*/\1/'                                  # Pluck JSON value
 }
+SEPIA_VERSION=$(get_latest_release "SEPIA-Framework/sepia-installation-and-setup")
 
 echo ""
 echo "Welcome to the SEPIA-Framework!"
 echo ""
-echo "This little script will help you to setup your environment and download SEPIA-Home."
-echo "If you are using a fresh Raspbian (Stretch) installation please follow steps 1 to 4 and make sure they complete successfully."
+echo "This little script will help you to setup your environment and download SEPIA-Home (the server stack of SEPIA)."
+echo "If you are using a fresh Raspbian installation please follow steps 1 to 4 and make sure they complete successfully."
 echo "If you know what you are doing feel free to skip some steps as needed ;-)"
 echo "More help can be found here: https://github.com/SEPIA-Framework/sepia-docs/wiki"
+echo ""
+echo "Tested with: Raspian Buster (30-01-2020)"
 while true; do
 	echo ""
 	echo "Please choose next step:"
-	echo "1: Install Oracle Java 8 (or try 1b: Install OpenJDK 9)"
+	echo "1: Install Java OpenJDK 11 (alternative: download SEPIA-Home first and use local Java installation)"
 	echo "2: Install missing packages and update server-clock for precise timers"
-	echo "3: Download SEPIA-Home bundle"
-	echo "4: Extract SEPIA-Home to ~/SEPIA and set access to scripts"
+	echo "3: Download SEPIA-Home bundle (latest version: $SEPIA_VERSION)"
+	echo "4: Extract SEPIA-Home to ~/SEPIA (recommended home folder for SEPIA)"
 	echo "5: Optional: Install NGINX reverse-proxy (alternative to SEPIA Reverse-Proxy)"
 	echo ""
 	read -p "Enter a number plz (0 to exit): " option
@@ -29,35 +32,13 @@ while true; do
 		break
 	elif [ $option = "1" ]
 	then
-		# INSTALL ORACLE JAVA
-
-		#add digital key for PPA
-		echo 'Installing Oracle Java 8 ...'
-		sudo apt install dirmngr
-		sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys EEA14886
-		#to skip the license agreement: https://askubuntu.com/questions/190582/installing-java-automatically-with-silent-option
-
-		#add packets
-		sudo touch /etc/apt/sources.list.d/webupd8team-java.list
-		echo 'deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main' | sudo tee --append /etc/apt/sources.list.d/webupd8team-java.list
-		echo 'deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main' | sudo tee --append /etc/apt/sources.list.d/webupd8team-java.list
-
-		#install
+		# INSTALL JAVA OPENJDK 11
+		
 		sudo apt-get update
-		sudo apt-get install oracle-java8-installer
-		sudo apt-get install oracle-java8-set-default
+		sudo apt-get install -y openjdk-11-jdk-headless
 		echo 'Done'
 		java -version
 	
-	elif [ $option = "1b" ]
-	then
-		# INSTALL OPENJDK JAVA
-
-		sudo apt-get update
-		sudo apt-get install -y openjdk-9-jdk-headless
-		echo 'Done'
-		java -version
-
 	elif [ $option = "2" ] 
 	then
 		# INSTALL zip, unzip, curl, procps, ca-certificates
@@ -75,9 +56,9 @@ while true; do
 		#create tmp folder (usually done before getting this file)
 		mkdir -p ~/SEPIA/tmp
 		cd ~/SEPIA/tmp
-		SEPIA_VERSION=$(get_latest_release "SEPIA-Framework/sepia-installation-and-setup")
 		#curl --silent "https://api.github.com/repos/SEPIA-Framework/sepia-installation-and-setup/releases/latest" | jq -r '.assets[] | select(.name == "SEPIA-Home.zip").browser_download_url'
-		wget "https://github.com/SEPIA-Framework/sepia-installation-and-setup/releases/download/${SEPIA_VERSION}/SEPIA-Home.zip"
+		#wget "https://github.com/SEPIA-Framework/sepia-installation-and-setup/releases/download/${SEPIA_VERSION}/SEPIA-Home.zip"
+		wget "https://github.com/SEPIA-Framework/sepia-installation-and-setup/releases/latest/download/SEPIA-Home.zip"
 
 	elif [ $option = "4" ] 
 	then
