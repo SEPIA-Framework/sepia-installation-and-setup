@@ -1,12 +1,12 @@
 #!/bin/sh
-
+echo "Welcome! Checking latest SEPIA version number, just asecond ..."
 get_latest_release() {
 	curl --silent "https://api.github.com/repos/$1/releases/latest" | # Get latest release from GitHub api
 		grep '"tag_name":' |                                          # Get tag line
 		sed -E 's/.*"([^"]+)".*/\1/'                                  # Pluck JSON value
 }
 SEPIA_VERSION=$(get_latest_release "SEPIA-Framework/sepia-installation-and-setup")
-
+echo "Latest SEPIA-Home version is: $SEPIA_VERSION"
 echo ""
 echo "Welcome to the SEPIA-Framework!"
 echo ""
@@ -19,9 +19,9 @@ echo "Tested with: Raspian Buster (30-01-2020)"
 while true; do
 	echo ""
 	echo "Please choose next step:"
-	echo "1: Install Java OpenJDK 11 (alternative: download SEPIA-Home first and use local Java installation)"
-	echo "2: Install missing packages and update server-clock for precise timers"
-	echo "3: Download SEPIA-Home bundle (latest version: $SEPIA_VERSION)"
+	echo "1: Install Java OpenJDK 11 globally (alternative: download SEPIA-Home first and use local Java installation)"
+	echo "2: Install required packages and update server-clock for precise timers"
+	echo "3: Download SEPIA-Home bundle version: $SEPIA_VERSION"
 	echo "4: Extract SEPIA-Home to ~/SEPIA (recommended home folder for SEPIA)"
 	echo "5: Optional: Install NGINX reverse-proxy (alternative to SEPIA Reverse-Proxy)"
 	echo ""
@@ -42,7 +42,7 @@ while true; do
 	elif [ $option = "2" ] 
 	then
 		# INSTALL zip, unzip, curl, procps, ca-certificates
-		sudo apt-get install -y zip unzip curl procps ca-certificates
+		sudo apt-get install -y zip unzip curl procps ca-certificates espeak-ng espeak-ng-espeak
 		
 		# UPDATE TIME SYNC
 		echo 'Installing ntpdate to sync time ...'
