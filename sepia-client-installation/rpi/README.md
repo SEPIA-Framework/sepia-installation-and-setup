@@ -28,11 +28,13 @@ network={
 * wget https://github.com/SEPIA-Framework/sepia-installation-and-setup/raw/dev/sepia-client-installation/sepia_client_rpi_raspbian_buster.zip (TODO: REPLACE WITH MASTER)
 * unzip sepia_client_rpi_raspbian_buster.zip
 * bash install_sepia_client.sh
+* bash install_usb_mic.sh
 * TBD ...
 
 ## Raspberry Pi - Raspian Buster - ReSpeaker 2 Mic HAT - Speakers via ReSpeaker audio jack
 
-Identical to USB Mic version just run the ReSpeaker installation first:
+Identical to USB Mic version just run the ReSpeaker installation first and DON'T use 'install_usb_mic.sh':
 * wget ...
 * bash ...
+* bash update_respeaker_boot.sh
 * TBD
