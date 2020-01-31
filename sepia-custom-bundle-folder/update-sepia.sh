@@ -3,8 +3,18 @@ set -e
 ORG_FOLDER=$(pwd)
 NOW=$(date +"%Y_%m_%d_%H%M%S")
 OLD_FOLDER=SEPIA_old_$NOW
-echo "-- BETA VERSION, USE AT OWN RISK ^^ --"
-echo "This script will try to update your default(!) SEPIA-Home installation."
+get_latest_release() {
+	curl --silent "https://api.github.com/repos/$1/releases/latest" | # Get latest release from GitHub api
+		grep '"tag_name":' |                                          # Get tag line
+		sed -E 's/.*"([^"]+)".*/\1/'                                  # Pluck JSON value
+}
+echo "Welcome! Checking version number of latest SEPIA release, just a second ..."
+SEPIA_VERSION=$(get_latest_release "SEPIA-Framework/sepia-installation-and-setup")
+echo "Latest SEPIA-Home version is: $SEPIA_VERSION"
+echo ""
+echo "-- THIS SCRIPT IS IN PUBLIC BETA, USE AT OWN RISK ^_^ --"
+echo ""
+echo "This script will try to update your default SEPIA-Home installation. NOTE: your own custom modifications might not be fully supported."
 echo "What it does is it:"
 echo "1) uses the 'backup-sepia.sh' script to backup your current installation"
 echo "2) moves your old installation to '../$OLD_FOLDER'"

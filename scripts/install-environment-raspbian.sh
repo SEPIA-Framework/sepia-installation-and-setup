@@ -1,10 +1,11 @@
 #!/bin/sh
-echo "Welcome! Checking latest SEPIA version number, just asecond ..."
+set -e
 get_latest_release() {
 	curl --silent "https://api.github.com/repos/$1/releases/latest" | # Get latest release from GitHub api
 		grep '"tag_name":' |                                          # Get tag line
 		sed -E 's/.*"([^"]+)".*/\1/'                                  # Pluck JSON value
 }
+echo "Welcome! Checking version number of latest SEPIA release, just a second ..."
 SEPIA_VERSION=$(get_latest_release "SEPIA-Framework/sepia-installation-and-setup")
 echo "Latest SEPIA-Home version is: $SEPIA_VERSION"
 echo ""
@@ -24,6 +25,7 @@ while true; do
 	echo "3: Download SEPIA-Home bundle version: $SEPIA_VERSION"
 	echo "4: Extract SEPIA-Home to ~/SEPIA (recommended home folder for SEPIA)"
 	echo "5: Optional: Install NGINX reverse-proxy (alternative to SEPIA Reverse-Proxy)"
+	echo "6: Optional: Download and deploy NGINX proxy config for SEPIA local network (HTTP without SSL)"
 	echo ""
 	read -p "Enter a number plz (0 to exit): " option
 	echo ""
@@ -33,7 +35,6 @@ while true; do
 	elif [ $option = "1" ]
 	then
 		# INSTALL JAVA OPENJDK 11
-		
 		sudo apt-get update
 		sudo apt-get install -y openjdk-11-jdk-headless
 		echo 'Done'
@@ -76,7 +77,7 @@ while true; do
 		
 		#done
 		echo ""
-		echo "DONE :-) If you saw no errors you can exit now and continue with 'cd ~/SEPIA' and './setup.sh'".
+		echo "DONE :-) If you saw no errors you can exit now and continue with 'cd ~/SEPIA' and 'bash setup.sh'".
 
 	elif [ $option = "5" ] 
 	then
@@ -85,6 +86,13 @@ while true; do
 		echo 'Installing nginx reverse-proxy ...'
 		sudo apt-get install software-properties-common
 		sudo apt-get install nginx
+
+	elif [ $option = "6" ] 
+	then
+		# INSTALL NGINX HTTP CONFIG FOR SEPIA
+
+		#echo 'Downloading nginx reverse-proxy HTTP config for SEPIA ...'
+		echo 'UNDER CONSTRUCTION'
 
 	else
 		echo "Not an option, please try again."
