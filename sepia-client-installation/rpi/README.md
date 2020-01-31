@@ -29,12 +29,16 @@ network={
 * unzip sepia_client_rpi_raspbian_buster.zip
 * bash install_sepia_client.sh
 * bash install_usb_mic.sh
-* TBD ...
+* reboot the system
+* continue setup in SEPIA Control HUB's client connections page
+* CLEXI server should be reachable at `ws://[rpi-IP]:9090/clexi` (via Nginx)
 
 ## Raspberry Pi - Raspian Buster - ReSpeaker 2 Mic HAT - Speakers via ReSpeaker audio jack
 
-Identical to USB Mic version just run the ReSpeaker installation first and DON'T use 'install_usb_mic.sh':
-* wget ...
-* bash ...
+Identical to USB Mic version just run the ReSpeaker installation first and DON'T use 'install_usb_mic.sh' ;-) :
+* bash install_respeaker_mic.sh
+* mkdir ...
+* ...
 * bash update_respeaker_boot.sh
-* TBD
+* reboot the system
+* ...

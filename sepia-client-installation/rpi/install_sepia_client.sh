@@ -1,4 +1,5 @@
 #!/bin/bash
+#parameter 1: SEPIA client git branch (e.g. dev)
 set -e
 this_folder=$(pwd)
 is_armv6l() {
@@ -71,7 +72,11 @@ echo "=========================================="
 echo "Downloading latest SEPIA Client version ..."
 mkdir -p ~/clexi/www/sepia
 mkdir -p ~/tmp
-git clone https://github.com/SEPIA-Framework/sepia-html-client-app.git ~/tmp/sepia-client-git
+if [ -z "$1" ]; then
+    git clone https://github.com/SEPIA-Framework/sepia-html-client-app.git ~/tmp/sepia-client-git
+else
+    git clone --single-branch -b $1 https://github.com/SEPIA-Framework/sepia-html-client-app.git ~/tmp/sepia-client-git
+fi
 mv ~/tmp/sepia-client-git/www/* ~/clexi/www/sepia/
 rm -rf ~/tmp/sepia-client-git
 echo "=========================================="
