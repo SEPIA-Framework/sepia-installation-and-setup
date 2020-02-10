@@ -16,6 +16,8 @@ while true; do
 	echo "1: Change CLEXI ID (in CLEXI config and SEPIA Client settings.js)"
 	echo "2: Set SEPIA Client mode to 'headless'"
 	echo "3: Set SEPIA Client mode to 'display'"
+	echo "4: Set SEPIA Server host address"
+	echo "5: Set SEPIA Client device ID"
 	echo ""
 	if [ -z "$option" ]; then
 		read -p "Enter a number plz (0 to exit): " option
@@ -42,6 +44,16 @@ while true; do
 		echo "Setting SEPIA Client mode to 'display'"
 		sed -i 's/is_headless=1/is_headless=0/' ~/.config/openbox/autostart
 		echo "DONE"
+	elif [ $option = "4" ] 
+	then
+		read -p "Enter new SEPIA Server host address (e.g.: localhost or IP): " new_host
+		sed -i "s/\"host-name\": \".*\"/\"host-name\": \"$new_host\"/" ~/clexi/www/sepia/settings.js
+		echo "DONE"
+	elif [ $option = "5" ] 
+	then
+		read -p "Enter new SEPIA Client device ID (e.g. o1): " new_device_id
+		sed -i "s/\"deviceId\": \".*\"/\"deviceId\": \"$new_device_id\"/" ~/clexi/www/sepia/settings.js
+		echo "DONE"
 	else
 		echo "Not an option, please try again."
 	fi
@@ -51,3 +63,4 @@ while true; do
 		break
 	fi
 done
+echo "Cu :-) ... ah and don't forget to restart your client ;-)"

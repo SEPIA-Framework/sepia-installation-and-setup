@@ -33,11 +33,14 @@ if [ -f "$chromedatadir/Default/Preferences" ]; then
 fi
 # headless or with display:
 pi_model=$(tr -d '\0' </proc/device-tree/model)
-echo $pi_model
+is_pi4=0
+case "$pi_model" in *"Pi 4"*) is_pi4=1;; *) is_pi4=0;; esac
+echo "RPi model: $pi_model"
+echo "Is Pi4: $is_pi4"
 if [ "$is_headless" -eq "0" ]; then
     chromium-browser --user-data-dir=$chromedatadir --alsa-output-device=default --allow-insecure-localhost --autoplay-policy=no-user-gesture-required --disable-infobars --enable-features=OverlayScrollbar --hide-scrollbars --kiosk 'http://localhost:8080/sepia/index.html?isApp=true'
-elif [[ $pi_model == *"Pi 4"* ]]; then
-    xvfb-run chromium-browser --disable-features=VizDisplayCompositor --user-data-dir=$chromedatadir --alsa-output-device=default --allow-insecure-localhost --autoplay-policy=no-user-gesture-required --disable-infobars --enable-features=OverlayScrollbar --hide-scrollbars --kiosk 'http://localhost:8080/sepia/index.html?isApp=true&isHeadless=true'
+elif [ "$is_pi4" = "1" ]; then
+    xvfb-run --server-args="-screen 0 500x800x24" chromium-browser --disable-features=VizDisplayCompositor --user-data-dir=$chromedatadir --alsa-output-device=default --allow-insecure-localhost --autoplay-policy=no-user-gesture-required --disable-infobars --enable-features=OverlayScrollbar --hide-scrollbars --kiosk 'http://localhost:8080/sepia/index.html?isApp=true&isHeadless=true'
 else
-    xvfb-run chromium-browser --user-data-dir=$chromedatadir --alsa-output-device=default --allow-insecure-localhost --autoplay-policy=no-user-gesture-required --disable-infobars --enable-features=OverlayScrollbar --hide-scrollbars --kiosk 'http://localhost:8080/sepia/index.html?isApp=true&isHeadless=true'
+    xvfb-run --server-args="-screen 0 320x480x24" chromium-browser --user-data-dir=$chromedatadir --alsa-output-device=default --allow-insecure-localhost --autoplay-policy=no-user-gesture-required --disable-infobars --enable-features=OverlayScrollbar --hide-scrollbars --kiosk 'http://localhost:8080/sepia/index.html?isApp=true&isHeadless=true'
 fi

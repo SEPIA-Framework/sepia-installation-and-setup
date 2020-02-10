@@ -18,7 +18,7 @@ echo -e '\nStarting SEPIA servers ...\n'
 cd sepia-assist-server
 ./run.sh
 cd ..
-sleep 10
+sleep 15
 cd sepia-websocket-server-java
 ./run.sh
 cd ..
