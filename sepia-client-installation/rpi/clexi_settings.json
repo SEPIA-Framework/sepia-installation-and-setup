@@ -1,6 +1,7 @@
 {
 	"hostname": "localhost",
 	"id": "clexi-123",
+	"idIsPassword": true,
 	"port": 8080,
 	"ssl": false,
 	"logger": {
