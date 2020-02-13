@@ -37,7 +37,7 @@ Tested with: Raspian Buster, RPi3, RPi4
 * Create installation folder `mkdir -p ~/install` and switch to directory `cd ~/install`
 * Download scripts `wget https://github.com/SEPIA-Framework/sepia-installation-and-setup/raw/dev/sepia-client-installation/sepia_client_rpi_raspbian_buster.zip` (TODO: REPLACE WITH MASTER)
 * `unzip sepia_client_rpi_raspbian_buster.zip`
-* `bash install_sepia_client.sh`
+* `bash install_sepia_client.sh dev` (TODO: REPLACE WITH MASTER)
 * `bash install_usb_mic.sh`
 * Reboot the system
 * Remote connect to client via SEPIA Control HUB (see above)
