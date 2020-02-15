@@ -62,7 +62,7 @@ there is [another script](build_sepia_home_release_apt.sh) to check the environm
 You can run the first using a Debian based Linux:
 ```
 wget https://raw.githubusercontent.com/SEPIA-Framework/sepia-installation-and-setup/master/scripts/install-debian-build-environment.sh
-sudo bash build_sepia_home_release_apt.sh
+sudo bash install-debian-build-environment.sh
 ```
 You can run the latter (if you have Java already installed) via:  
 ```
