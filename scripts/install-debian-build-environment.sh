@@ -1,5 +1,7 @@
 #!/bin/sh
 set -e
+echo "This script has been tested with: Debian 10 (slim)"
+echo ""
 
 # UPDATE PACKAGE SOURCES
 echo 'Updating package sources ...'
@@ -22,7 +24,7 @@ echo ''
 
 # CLEAN UP
 echo 'Cleaning up ...'
-sudo apt-get clean && apt-get autoclean && apt-get autoremove -y
+sudo apt-get clean && sudo apt-get autoclean && sudo apt-get autoremove -y
 echo 'Done'
 echo ''
 
@@ -36,3 +38,4 @@ echo 'wget https://raw.githubusercontent.com/SEPIA-Framework/sepia-installation-
 echo 'sudo bash build_sepia_home_release_apt.sh'
 echo 'or (for dev builds):'
 echo 'sudo bash build_sepia_home_release_apt.sh dev'
+echo ''

@@ -12,6 +12,8 @@ echo "Cleaning up ..."
 rm "java_tmp.tar.gz"
 javaversion=$(find -maxdepth 1 ! -path . -type d -name '*' -print -quit | cut -c3-)
 echo $javaversion> version
+# sudo apt-get install ca-certificates-java
+# ln -sf "/etc/ssl/certs/java/cacerts" "~/SEPIA/java/${javaversion}/lib/security/cacerts"
 echo "Set Java version to: $javaversion"
 echo "DONE"
 

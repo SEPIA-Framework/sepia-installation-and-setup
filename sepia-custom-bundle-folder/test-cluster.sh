@@ -43,4 +43,5 @@ curl -X GET http://localhost:20724/_cluster/health?pretty
 echo -e '\nDONE. Please check output for errors!\n'
 echo -e "If all looks good you should be able to reach your SEPIA server via: $(hostname).local"
 echo -e "Example: $(hostname).local:20721/tools/index.html"
+echo -e "Please note: if this is a virtual machine the host name may not work to contact the server!"
 echo -e ''

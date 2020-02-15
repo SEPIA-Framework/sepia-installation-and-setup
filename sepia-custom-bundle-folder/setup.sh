@@ -13,6 +13,19 @@ if [[ $EUID -eq 0 ]]; then
         exit
     fi
 fi
+# system check methods
+is_arm() {
+  case "$(uname -m)" in
+    arm) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+is_x86_64() {
+  case "$(uname -m)" in
+    x86_64) return 0 ;;
+    *) return 1 ;;
+  esac
+}
 #
 # make scripts executable
 find . -name "*.sh" -exec chmod +x {} \;
@@ -42,7 +55,8 @@ echo ""
 echo "If you don't know what to do next read the guide at:"
 echo "https://github.com/SEPIA-Framework/sepia-installation-and-setup#quick-start"
 echo ""
-echo "Typically for a new installation what you should do is (4) then (1) to setup the database and create the admin and assistant accounts."
+echo "Typically for a new installation what you should do is start ES (4) then setup the database and create the admin and assistant accounts (1)."
+echo "Installation of the TTS engine (7) is required if you're planning to use a DIY SEPIA Client (and recommended for fun)."
 echo "After that type the IP address or hostname of this machine into your SEPIA-Client login-screen and you are good to go :-)"
 # check commandline arguments
 option=""
@@ -131,13 +145,33 @@ while true; do
 		echo "Installing TTS engine and voices:"
 		mkdir -p tmp/deb
 		cd tmp/deb
+		sudo apt-get update
 		sudo apt-get install -y espeak-ng espeak-ng-espeak
-		sudo apt-get install -y --no-install-recommends flite-dev flite libttspico-data
-		wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_armhf.deb
-		wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_armhf.deb
-		# apt-get install -f ./libttspico0_1.0+git20130326-9_armhf.deb ./libttspico-utils_1.0+git20130326-9_armhf.deb
-		sudo dpkg -i libttspico0_1.0+git20130326-9_armhf.deb
-		sudo dpkg -i libttspico-utils_1.0+git20130326-9_armhf.deb
+		sudo apt-get install -y --no-install-recommends flite-dev flite
+		if is_arm;
+		then
+			sudo apt-get install -y --no-install-recommends libttspico-data
+			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_armhf.deb
+			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_armhf.deb
+			# apt-get install -f ./libttspico0_1.0+git20130326-9_armhf.deb ./libttspico-utils_1.0+git20130326-9_armhf.deb
+			sudo dpkg -i libttspico0_1.0+git20130326-9_armhf.deb
+			sudo dpkg -i libttspico-utils_1.0+git20130326-9_armhf.deb
+		elif is_x86_64;
+		then
+			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-data_1.0+git20130326-9_all.deb
+			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_amd64.deb
+			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_amd64.deb
+			sudo dpkg -i libttspico-data_1.0+git20130326-9_all.deb
+			sudo dpkg -i libttspico0_1.0+git20130326-9_amd64.deb
+			sudo dpkg -i libttspico-utils_1.0+git20130326-9_amd64.deb
+		else
+			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-data_1.0+git20130326-9_all.deb
+			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_i386.deb
+			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_i386.deb
+			sudo dpkg -i libttspico-data_1.0+git20130326-9_all.deb
+			sudo dpkg -i libttspico0_1.0+git20130326-9_i386.deb
+			sudo dpkg -i libttspico-utils_1.0+git20130326-9_i386.deb
+		fi
 		cd ../..
 		rm -rf tmp
 	elif [ $option = "8" ] 

@@ -1,13 +1,14 @@
 #!/bin/bash
 set -e
+echo "This script has been tested with: Raspbian Stretch (slim), Debian 10 (slim)"
+echo ""
 
 #check packages (except Java)
 echo "Checking packages ..."
-apt-get update
-apt-get install -y wget maven zip unzip git curl procps
+sudo apt-get update
+sudo apt-get install -y wget maven zip unzip git curl procps
 echo "Checking Java ..."
 java -version
-echo 'Please note: SEPIA components built with this version require the same (or a higher version) to run. As of February 2020 Java 12+ is not yet supported!'
 
 #backup if folder exists
 if [ -d "$HOME/SEPIA" ]; then
@@ -67,7 +68,7 @@ cp -rn elasticsearch-*/. ~/SEPIA/elasticsearch/
 
 #clean up
 cd ~/SEPIA
-rm -r ~/SEPIA/tmp
+rm -rf ~/SEPIA/tmp
 
 #create release zip-file
 if [ -z "$2" ]; then
@@ -77,3 +78,8 @@ else
 	zip -r $2/SEPIA-Home.zip *
 	echo "Bundle created as ZIP at: $2/SEPIA-Home.zip"
 fi
+
+#final note
+echo "Java version:"
+java -version
+echo 'Please note: SEPIA components built with this version require the same (or a higher version) to run. As of February 2020 Java 12+ is not yet supported!'
