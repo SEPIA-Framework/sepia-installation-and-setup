@@ -7,8 +7,8 @@
 * Download Raspbian Buster
 * Flash MicroSD with Etcher
 * Remove MicroSD and replug (to reload filesystem)
-* Add an empty file called "ssh" to boot partition ([microSD]/boot) to enable SSH
-* Add a file called "wpa_supplicant.conf" to boot with content:
+* Add an empty file called 'ssh' to boot partition ([microSD]/boot) to enable SSH
+* Add a file called 'wpa_supplicant.conf' to boot with content:
 ```
 country=US
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
@@ -18,15 +18,39 @@ network={
     psk="NETWORK-PASSWORD"
 }
 ```
-* Eject MicroSD and plug into RPi
-* Connect via SSH with RPi
-* If required finish your RPi setup with `sudo raspi-config` (for headless client set up auto-login after boot later)
+* Eject the MicroSD and plug it into your RPi
+* Connect via SSH with your RPi
+* If required finish your RPi setup with `sudo raspi-config` (expand SD card, set timezone, etc.)
 
-### 2) Remote Connection to Client
+### 2) Run SEPIA Client Installation
 
-* After installation of one of the variants below continue setup in SEPIA Control HUB's client connections page
-* CLEXI server should be reachable at `ws://[rpi-IP]:9090/clexi` (via Nginx)
-* ...
+* Connect devices as needed (USB mic, ReSpeaker HAT, Touchscreen, etc.)
+* Choose one of the variants below to install your client.
+
+### 3) Run SEPIA Client Setup
+
+* Run `bash setup.sh` from the `~/install` folder
+* Set SEPIA server host address (as you would inside your SEPIA app login box)
+* Optional: Define a unique device ID (default is 'o1', Android apps have 'a1' and browsers 'b1' by default)
+* Optional: Define a new CLEXI-ID (this can be used as password for the remote terminal later, default is: clexi-123)
+* Optional: Open the CLEXI settings.json file located at `~/clexi/settings.json` manually to tweak your client (e.g. activate "Hey SEPIA")
+* Finish your setup by setting automatic login via `sudo raspi-config` (Boot options - Desktop/CLI - Console Autologin)
+* Reboot your system 
+* Your headless client should automatically start and notify you via a short audio message that he'll be "right there"
+
+### 4) Configure the Client via Remote Connection
+
+* Continue the setup in your [SEPIA Control HUB](https://github.com/SEPIA-Framework/sepia-admin-tools/tree/master/admin-web-tools) by opening the 'client connections' page
+* The CLEXI server of your newly installed SEPIA Client should be reachable at `ws://[rpi-IP]:9090/clexi` (via Nginx proxy)
+* Enter your CLEXI-ID from the previous step (or use the default) and press the 'CONNECT' button. The remote terminal window at the bottom will show the status of the connection.
+* By default your headless client will start the 'setup mode'. This might take a while, depending on your RPi model. You should hear the audio message "ready for setup" at some point
+* Use the remote terminal to ping all connected clients by typing `ping all` or use the shortcut button right above the terminal input field
+* Your SEPIA Client should answer with client info, device ID and a short message. If this is not the case something went wrong during the setup. Try to reboot your RPi and observe your CLEXI connection status.
+* Copy the device ID into the field with the same name (right above the shortcut buttons)
+* Use the remote terminal command `call login user [user-ID] password [user-pwd]` (message type: 'SEPIA Client') to login your user
+* You should see a "login successfull" message in the terminal. If not check your "host name" settings from the previous step (Client Setup)
+* Use the commands `call test` (message type: 'SEPIA Client') or corresponding shortcut button 'test client' to ... test your client
+* Reboot your system one last time to finish the configuration
 
 ## Variant 1: USB Mic - Speakers via audio jack
 
@@ -40,7 +64,7 @@ Tested with: Raspian Buster, RPi3, RPi4
 * `bash install_sepia_client.sh dev` (TODO: REPLACE WITH MASTER)
 * `bash install_usb_mic.sh`
 * Reboot the system
-* Remote connect to client via SEPIA Control HUB (see above)
+* Continue with the step 'SEPIA Client Setup' of the common instruction above
 
 ## Variant 2: ReSpeaker 2 Mic HAT - Speakers via ReSpeaker audio jack
 
@@ -54,7 +78,7 @@ Tested with: Raspian Buster, RPi3, RPi Zero
 * DON'T use 'install_usb_mic.sh' at the end ;-)
 * Run `bash update_respeaker_boot.sh` to deactivate unused RPi default audio jack
 * Reboot the system
-* Remote connect to client via SEPIA Control HUB (see above)
+* Continue with the step 'SEPIA Client Setup' of the common instruction above
 
 ## Variant 3: Hyperpixel 4.0 Touchscreen - USB Mic - Speakers via audio jack
 
@@ -66,4 +90,4 @@ Tested with: Raspian Buster, RPi4
 * Continue with variant 1 installation procedure
 * If you have problems with the touchscreen (swapped axis etc.) run `bash update_hyperpixel4_boot.sh`
 * Use `bash setup.sh` to switch between 'display' and 'headless' mode
-* Remote connect to client via SEPIA Control HUB (see above) or configure system via display/touchscreen
+* Continue with the step 'SEPIA Client Setup' of the common instruction above or configure system via display/touchscreen
