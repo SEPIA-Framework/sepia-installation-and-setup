@@ -37,8 +37,10 @@ while true; do
 		# INSTALL JAVA OPENJDK 11
 		sudo apt-get update
 		sudo apt-get install -y openjdk-11-jdk-headless ca-certificates-java
-		echo 'Done'
+		echo "------------------------"
+		echo "DONE."
 		java -version
+		echo "------------------------"
 	
 	elif [ $option = "2" ] 
 	then
@@ -49,6 +51,9 @@ while true; do
 		echo 'Installing ntpdate to sync time ...'
 		sudo apt-get install -y ntpdate
 		sudo ntpdate -u ntp.ubuntu.com
+		echo "------------------------"
+		echo "DONE."
+		echo "------------------------"
 
 	elif [ $option = "3" ] 
 	then
@@ -60,6 +65,9 @@ while true; do
 		#curl --silent "https://api.github.com/repos/SEPIA-Framework/sepia-installation-and-setup/releases/latest" | jq -r '.assets[] | select(.name == "SEPIA-Home.zip").browser_download_url'
 		#wget "https://github.com/SEPIA-Framework/sepia-installation-and-setup/releases/download/${SEPIA_VERSION}/SEPIA-Home.zip"
 		wget "https://github.com/SEPIA-Framework/sepia-installation-and-setup/releases/latest/download/SEPIA-Home.zip"
+		echo "------------------------"
+		echo "DONE."
+		echo "------------------------"
 
 	elif [ $option = "4" ] 
 	then
@@ -77,7 +85,9 @@ while true; do
 		
 		#done
 		echo ""
+		echo "------------------------"
 		echo "DONE :-) If you saw no errors you can exit now and continue with 'cd ~/SEPIA' and 'bash setup.sh'".
+		echo "------------------------"
 
 	elif [ $option = "5" ] 
 	then
@@ -86,15 +96,22 @@ while true; do
 		echo 'Installing nginx reverse-proxy ...'
 		sudo apt-get install software-properties-common
 		sudo apt-get install nginx
+		echo "------------------------"
+		echo "DONE."
+		echo "------------------------"
 
 	elif [ $option = "6" ] 
 	then
 		# INSTALL NGINX HTTP CONFIG FOR SEPIA
 
 		#echo 'Downloading nginx reverse-proxy HTTP config for SEPIA ...'
+		echo "------------------------"
 		echo "UNDER CONSTRUCTION - Alternative: Run 'bash setup-nginx.sh' inside your SEPIA-Home folder"
+		echo "------------------------"
 
 	else
+		echo "------------------------"
 		echo "Not an option, please try again."
+		echo "------------------------"
 	fi
 done

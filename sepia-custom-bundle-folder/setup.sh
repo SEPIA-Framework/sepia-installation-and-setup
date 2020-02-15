@@ -102,8 +102,9 @@ while true; do
 		else
 			java -jar $JAR_NAME setup --my
 		fi
-		echo "If you saw no errors on the screen then you can use ./run-sepia.sh now to start SEPIA."
-		break
+		echo "------------------------"
+		echo "If you saw no errors on the screen you can now use ./run-sepia.sh to start SEPIA."
+		echo "------------------------"
 	elif [ $option = "2" ] 
 	then
 		if [ -n "$argument1" ]; then
@@ -111,7 +112,6 @@ while true; do
 		else
 			java -jar $JAR_NAME setup accounts --my
 		fi
-		break
 	elif [ $option = "3" ] 
 	then
 		if [ -n "$argument1" ]; then
@@ -119,8 +119,9 @@ while true; do
 		else
 			java -jar $JAR_NAME setup duckdns --my
 		fi
+		echo "------------------------"
 		echo "DONE. Please restart 'SEPIA assist server' to activate DuckDNS worker!"
-		break
+		echo "------------------------"
 	elif [ $option = "4" ] 
 	then	
 		cd ..
@@ -129,17 +130,24 @@ while true; do
 		./wait.sh
 		cd ..
 		cd sepia-assist-server
+		echo "------------------------"
+		echo "DONE."
+		echo "------------------------"
 	elif [ $option = "5" ] 
 	then
 		sudo sh -c "echo 'sepia-home' > /etc/hostname"
 		sudo sed -i -e 's|127\.0\.1\.1.*|127.0.1.1	sepia-home|g' /etc/hosts
+		echo "------------------------"
 		echo "Please reboot the system to use new hostname."
+		echo "------------------------"
 	elif [ $option = "6" ] 
 	then
+		echo "------------------------"
 		echo "Cronjob suggestions:"
 		echo ""
 		echo '@reboot sleep 60 && ~/SEPIA/on-reboot.sh;'
 		echo '30 4 1-31/2 * * ~/SEPIA/cronjob.sh;'
+		echo "------------------------"
 	elif [ $option = "7" ] 
 	then
 		echo "Installing TTS engine and voices:"
@@ -174,11 +182,18 @@ while true; do
 		fi
 		cd ../..
 		rm -rf tmp
+		echo "------------------------"
+		echo "DONE."
+		echo "------------------------"
 	elif [ $option = "8" ] 
 	then
+		echo "------------------------"
 		echo "Please go to the folder 'java' and run the script for your specific platform. Afterwards restart this setup and check if local Java is indicated at start."
+		echo "------------------------"
 	else
+		echo "------------------------"
 		echo "Not an option, please try again."
+		echo "------------------------"
 	fi
 	option=""
 	argument1=""

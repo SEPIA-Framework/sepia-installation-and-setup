@@ -20,8 +20,11 @@ while true; do
 		break
 	elif [ $option = "1" ]
 	then
+		sudo apt-get update
 		sudo apt-get install -y nginx
+		echo "------------------------"
 		echo "DONE."
+		echo "------------------------"
 	elif [ $option = "2" ]
 	then
 		echo "Copying $SEPIA_FOLDER/nginx/sites-available/sepia-fw-http.conf to /etc/nginx/sites-enabled/ ..."
@@ -41,11 +44,12 @@ while true; do
 		if [ -z "$ip_adr" ]; then
 			ip_adr="[IP]"
 		fi
+		echo "------------------------"
+		echo "DONE."
 		echo "You should be able to reach the server now at e.g.: http://$ip_adr:20726 or http://$(hostname).local:20726"
 		echo "In your SEPIA client you can use the host name: http://$ip_adr:20726/sepia or http://$(hostname).local:20726/sepia"
-		echo "Please note: if this is a virtual machine the IP might be different and the host name may not work at all!"
-		
-		echo "DONE."
+		echo "Please note: if this is a virtual machine the external IP might be different and the host name may not work at all!"
+		echo "------------------------"
 	elif [ $option = "3" ] 
 	then
 		# Get domain variable (DOMAIN) set via SEPIA DuckDNS setup
@@ -79,17 +83,22 @@ while true; do
 			sudo nginx -s reload
 			
 			echo ""
+			echo "------------------------"
+			echo "DONE."
 			echo "You should be able to reach the server now at e.g.: https://$DOMAIN:20726"
 			echo "In your SEPIA client you can use the host name: $DOMAIN:20726/sepia"
-			
-			echo "DONE."
+			echo "------------------------"
 		else
+			echo "------------------------"
 			echo "Setup aborted. EXIT."
+			echo "------------------------"
 		fi
 	elif [ $option = "4" ] 
 	then
 		sudo rm -f /etc/nginx/sites-enabled/sepia-fw-*
 	else
+		echo "------------------------"
 		echo "Not an option, please try again."
+		echo "------------------------"
 	fi
 done
