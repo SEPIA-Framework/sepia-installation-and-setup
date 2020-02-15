@@ -13,9 +13,9 @@ NOTE: Setup and scripts included in this bundle assume you are using the framewo
 
 ## Quick start
   
-If you are using Raspian for Raspberry Pi check out the more detailed [guide](https://github.com/SEPIA-Framework/sepia-docs/wiki/Installation#raspberry-pi-3) including a help script.  
+If you are using Raspian for Raspberry Pi check out the more detailed [guide](https://github.com/SEPIA-Framework/sepia-docs/wiki/Installation) including an installation script.  
   
-* Make sure you have at least Java 8 installed (tested extensively with [Oracle Java 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html) but OpenJDK 8+ should work as well)
+* Make sure you have at least Java 8 installed (tested extensively with [Oracle Java 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html) and OpenJDK 11)
 * Optionally update your local clock for precise timers (Linux), e.g.: with `sudo apt-get install ntpdate` and `sudo ntpdate -u ntp.ubuntu.com`
 * Place the content of the SEPIA-Home bundle in any folder you like. On Linux "~/SEPIA/" is recommended (`unzip SEPIA-Home.zip -d ~/SEPIA`) if you want to use the scripts to setup a web-server later.
 * Run `setup.bat` (Windows) or `bash setup.sh` (Mac, Linux) to setup your SEPIA servers
@@ -55,10 +55,16 @@ If you want a super-fast (2min), zero-configuration solution you can use the inc
 ## Build-your-own release (for experts)
 
 Since everything in SEPIA is open-source you can always build the whole framework from scratch using the Github repositories.
-A first draft of the requirements to do so can be found [here](https://github.com/SEPIA-Framework/sepia-docs/wiki/Requirements).  
+A rough list of the requirements to do so can be found [here](https://github.com/SEPIA-Framework/sepia-docs/wiki/Requirements).  
   
-There is a [Dockerfile](https://github.com/SEPIA-Framework/sepia-installation-and-setup/blob/master/Dockerfile) that describes all steps to build SEPIA-Home (custom bundle release) on Debian9 (tested with amd64).  
-There is also a build script doing the same (and even a bit more, except installing Java). You can run it in Linux (needs sudo):  
+There is a [setup script](scripts/install-debian-build-environment.sh) that helps to setup a build environment on Debian based Linux and
+there is [another script](build_sepia_home_release_apt.sh) to check the environment (except Java) and build SEPIA-Home (custom bundle release).
+You can run the first using a Debian based Linux:
+```
+wget https://raw.githubusercontent.com/SEPIA-Framework/sepia-installation-and-setup/master/scripts/install-debian-build-environment.sh
+sudo bash build_sepia_home_release_apt.sh
+```
+You can run the latter (if you have Java already installed) via:  
 ```
 wget https://raw.githubusercontent.com/SEPIA-Framework/sepia-installation-and-setup/master/build_sepia_home_release_apt.sh
 sudo bash build_sepia_home_release_apt.sh

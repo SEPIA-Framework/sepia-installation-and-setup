@@ -1,5 +1,8 @@
 #!/bin/bash
 set -e
+echo ''
+echo 'PLEASE NOTE: This script might be outdated and fail to get correct KEYs form the key-server!'
+echo ''
 
 #add digital key for PPA
 apt-get install -y dirmngr debconf-utils

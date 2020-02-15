@@ -7,8 +7,8 @@
 * Download Raspbian Buster
 * Flash MicroSD with Etcher
 * Remove MicroSD and replug (to reload filesystem)
-* Add an empty file called 'ssh' to boot partition ([microSD]/boot) to enable SSH
-* Add a file called 'wpa_supplicant.conf' to boot with content:
+* Add an empty file called 'ssh' to the boot folder ([microSD]/boot) to enable SSH
+* Add a file called 'wpa_supplicant.conf' with the following content to the boot folder to enable WiFi login (replace 'country' [US, DE, ..], 'ssid' and 'psk'):
 ```
 country=US
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
@@ -19,12 +19,12 @@ network={
 }
 ```
 * Eject the MicroSD and plug it into your RPi
-* Connect via SSH with your RPi
-* If required finish your RPi setup with `sudo raspi-config` (expand SD card, set timezone, etc.)
+* Connect to your RPi via SSH (in Windows you can use [putty](https://www.putty.org/))
+* Finish your RPi setup with `sudo raspi-config` (expand SD card, set timezone, etc.)
 
 ### 2) Run SEPIA Client Installation
 
-* Connect devices as needed (USB mic, ReSpeaker HAT, Touchscreen, etc.)
+* Connect your hardware to the RPi (USB mic, ReSpeaker HAT, Hyperpixel Touchscreen, etc.)
 * Choose one of the variants below to install your client.
 
 ### 3) Run SEPIA Client Setup
@@ -33,7 +33,6 @@ network={
 * Set SEPIA server host address (as you would inside your SEPIA app login box)
 * Optional: Define a unique device ID (default is 'o1', Android apps have 'a1' and browsers 'b1' by default)
 * Optional: Define a new CLEXI-ID (this can be used as password for the remote terminal later, default is: clexi-123)
-* Optional: Open the CLEXI settings.json file located at `~/clexi/settings.json` manually to tweak your client (e.g. activate "Hey SEPIA")
 * Finish your setup by setting automatic login via `sudo raspi-config` (Boot options - Desktop/CLI - Console Autologin)
 * Reboot your system 
 * Your headless client should automatically start and notify you via a short audio message that he'll be "right there"
@@ -48,9 +47,14 @@ network={
 * Your SEPIA Client should answer with client info, device ID and a short message. If this is not the case something went wrong during the setup. Try to reboot your RPi and observe your CLEXI connection status.
 * Copy the device ID into the field with the same name (right above the shortcut buttons)
 * Use the remote terminal command `call login user [user-ID] password [user-pwd]` (message type: 'SEPIA Client') to login your user
-* You should see a "login successfull" message in the terminal. If not check your "host name" settings from the previous step (Client Setup)
-* Use the commands `call test` (message type: 'SEPIA Client') or corresponding shortcut button 'test client' to ... test your client
-* Reboot your system one last time to finish the configuration
+* You should see a "login successful" message in the terminal. If not check your "host name" settings from the previous step (Client Setup)
+* Use the command `call test` (message type: 'SEPIA Client') or corresponding shortcut button 'test client' to ... test your client. You should hear an acoustic confirmation
+* Reboot your system one last time to finish the configuration (NOTE: your microphone will only have access permission AFTER the reboot)
+
+### 5) Fine Tuning
+
+* Optional: Open the CLEXI settings.json file located at `~/clexi/settings.json` to tweak your client (e.g. activate "Hey SEPIA"). NOTE: please do this AFTER a successful configuration and reboot (previous step)
+* Done. Enjoy! :-)
 
 ## Variant 1: USB Mic - Speakers via audio jack
 

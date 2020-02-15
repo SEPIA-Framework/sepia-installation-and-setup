@@ -36,13 +36,13 @@ while true; do
 	then
 		# INSTALL JAVA OPENJDK 11
 		sudo apt-get update
-		sudo apt-get install -y openjdk-11-jdk-headless
+		sudo apt-get install -y openjdk-11-jdk-headless ca-certificates-java
 		echo 'Done'
 		java -version
 	
 	elif [ $option = "2" ] 
 	then
-		# INSTALL zip, unzip, curl, procps, ca-certificates
+		# INSTALL zip, unzip, curl, procps, etc.
 		sudo apt-get install -y zip unzip curl procps ca-certificates espeak-ng espeak-ng-espeak
 		
 		# UPDATE TIME SYNC
@@ -92,7 +92,7 @@ while true; do
 		# INSTALL NGINX HTTP CONFIG FOR SEPIA
 
 		#echo 'Downloading nginx reverse-proxy HTTP config for SEPIA ...'
-		echo 'UNDER CONSTRUCTION'
+		echo "UNDER CONSTRUCTION - Alternative: Run 'bash setup-nginx.sh' inside your SEPIA-Home folder"
 
 	else
 		echo "Not an option, please try again."

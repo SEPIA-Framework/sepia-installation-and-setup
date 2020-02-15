@@ -2,8 +2,12 @@
 set -e
 
 #check packages (except Java)
+echo "Checking packages ..."
 apt-get update
 apt-get install -y wget maven zip unzip git curl procps
+echo "Checking Java ..."
+java -version
+echo 'Please note: SEPIA components built with this version require the same (or a higher version) to run. As of February 2020 Java 12+ is not yet supported!'
 
 #backup if folder exists
 if [ -d "$HOME/SEPIA" ]; then
