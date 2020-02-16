@@ -1,4 +1,4 @@
-FROM debian:stretch-slim
+FROM debian:buster-slim
 
 # Default to UTF-8 file.encoding
 ENV LANG C.UTF-8
@@ -12,9 +12,9 @@ RUN echo 'Installing SEPIA-Home...' && \
 #
 #	Get packages
 	apt-get install -y --no-install-recommends \
-        git wget curl nano unzip zip procps ntpdate \
+        sudo git wget curl nano unzip zip procps \
 		openjdk-11-jdk-headless ca-certificates-java \
-		nginx \
+		ntpdate nginx \
 		espeak-ng espeak-ng-espeak && \
 #
 #   Clean up
@@ -50,9 +50,12 @@ RUN echo "Downloading SEPIA-Home (custom bundle) ..." && \
 	cd ~/SEPIA && \
 	find . -iname "*.sh" -exec chmod +x {} \; && \
 	chmod +x elasticsearch/bin/elasticsearch && \
-	rm -r ~/SEPIA/tmp && \
+	rm -rf ~/SEPIA/tmp && \
 #
-#	Set up Nginx
+#	Run setup to install TTS engine
+	bash setup.sh 7 && \
+#
+#	Set up Nginx (HTTP)
 	sudo cp nginx/sites-available/sepia-fw-http.conf /etc/nginx/sites-enabled/sepia-fw-http.conf
 
 #	Setup SEPIA
