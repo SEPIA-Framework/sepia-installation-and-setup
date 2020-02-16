@@ -37,18 +37,18 @@ while true; do
 		echo ""
 		ip_adr=""
 		if [ -x "$(command -v ifconfig)" ]; then
-			ip_adr=$(ifconfig eth0 | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
+			ip_adr=$(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
 		elif [ -x "$(command -v ip)" ]; then
-			ip_adr=$(ip a | grep eth0 | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
+			ip_adr=$(ip a | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
 		fi
 		if [ -z "$ip_adr" ]; then
 			ip_adr="[IP]"
 		fi
 		echo "------------------------"
 		echo "DONE."
-		echo "You should be able to reach the server now at e.g.: http://$ip_adr:20726 or http://$(hostname).local:20726"
-		echo "In your SEPIA client you can use the host name: http://$ip_adr:20726/sepia or http://$(hostname).local:20726/sepia"
-		echo "Please note: if this is a virtual machine the external IP might be different and the host name may not work at all!"
+		echo "You should be able to reach the server at: http://$ip_adr:20726 or http://$(hostname).local:20726"
+		echo "In your SEPIA client you can use the hostname: http://$ip_adr:20726/sepia or http://$(hostname).local:20726/sepia"
+		echo "Please note: if this is a virtual machine the external IP might be different and the hostname might not work at all!"
 		echo "------------------------"
 	elif [ $option = "3" ] 
 	then
@@ -86,7 +86,7 @@ while true; do
 			echo "------------------------"
 			echo "DONE."
 			echo "You should be able to reach the server now at e.g.: https://$DOMAIN:20726"
-			echo "In your SEPIA client you can use the host name: $DOMAIN:20726/sepia"
+			echo "In your SEPIA client you can use the hostname: $DOMAIN:20726/sepia"
 			echo "------------------------"
 		else
 			echo "------------------------"

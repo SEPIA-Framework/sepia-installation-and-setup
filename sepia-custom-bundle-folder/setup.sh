@@ -16,13 +16,13 @@ fi
 # system check methods
 is_arm() {
   case "$(uname -m)" in
-    arm) return 0 ;;
+    *arm*) return 0 ;;
     *) return 1 ;;
   esac
 }
-is_x86_64() {
+is_64() {
   case "$(uname -m)" in
-    x86_64) return 0 ;;
+    *64*) return 0 ;;
     *) return 1 ;;
   esac
 }
@@ -127,12 +127,18 @@ while true; do
 		cd ..
 		cd elasticsearch
 		./run.sh
-		./wait.sh
-		cd ..
-		cd sepia-assist-server
-		echo "------------------------"
-		echo "DONE."
-		echo "------------------------"
+		if [ $? -eq 0 ]; then
+			./wait.sh
+			cd ..
+			cd sepia-assist-server
+			echo "------------------------"
+			echo "DONE."
+			echo "------------------------"
+		else
+			echo "------------------------"
+			echo "FAILED to start Elasticsearch"
+			echo "------------------------"
+		fi
 	elif [ $option = "5" ] 
 	then
 		sudo sh -c "echo 'sepia-home' > /etc/hostname"
@@ -164,7 +170,7 @@ while true; do
 			# apt-get install -f ./libttspico0_1.0+git20130326-9_armhf.deb ./libttspico-utils_1.0+git20130326-9_armhf.deb
 			sudo dpkg -i libttspico0_1.0+git20130326-9_armhf.deb
 			sudo dpkg -i libttspico-utils_1.0+git20130326-9_armhf.deb
-		elif is_x86_64;
+		elif is_64;
 		then
 			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-data_1.0+git20130326-9_all.deb
 			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_amd64.deb

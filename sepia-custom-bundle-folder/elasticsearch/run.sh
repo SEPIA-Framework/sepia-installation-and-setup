@@ -10,4 +10,8 @@ cd bin
 PIDFile="elasticPID.pid"
 touch $PIDFile
 ./elasticsearch -p $PIDFile -d
-cat $PIDFile && echo
+if [ $? -eq 0 ]; then
+	cat $PIDFile && echo
+else
+	exit 1
+fi
