@@ -47,7 +47,7 @@ network={
 * Your SEPIA Client should answer with client info, device ID and a short message. If this is not the case something went wrong during the setup. Try to reboot your RPi and observe your CLEXI connection status.
 * Copy the device ID into the field with the same name (right above the shortcut buttons)
 * Use the remote terminal command `call login user [user-ID] password [user-pwd]` (message type: 'SEPIA Client') to login your user
-* You should see a "login successful" message in the terminal. If not check your "hostname" settings from the previous step (Client Setup)
+* You should see a "login successful" message in the terminal. If not you can use the command `call ping` to see if the client can reach the SEPIA server. Check your "hostname" settings from the previous step (Client Setup) if ping fails
 * Use the command `call test` (message type: 'SEPIA Client') or corresponding shortcut button 'test client' to ... test your client. You should hear an acoustic confirmation
 * Reboot your system one last time to finish the configuration (NOTE: your microphone will only have access permission AFTER the reboot)
 

@@ -33,17 +33,26 @@ echo "=========================================="
 echo "Installing app environment ..."
 sudo apt-get install -y --no-install-recommends xserver-xorg x11-xserver-utils xinit openbox xvfb
 sudo apt-get install -y --no-install-recommends chromium-browser unclutter
-mkdir -p ~/sepia/chromium
+mkdir -p ~/sepia-client/chromium
+cp setup.sh ~/sepia-client/
+cp run.sh ~/sepia-client/
+cp shutdown.sh ~/sepia-client/
 mkdir -p ~/.config/openbox
 cp openbox ~/.config/openbox/autostart
 startfile=~/.bashrc
 if grep -q "exec startx" $startfile; then
     echo "Found 'startx' in .bashrc already"
 else
-    echo "# Autostart X" >> $startfile
+    echo '' >> $startfile
+    echo '# SEPIA-Client auto-start at (non SSH) login' >> $startfile
     echo 'if [[ ! $DISPLAY && $XDG_VTNR -eq 1 ]]; then' >> $startfile
-    echo "    exec startx" >> $startfile
-    echo "fi" >> $startfile
+    echo '    client_run_script="$HOME/sepia-client/run.sh"' >> $startfile
+    echo '    if [ -z $(cat "$client_run_script" | grep is_headless=1) ]; then' >> $startfile
+    echo '        exec startx' >> $startfile
+    echo '    else' >> $startfile
+    echo '        bash $client_run_script' >> $startfile
+    echo '    fi' >> $startfile
+    echo 'fi' >> $startfile
 fi
 echo "=========================================="
 #
@@ -84,7 +93,7 @@ echo "=========================================="
 # Nginx
 echo "Installing proxy ..."
 sudo apt-get install -y nginx
-sudo cp sepia-client-nginx.conf /etc/nginx/sites-enabled/sepia-fw-http.conf
+sudo cp sepia-client-nginx.conf /etc/nginx/sites-enabled/
 sudo service nginx reload
 echo "=========================================="
 echo "DONE!"

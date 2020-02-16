@@ -6,41 +6,5 @@ xset -dpms
 # Allow quitting the X server with CTRL-ATL-Backspace
 setxkbmap -option terminate:ctrl_alt_bksp
 
-# Notify user
-headphone_count=$(amixer scontrols | grep "Headphone" | wc -l)
-if [ $headphone_count -gt 0 ];
-then
-    amixer sset 'Headphone' 80%
-fi
-espeak-ng "Hello friend! I'll be right there, just a second."
-
-# Start CLEXI
-cd ~/clexi
-pkill -f "clexi-server.js"
-sleep 2
-nohup node --title=clexi-server.js server.js &> log.out&
-sleep 2
-
-# Start Chromium in kiosk mode
-is_headless=1
-chromedatadir=~/sepia/chromium
-if [ -f "$chromedatadir/Default/Preferences" ]; then
-    sed -i 's/"exited_cleanly":false/"exited_cleanly":true/' $chromedatadir/'Local State'
-    sed -i 's/"exited_cleanly":false/"exited_cleanly":true/; s/"exit_type":"[^"]\+"/"exit_type":"Normal"/' $chromedatadir/Default/Preferences
-    sed -i 's/"notifications":{}/"notifications":{"http:\/\/localhost:8080,*":{"last_modified":"13224291659276737","setting":1}}/' $chromedatadir/Default/Preferences
-    sed -i 's/"geolocation":{}/"geolocation":{"http:\/\/localhost:8080,http:\/\/localhost:8080":{"last_modified":"13224291716729005","setting":1}}/' $chromedatadir/Default/Preferences
-    sed -i 's/"media_stream_mic":{}/"media_stream_mic":{"http:\/\/localhost:8080,*":{"last_modified":"13224291643099497","setting":1}}/' $chromedatadir/Default/Preferences
-fi
-# headless or with display:
-pi_model=$(tr -d '\0' </proc/device-tree/model)
-is_pi4=0
-case "$pi_model" in *"Pi 4"*) is_pi4=1;; *) is_pi4=0;; esac
-echo "RPi model: $pi_model"
-echo "Is Pi4: $is_pi4"
-if [ "$is_headless" -eq "0" ]; then
-    chromium-browser --user-data-dir=$chromedatadir --alsa-output-device=default --allow-insecure-localhost --autoplay-policy=no-user-gesture-required --disable-infobars --enable-features=OverlayScrollbar --hide-scrollbars --kiosk 'http://localhost:8080/sepia/index.html?isApp=true'
-elif [ "$is_pi4" = "1" ]; then
-    xvfb-run --server-args="-screen 0 500x800x24" chromium-browser --disable-features=VizDisplayCompositor --user-data-dir=$chromedatadir --alsa-output-device=default --allow-insecure-localhost --autoplay-policy=no-user-gesture-required --disable-infobars --enable-features=OverlayScrollbar --hide-scrollbars --kiosk 'http://localhost:8080/sepia/index.html?isApp=true&isHeadless=true'
-else
-    xvfb-run --server-args="-screen 0 320x480x24" chromium-browser --user-data-dir=$chromedatadir --alsa-output-device=default --allow-insecure-localhost --autoplay-policy=no-user-gesture-required --disable-infobars --enable-features=OverlayScrollbar --hide-scrollbars --kiosk 'http://localhost:8080/sepia/index.html?isApp=true&isHeadless=true'
-fi
+# Run SEPIA-Client
+bash ~/sepia-client/run.sh
