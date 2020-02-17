@@ -2,6 +2,8 @@
 set -e
 echo ''
 echo 'PLEASE NOTE: This script might be outdated and fail to get correct KEYs form the key-server!'
+echo 'It is now recommended to install OpenJDK Java 11: sudo apt-get install -y openjdk-11-jdk-headless ca-certificates-java'
+read -p "Press enter to continue or CTRL+C to quit"
 echo ''
 
 #add digital key for PPA
