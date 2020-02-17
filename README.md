@@ -13,9 +13,9 @@ NOTE: Setup and scripts included in this bundle assume you are using the framewo
 
 ## Quick start
   
-If you are using Raspian for Raspberry Pi check out the more detailed [guide](https://github.com/SEPIA-Framework/sepia-docs/wiki/Installation#raspberry-pi-3) including a help script.  
+If you are using Raspian for Raspberry Pi check out the more detailed [guide](https://github.com/SEPIA-Framework/sepia-docs/wiki/Installation) including an installation script.  
   
-* Make sure you have at least Java 8 installed (tested extensively with [Oracle Java 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html) but OpenJDK 8+ should work as well)
+* Make sure you have at least Java 8 installed (tested extensively with [Oracle Java 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html) and OpenJDK 11)
 * Optionally update your local clock for precise timers (Linux), e.g.: with `sudo apt-get install ntpdate` and `sudo ntpdate -u ntp.ubuntu.com`
 * Place the content of the SEPIA-Home bundle in any folder you like. On Linux "~/SEPIA/" is recommended (`unzip SEPIA-Home.zip -d ~/SEPIA`) if you want to use the scripts to setup a web-server later.
 * Run `setup.bat` (Windows) or `bash setup.sh` (Mac, Linux) to setup your SEPIA servers
@@ -26,8 +26,9 @@ If you are using Raspian for Raspberry Pi check out the more detailed [guide](ht
 * If your browser is not on the same machine replace 'localhost' (similar to the previous step) in the hostname field during login with the IP of your server (e.g. localhost -> 192.168.0.10).
 * For testing purposes (only!) you can use the admin-acount to log-in, by default the ID is "admin@sepia.localhost" or "uid1003" (don't use the "assistant" account). The password has been set during setup.
   
-NOTE: Using the web-app via "localhost" will (depending on the browser) limit the functionality of some features like the speech-recognition, geo-location and notifications due to security reasons (browser restriction, requires HTTPS to work).
-See "Secure server" below for further instructions on how to setup your own HTTPS web-server.
+NOTE: Using the web-app via "localhost" or local network IPs will (depending on the browser) limit the functionality of some features like the speech-recognition, geo-location and notifications due to security reasons (browser restriction, requires HTTPS to work).
+See "Secure server" below for further instructions on how to set up your own HTTPS web-server, BUT if you are just using your own local servers there is another solution that will work fine. You can add exceptions 
+to your browser as well :-) see [this guide](https://github.com/SEPIA-Framework/sepia-docs/wiki/Set-up-web-browser-to-treat-your-local-IP-as-secure-origin).
 
 ## Next steps
 
@@ -54,10 +55,16 @@ If you want a super-fast (2min), zero-configuration solution you can use the inc
 ## Build-your-own release (for experts)
 
 Since everything in SEPIA is open-source you can always build the whole framework from scratch using the Github repositories.
-A first draft of the requirements to do so can be found [here](https://github.com/SEPIA-Framework/sepia-docs/wiki/Requirements).  
+A rough list of the requirements to do so can be found [here](https://github.com/SEPIA-Framework/sepia-docs/wiki/Requirements).  
   
-There is a [Dockerfile](https://github.com/SEPIA-Framework/sepia-installation-and-setup/blob/master/Dockerfile) that describes all steps to build SEPIA-Home (custom bundle release) on Debian9 (tested with amd64).  
-There is also a build script doing the same (and even a bit more, except installing Java). You can run it in Linux (needs sudo):  
+There is a [setup script](scripts/install-debian-build-environment.sh) that helps to setup a build environment on Debian based Linux and
+there is [another script](build_sepia_home_release_apt.sh) to check the environment (except Java) and build SEPIA-Home (custom bundle release).
+You can run the first using a Debian based Linux:
+```
+wget https://raw.githubusercontent.com/SEPIA-Framework/sepia-installation-and-setup/master/scripts/install-debian-build-environment.sh
+sudo bash install-debian-build-environment.sh
+```
+You can run the latter (if you have Java already installed) via:  
 ```
 wget https://raw.githubusercontent.com/SEPIA-Framework/sepia-installation-and-setup/master/build_sepia_home_release_apt.sh
 sudo bash build_sepia_home_release_apt.sh

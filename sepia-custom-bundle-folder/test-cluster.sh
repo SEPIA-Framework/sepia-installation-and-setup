@@ -1,4 +1,14 @@
 #!/bin/bash
+#
+# set local Java path
+if [ -f "java/version" ]; then
+    new_java_home=$(cat java/version)
+    export JAVA_HOME=$(pwd)/java/$new_java_home
+    export PATH=$JAVA_HOME/bin:$PATH
+	echo "Found local Java version: $JAVA_HOME"
+	echo
+fi
+#
 cd sepia-assist-server
 TOOLS_JAR=$(ls | grep "^sepia-core-tools.*jar" | tail -n 1)
 echo -e "\n-----Assist API-----\n"
@@ -31,6 +41,21 @@ fi
 echo -e '\n-----Database: Elasticsearch-----\n'
 curl -X GET http://localhost:20724/_cluster/health?pretty
 echo -e '\nDONE. Please check output for errors!\n'
-echo -e "If all looks good you should be able to reach your SEPIA server via: $(hostname).local"
-echo -e "Example: $(hostname).local:20721/tools/index.html"
+ip_adr=""
+if [ -x "$(command -v ifconfig)" ]; then
+	ip_adr=$(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
+elif [ -x "$(command -v ip)" ]; then
+	ip_adr=$(ip a | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
+fi
+if [ -z "$ip_adr" ]; then
+	ip_adr="[IP]"
+fi
+echo -e "If all looks good you should be able to reach your SEPIA server via: $(hostname).local or $ip_adr"
+echo -e ''
+echo -e "Example1: http://$(hostname).local:20721/tools/index.html"
+echo -e "Example2: http://$(hostname).local:20726/sepia/assist/tools/index.html (IF you've installed Nginx proxy)"
+echo -e "Example3: http://$ip_adr:20721/tools/index.html"
+echo -e "Example4: http://$ip_adr:20721/app/index.html"
+echo -e ''
+echo -e "Please note: if this is a virtual machine the hostname might not work to contact the server!"
 echo -e ''

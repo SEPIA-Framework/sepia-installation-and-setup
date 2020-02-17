@@ -1,4 +1,14 @@
 #!/bin/bash
+#
+# set local Java path
+if [ -f "java/version" ]; then
+    new_java_home=$(cat java/version)
+    export JAVA_HOME=$(pwd)/java/$new_java_home
+    export PATH=$JAVA_HOME/bin:$PATH
+	echo "Found local Java version: $JAVA_HOME"
+	echo
+fi
+#
 cd elasticsearch
 ./run.sh
 # echo -e 'Waiting for Elasticsearch...\n'
@@ -8,7 +18,7 @@ echo -e '\nStarting SEPIA servers ...\n'
 cd sepia-assist-server
 ./run.sh
 cd ..
-sleep 10
+sleep 15
 cd sepia-websocket-server-java
 ./run.sh
 cd ..
