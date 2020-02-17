@@ -1,5 +1,65 @@
 ## Release history and changelog
 
+### v2.4.1 - 2019.02.17
+
+Updated client to v0.21.0:
+* Introduced new headless mode (URL param. 'isHeadless=true') with support for 'settings.js' file and new remote commandline module (using CLEXI server)
+* Client will automatically switch into setup state after few seconds when in headless mode and no login is given (+ audio notification ^^)
+* Integrated new TTS engine that streams data from SEPIA server (switch via new voice engine selector in settings)
+* Added new 'ILA-Legacy' skin with custom avatar for Always-On mode :-)
+* Added new 'server-access' page for detailed connection configuration (accessible from login and settings, replaces hostname field)
+* Improved automatic hostname recognition
+* Created new icon selection popup and applied it to Teach-UI custom button field
+* Added custom GPS location to device site settings
+* Slightly improved visibility of missed chat messages
+* Improved alarm sound player to better manage other audio sources
+* New CSS options to better control status bar and navigation bar color in Android (and probably iOS)
+* Fixed bugs in view scrolling and 'switchLanguage' service-action
+* Added URL param. 'logout' to start client with automatic logout
+* Improved Teach-UI start-up to allow more pre-filled teach fields
+* Added more debug/help info for insecure-origin (SSL stuff) issues like microphone access restrictions
+* Updated CLEXI lib to v0.8.1
+* Added some IE11 polyfills
+  
+Updated Control-HUB (admin-tools) to v1.3.1:
+* New 'Client Connections' page including remote terminal to access headless clients (via CLEXI)
+* New 'Speech Synthesis' test page for SEPIA TTS endpoint called
+* Smart home: better check of set-cmds entry for toggle button
+* Smart home: added 'sunroom' to list of rooms
+* Improved automatic hostname recognition for '[IP]:20726/sepia/...' origins
+* Updated CLEXI lib to v0.8.1
+  
+Updated Assist-server to v2.4.1:
+* The TTS module of the server has been updated and upgraded to support the 'espeak' engine (flite and picoTTS will follow soon). This means every client can stream TTS from the SEPIA server now if required. Please check the updated 'setup' scripts to install the packages.
+* Improved DataLoader to allow custom command and answer files, e.g. chats_en_custom.txt in addition to chats_en.txt (folder Xtensions/Assistant/...). This way users can better build and manage global custom commands.
+* Smart home interfaces (FHEM, openHAB, TestHub) will load devices correctly via unique ID now
+* The smart home service will ask the user now if its ok to use the first result if a room has multiple devices that match the search
+* If a command uses a smart home device with specific name (tag) e.g. because it was defined via Teach-UI the tag will now be used properly to search the device (see Teach-UI examples)
+* Added 'sunroom' type to Room parameter
+* All brackets in the names of smart home devices will correctly be removed during voice output (use them e.g. to give your devices numbers)
+* Fix for FHEM interface if CrfToken is deactivated in FHEM server
+* Several smaller fixes/tweaks to the smart home interface (better 'state' and 'stateType' checks, "device with number X" works, correct handling of non-existing device types, etc.)
+* Updated radio stations, fixed a bug and added "chill-out" to parameter 'MusicGenre'
+* Improved output format of local time in answers
+* Updated news outlets and removed "11FREUNDE" (feed does not exist anymore :-( )
+* Added a README for the directory listing endpoint that can be found inside the web-content folder
+* Improved Java 11 compatability
+  
+Updated Core-tools to v2.2.5:
+* Fixed a bug in RuntimeInterface
+* Added new 'open_frames_view' action (to be used by services)
+* Better error messages for Apache Http GET method
+* Updated mp3spi lib to v1.9.5.4 to fix a Java 11 issue
+  
+Other servers and tools:
+* Added scripts to install Java locally into SEPIA folder (~/SEPIA/java)
+* Updated server scripts to offer more options, better overview and improve some stuff (e.g. setup Nginx and TTS engine, handle errors better, etc.)
+* Updated installation scripts and descriptions to get rid of some outdated info and stuff (e.g. promote Java 11, sudo warnings, etc.)
+* Teach-Server v2.1.1 has some improved descriptions for Teach-UI commands
+* Updated all servers and tools to use core-tools v2.2.5
+* Updated Dockerfile and added new script to build the build-environment for SEPIA-Home
+* Prepared everything for the release of the official "headless" Raspberry Pi SEPIA-Client
+  
 ### v2.4.0 - 2019.12.30
 
 Updated client to v0.20.0:
