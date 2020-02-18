@@ -1,6 +1,6 @@
 ## Release history and changelog
 
-### v2.4.1 - 2019.02.17
+### v2.4.1 - 2020.02.17
 
 Updated client to v0.21.0:
 * Introduced new headless mode (URL param. 'isHeadless=true') with support for 'settings.js' file and new remote commandline module (using CLEXI server)
@@ -30,10 +30,10 @@ Updated Control-HUB (admin-tools) to v1.3.1:
 * Updated CLEXI lib to v0.8.1
   
 Updated Assist-server to v2.4.1:
-* The TTS module of the server has been updated and upgraded to support the 'espeak' engine (flite and picoTTS will follow soon). This means every client can stream TTS from the SEPIA server now if required. Please check the updated 'setup' scripts to install the packages.
-* Improved DataLoader to allow custom command and answer files, e.g. chats_en_custom.txt in addition to chats_en.txt (folder Xtensions/Assistant/...). This way users can better build and manage global custom commands.
+* The TTS module of the server has been updated and upgraded to support the 'espeak' engine (flite and picoTTS will follow soon). This means every client can stream TTS from the SEPIA server now if required. Please check the updated 'setup' scripts to install the packages!
+* Improved DataLoader to allow custom command and answer files, e.g. chats_en_custom.txt in addition to chats_en.txt (folder: sepia-assist-server/Xtensions/Assistant/...). This way users can better manage global custom commands.
 * Smart home interfaces (FHEM, openHAB, TestHub) will load devices correctly via unique ID now
-* The smart home service will ask the user now if its ok to use the first result if a room has multiple devices that match the search
+* The smart home service will ask the user now if its ok to use the first result in case a device search has multiple matches (given a specific room)
 * If a command uses a smart home device with specific name (tag) e.g. because it was defined via Teach-UI the tag will now be used properly to search the device (see Teach-UI examples)
 * Added 'sunroom' type to Room parameter
 * All brackets in the names of smart home devices will correctly be removed during voice output (use them e.g. to give your devices numbers)
@@ -43,7 +43,7 @@ Updated Assist-server to v2.4.1:
 * Improved output format of local time in answers
 * Updated news outlets and removed "11FREUNDE" (feed does not exist anymore :-( )
 * Added a README for the directory listing endpoint that can be found inside the web-content folder
-* Improved Java 11 compatability
+* Improved Java 11 compatibility
   
 Updated Core-tools to v2.2.5:
 * Fixed a bug in RuntimeInterface
@@ -52,8 +52,8 @@ Updated Core-tools to v2.2.5:
 * Updated mp3spi lib to v1.9.5.4 to fix a Java 11 issue
   
 Other servers and tools:
-* Added scripts to install Java locally into SEPIA folder (~/SEPIA/java)
-* Updated server scripts to offer more options, better overview and improve some stuff (e.g. setup Nginx and TTS engine, handle errors better, etc.)
+* Added scripts to install Java locally into SEPIA folder (~/SEPIA/java). Very useful for Windows systems.
+* Updated server scripts to offer more options, better overview and improved features (e.g. setup Nginx and TTS engine, handle errors better, etc.)
 * Updated installation scripts and descriptions to get rid of some outdated info and stuff (e.g. promote Java 11, sudo warnings, etc.)
 * Teach-Server v2.1.1 has some improved descriptions for Teach-UI commands
 * Updated all servers and tools to use core-tools v2.2.5
