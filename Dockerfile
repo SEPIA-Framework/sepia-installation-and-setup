@@ -10,22 +10,26 @@ RUN echo 'Installing SEPIA-Home...' && \
 #	Update package sources
 	apt-get update && \
 #
+#	Fix for Debian9/10 slim to be able to install Java
+	mkdir -p /usr/share/man/man1 && \
+#
 #	Get packages
 	apt-get install -y --no-install-recommends \
         sudo git wget curl nano unzip zip procps \
 		openjdk-11-jdk-headless ca-certificates-java \
 		ntpdate nginx \
-		espeak-ng espeak-ng-espeak && \
+		espeak-ng espeak-ng-espeak libpopt0 && \
+#
+# 	Update time-sync - NOTE: not possible in Docker; will use host clock
+#	sudo ntpdate -u ntp.ubuntu.com
 #
 #   Clean up
     apt-get clean && apt-get autoclean && apt-get autoremove -y && \
 #
-# 	Update time-sync
-	ntpdate -u ntp.ubuntu.com
-#
 #   Create a Linux user
     useradd --create-home --shell /bin/bash admin && \
-	adduser admin sudo
+	adduser admin sudo && \
+	echo "admin ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 # Set JAVA_HOME path ... just in case
 
