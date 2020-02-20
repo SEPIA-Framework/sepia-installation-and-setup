@@ -23,9 +23,9 @@ while true; do
 	echo "1: Install Java OpenJDK 11 globally (alternative: download SEPIA-Home first and use local Java installation)"
 	echo "2: Install required packages and update server-clock for precise timers"
 	echo "3: Download SEPIA-Home bundle version: $SEPIA_VERSION"
-	echo "4: Extract SEPIA-Home to ~/SEPIA (recommended home folder for SEPIA)"
-	echo "5: Optional: Install NGINX reverse-proxy (alternative to SEPIA Reverse-Proxy)"
-	echo "6: Optional: Download and deploy NGINX proxy config for SEPIA local network (HTTP without SSL)"
+	echo "4: Extract SEPIA-Home to '~/SEPIA' (currently required home folder for SEPIA)"
+	echo "5: Optional: Install NGINX reverse-proxy (recommended alternative to SEPIA Reverse-Proxy)"
+	echo "6: Optional: Download and deploy NGINX proxy config for SEPIA"
 	echo ""
 	read -p "Enter a number plz (0 to exit): " option
 	echo ""
@@ -106,7 +106,7 @@ while true; do
 
 		#echo 'Downloading nginx reverse-proxy HTTP config for SEPIA ...'
 		echo "------------------------"
-		echo "UNDER CONSTRUCTION - Alternative: Run 'bash setup-nginx.sh' inside your SEPIA-Home folder"
+		echo "UNDER CONSTRUCTION - For now please run 'bash setup-nginx.sh' inside your SEPIA-Home folder"
 		echo "------------------------"
 
 	else
