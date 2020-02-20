@@ -84,7 +84,7 @@ while true; do
 	echo "5: Set hostname of this machine to 'sepia-home' (works e.g. for Debian/Raspian Linux)"
 	echo "6: Suggest cronjobs for server (open cronjobs manually with 'crontab -e' and copy/paste lines)"
 	echo "7: Install TTS engine and voices"
-	echo "8: Install Java locally in SEPIA folder"
+	echo "8: Install Java locally into SEPIA folder"
 	echo ""
 	if [ -z "$option" ]; then
 		read -p "Enter a number plz (0 to exit): " option
@@ -103,7 +103,14 @@ while true; do
 			java -jar $JAR_NAME setup --my
 		fi
 		echo "------------------------"
-		echo "If you saw no errors on the screen you can now use ./run-sepia.sh to start SEPIA."
+		echo "Please check the screen for errors. If you saw nothing suspicious you can continue with:"
+		echo ""
+		echo "1) TTS engine installation (menu entry 7, optional but recommended)"
+		echo "2) Set up NGINX to secure your server: bash setup-nginx.sh (optional but recommended)"
+		echo "3) Start SEPIA server: bash run-sepia.sh"
+		echo ""
+		echo "When you're done and everything works as expected check out the suggested cronjobs (step 6) to run SEPIA automatically."
+		echo "If you want to use your own auto-start procedure please include the commands from either 'on-reboot.sh' or 'on-docker.sh'."
 		echo "------------------------"
 	elif [ $option = "2" ] 
 	then

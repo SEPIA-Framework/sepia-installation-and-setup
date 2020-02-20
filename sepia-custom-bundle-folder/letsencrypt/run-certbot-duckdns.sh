@@ -5,6 +5,17 @@
 # The SEPIA folder
 SEPIA_FOLDER=~/SEPIA
 
+# Check certbot
+if [ -x "$(command -v certbot)" ]
+then
+	echo "Certbot found: $(command -v certbot)"
+else
+	echo "Installing certbot ..."
+	sudo apt-get update
+	sudo apt-get install certbot
+	echo ""
+fi
+
 # Get domain variable (DOMAIN) set via SEPIA DuckDNS setup
 echo "Loading settings from $SEPIA_FOLDER/letsencrypt/duck-dns-settings.sh"
 cd $SEPIA_FOLDER/letsencrypt

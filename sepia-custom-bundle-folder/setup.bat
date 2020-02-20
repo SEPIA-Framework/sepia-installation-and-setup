@@ -31,7 +31,7 @@ echo 2: Define new admin and assistant passwords
 echo 3: Setup dynamic DNS with DuckDNS
 echo 4: Start Elasticsearch
 echo 5: Install TTS engine and voices
-echo 6: Install Java locally in SEPIA folder
+echo 6: Install Java locally into SEPIA folder
 echo. 
 set /p option="Enter a number plz (0 to exit): "
 echo. 
