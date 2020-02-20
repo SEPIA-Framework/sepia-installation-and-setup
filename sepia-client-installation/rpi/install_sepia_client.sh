@@ -94,10 +94,11 @@ echo "=========================================="
 echo "Installing proxy ..."
 sudo apt-get install -y nginx
 sudo cp sepia-client-nginx.conf /etc/nginx/sites-enabled/
-sudo service nginx reload
+sudo nginx -t
+sudo nginx -s reload
 echo "=========================================="
 echo "DONE!"
 echo ""
 echo "Please make sure that your Raspberry automatically logs in after reboot (sudo raspi-config -> boot -> Desktop -> ...)"
-echo "then reboot the RPi and after a few seconds you should here a voice saying 'just a second' followed by 'ready for setup' few seconds later."
+echo "then reboot the RPi and after a few seconds you should hear a voice saying 'just a second' followed by 'ready for setup' few seconds later."
 echo "Now you can use the SEPIA Control HUB to set up your new SEPIA Client :-)"

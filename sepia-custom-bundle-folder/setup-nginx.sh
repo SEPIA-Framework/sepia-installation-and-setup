@@ -38,6 +38,7 @@ while true; do
 		sudo cp sepia-fw-http.conf /etc/nginx/sites-enabled/
 		
 		echo "Restarting NGINX to load new config ..."
+		sudo nginx -t
 		sudo nginx -s reload
 		
 		echo ""
