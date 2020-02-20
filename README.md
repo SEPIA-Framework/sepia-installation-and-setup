@@ -42,14 +42,15 @@ If your local tests worked well it is time to create your own (non-admin) accoun
 ## Secure server
 
 Creating your own web-server with SSL encryption will make sure that you can use all features of the app without problems and will also make your server reachable from outside your network (e.g. when you're using the mobile app and want to check your shopping-list inside a supermarket).
-To upgrade you local server to a full-blown web-server with SSL it is recommended to use [Nginx](https://de.wikipedia.org/wiki/Nginx) and [Letsencrypt](https://letsencrypt.org/). There are some scripts included in the SEPIA-Home release to make your life easier, to get started check the Wiki entry [here](https://github.com/SEPIA-Framework/sepia-docs/wiki/SSL-for-your-Server).  
+To upgrade you local server to a full-blown web-server with SSL it is recommended to use [Nginx](https://de.wikipedia.org/wiki/Nginx) and [Letsencrypt](https://letsencrypt.org/). There are some scripts included in the SEPIA-Home release to make your life easier.
+To get started check the Wiki entry about [how to secure your server, use all features and open it to the world](https://github.com/SEPIA-Framework/sepia-docs/wiki/SSL-for-your-Server).  
   
-If you want a super-fast (2min), zero-configuration solution you can use the included SEPIA Reverse-Proxy (Java) together with a neat little tool called "ngrok" to create a temporary, secure web-server:
+If you want a super-fast (2min), zero-configuration, temporary solution you can use the included SEPIA Reverse-Proxy (Java) together with a neat little tool called "ngrok" to create a temporary, secure web-server:
 * Download and extract ngrok for your OS: https://ngrok.com/download
 * Start the SEPIA Reverse-Proxy with one of the scripts inside the "sepia-reverse-proxy"-folder
 * Call `./ngrok http 20726` (or `.\ngrok.exe http 20726` in Windows) and you will get a HTTPS URL for your SEPIA server
 * Use this URL as hostname ([your-ngrok-url]/sepia) in your SEPIA web-app: [your-ngrok-url]/sepia/assist/app/index.html (or in the official, public web-app: https://sepia-framework.github.io/app/index.html)
-* ***The drawback:*** your ngrok-server will expire after a while (~7h) and you need to manually restart it. In this process your URL will change as well.
+* **The drawback:** your ngrok-server will expire after a while (~7h) and you need to manually restart it. In this process your URL will change as well.
 * TO BE CONTINUED ...
 
 ## Build-your-own release (for experts)
