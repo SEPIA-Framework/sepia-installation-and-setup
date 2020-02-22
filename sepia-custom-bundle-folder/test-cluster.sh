@@ -18,7 +18,7 @@ then
 	echo "OK"
 else
 	echo "Error:"
-	curl -X GET http://localhost:20721/ping
+	curl --silent -X GET http://localhost:20721/ping
 fi
 echo -e "\n-----Teach API-----\n"
 java -jar $TOOLS_JAR connection-check httpGetJson -url=http://localhost:20722/ping -maxTries=3 -waitBetween=1500 -expectKey=result -expectValue=success
@@ -27,7 +27,7 @@ then
 	echo "OK"
 else
 	echo "Error:"
-	curl -X GET http://localhost:20722/ping
+	curl --silent -X GET http://localhost:20722/ping
 fi
 echo -e "\n-----Chat API - WebSocket Server-----\n"
 java -jar $TOOLS_JAR connection-check httpGetJson -url=http://localhost:20723/ping -maxTries=3 -waitBetween=1500 -expectKey=result -expectValue=success
@@ -36,10 +36,10 @@ then
 	echo "OK"
 else
 	echo "Error:"
-	curl -X GET http://localhost:20723/ping
+	curl --silent -X GET http://localhost:20723/ping
 fi
 echo -e '\n-----Database: Elasticsearch-----\n'
-curl -X GET http://localhost:20724/_cluster/health?pretty
+curl --silent -X GET http://localhost:20724/_cluster/health?pretty
 echo -e '\nDONE. Please check output for errors!\n'
 ip_adr=""
 if [ -x "$(command -v ip)" ]; then
