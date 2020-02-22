@@ -42,10 +42,9 @@ echo -e '\n-----Database: Elasticsearch-----\n'
 curl -X GET http://localhost:20724/_cluster/health?pretty
 echo -e '\nDONE. Please check output for errors!\n'
 ip_adr=""
-if [ -x "$(command -v ifconfig)" ]; then
-	ip_adr=$(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
-elif [ -x "$(command -v ip)" ]; then
-	ip_adr=$(ip a | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
+if [ -x "$(command -v ip)" ]; then
+	# old: ifconfig
+	ip_adr=$(ip a | grep -E 'eth0|wlan0' | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' | head -1)
 fi
 if [ -z "$ip_adr" ]; then
 	ip_adr="[IP]"
@@ -53,9 +52,12 @@ fi
 echo -e "If all looks good you should be able to reach your SEPIA server via: $(hostname).local or $ip_adr"
 echo -e ''
 echo -e "Example1: http://$(hostname).local:20721/tools/index.html"
-echo -e "Example2: http://$(hostname).local:20726/sepia/assist/tools/index.html (IF you've installed Nginx proxy)"
-echo -e "Example3: http://$ip_adr:20721/tools/index.html"
-echo -e "Example4: http://$ip_adr:20721/app/index.html"
+echo -e "Example2: http://$ip_adr:20721/tools/index.html"
+echo -e "Example3: http://$ip_adr:20721/app/index.html"
+echo -e ''
+echo -e "If you've installed NGINX proxy with self-signed SSL try:"
+echo -e "Example4: https://$(hostname).local:20726/sepia/assist/tools/index.html"
+echo -e "Example5: https://$(hostname).local:20726/sepia/assist/app/index.html"
 echo -e ''
 echo -e "Please note: if this is a virtual machine the hostname might not work to contact the server!"
 echo -e ''

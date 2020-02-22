@@ -27,6 +27,18 @@ if "%exitcode%" == "0" (
 	java -jar %TOOLS_JAR% connection-check httpGetJson -url=http://localhost:20724 -maxTries=25 -waitBetween=2000
 	cd..
 )
+echo # Checking Elasticsearch setup ...
+cd sepia-assist-server
+java -jar %TOOLS_JAR% connection-check httpGetJson -url=http://localhost:20724/users -maxTries=3 -waitBetween=1000
+set exitcode=%errorlevel%
+cd..
+if "%exitcode%" == "0" (
+	echo # Elasticsearch looks GOOD.
+) else (
+	echo # Elasticsearch is NOT yet setup (or not running with default settings)! Run setup.bat first.
+	pause
+	exit
+)
 echo # Starting SEPIA Assist-Server, please wait ...
 cd sepia-assist-server
 start /b "SEPIA-Assist" run.bat > nul

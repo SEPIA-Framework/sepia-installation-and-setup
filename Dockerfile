@@ -61,13 +61,23 @@ RUN echo "Downloading SEPIA-Home (custom bundle) ..." && \
 #
 #	Set up Nginx (HTTP)
 	sudo cp nginx/sites-available/sepia-fw-http.conf /etc/nginx/sites-enabled/sepia-fw-http.conf
-
-#	Setup SEPIA
+#
+#	---------------------
+#	Please read: https://github.com/SEPIA-Framework/sepia-docs/wiki/SEPIA-inside-virtual-environments
+#
+#	Set up Elasticsearch
+#	Run this on your HOST (the machine that starts the Docker container): 	sudo sysctl -w vm.max_map_count=262144
+#	Comment: https://www.elastic.co/guide/en/elasticsearch/reference/5.3/vm-max-map-count.html (the container will inherit this from the host)
+#
+#	Set up SEPIA
 #	NOTE: This has to be done (e.g. by sharing external config folder) before server can run without error
 #	e.g.: 
-#	0 - Create an EMPTY shared folder:		export SEPIA_SHARE=/home/[my-user]/sepia-share && mkdir -p $SEPIA_SHARE
-#	1 - Run setup with shared folder:		sudo docker run --rm --name=sepia_home -p 20726:20726 -it -v $SEPIA_SHARE/SEPIA:/home/admin/SEPIA sepia/home:latest bash setup.sh
-#	2 - Run server:							sudo docker run --rm --name=sepia_home -p 20726:20726 -d -v $SEPIA_SHARE/SEPIA:/home/admin/SEPIA sepia/home:latest
+#	0 - Create an EMPTY shared folder:		SEPIA_SHARE=/home/[my-user]/sepia-home-share && mkdir -p $SEPIA_SHARE
+#	1 - Make a Docker volume out of it:		docker volume create --opt type=none --opt device=$SEPIA_SHARE --opt o=bind sepia-home-share
+#	1 - Run container with terminal:		docker run --rm --name=sepia_home -it -v sepia-home-share:/home/admin/SEPIA sepia/home:vX.Y.Z /bin/bash
+#	2 - Inside container finish setup:		bash setup.sh 	(steps 4 and 1)
+#	3 - Exit container and run as server:	docker run --rm --name=sepia_home -p 20726:20726 -it -v sepia-home-share:/home/admin/SEPIA sepia/home:vX.Y.Z
+#	---------------------
 
 # Start
 WORKDIR /home/admin/SEPIA

@@ -43,10 +43,9 @@ while true; do
 		
 		echo ""
 		ip_adr=""
-		if [ -x "$(command -v ifconfig)" ]; then
-			ip_adr=$(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
-		elif [ -x "$(command -v ip)" ]; then
-			ip_adr=$(ip a | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
+		if [ -x "$(command -v ip)" ]; then
+			# old: ifconfig
+			ip_adr=$(ip a | grep -E 'eth0|wlan0' | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' | head -1)
 		fi
 		if [ -z "$ip_adr" ]; then
 			ip_adr="[IP]"

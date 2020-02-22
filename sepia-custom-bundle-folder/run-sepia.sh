@@ -13,6 +13,14 @@ cd elasticsearch
 ./run.sh
 # echo -e 'Waiting for Elasticsearch...\n'
 ./wait.sh
+echo "Checking Elasticsearch setup ..."
+es_check=$(curl --silent http://127.0.0.1:20724/users | grep mappings)
+if [ -z "$es_check" ]; then
+	echo "Elasticsearch is NOT yet setup (or not running with default settings)! Run setup.sh first."
+	exit 1
+else
+	echo "Elasticsearch looks GOOD."
+fi
 cd ..
 echo -e '\nStarting SEPIA servers ...\n'
 cd sepia-assist-server
