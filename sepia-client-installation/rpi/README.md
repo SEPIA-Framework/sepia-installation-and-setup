@@ -92,6 +92,7 @@ Tested with: Raspian Buster, RPi4
 
 * Install the Hyperpixel touchscreen first: `curl https://get.pimoroni.com/hyperpixel4 | bash`
 * Continue with variant 1 installation procedure
+* Use `bash setup.sh` to switch between 'display', 'headless' or 'pseudo-headless' mode
 * If you have problems with the touchscreen (swapped axis etc.) run `bash update_hyperpixel4_boot.sh`
-* Use `bash setup.sh` to switch between 'display' and 'headless' mode
+* If your screen width is smaller than 500px, e.g. 480px (typical Hyperpixel width) you can use `bash adapt_to_small_screen.sh 20` to shift the screen by 20px (chromium bug)
 * Continue with the step 'SEPIA Client Setup' of the common instruction above or configure system via display/touchscreen

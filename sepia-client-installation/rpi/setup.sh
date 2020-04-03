@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
-# TODO: Option1: change CLEXI ID (in CLEXI config and client settings.js)
-# TODO: Option2: switch between headless and display
+
 # check commandline arguments
 option=""
 breakafterfirst="false"
@@ -9,10 +8,10 @@ if [ -n "$1" ]; then
     option=$1
 	breakafterfirst="true"
 fi
+
 # env
 client_settings="$HOME/clexi/www/sepia/settings.js"
 clexi_settings="$HOME/clexi/settings.json"
-#client_run_script="$HOME/.config/openbox/autostart"
 client_run_script="$HOME/sepia-client/run.sh"
 	
 # stat menu loop
@@ -25,7 +24,7 @@ while true; do
 	echo "2: Set SEPIA Client mode to 'headless'"
 	echo "3: Set SEPIA Client mode to 'pseudo-headless' (headless settings + display)"
 	echo "4: Set SEPIA Client mode to 'display'"
-	echo "5: Set hostname of SEPIA Server"
+	echo "5: Enter hostname of your SEPIA Server"
 	echo "6: Set SEPIA Client device ID"
 	echo ""
 	if [ -z "$option" ]; then

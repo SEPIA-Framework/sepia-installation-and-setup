@@ -37,22 +37,19 @@ mkdir -p ~/sepia-client/chromium
 cp setup.sh ~/sepia-client/
 cp run.sh ~/sepia-client/
 cp shutdown.sh ~/sepia-client/
+cp on-login.sh ~/sepia-client/
 mkdir -p ~/.config/openbox
 cp openbox ~/.config/openbox/autostart
 startfile=~/.bashrc
-if grep -q "exec startx" $startfile; then
-    echo "Found 'startx' in .bashrc already"
+if grep -q "sepia_run_on_login" $startfile; then
+    echo "Found 'sepia_run_on_login' in .bashrc already"
 else
-    echo '' >> $startfile
-    echo '# SEPIA-Client auto-start at (non SSH) login' >> $startfile
-    echo 'if [[ ! $DISPLAY && $XDG_VTNR -eq 1 ]]; then' >> $startfile
-    echo '    client_run_script="$HOME/sepia-client/run.sh"' >> $startfile
-    echo '    if [ -z $(cat "$client_run_script" | grep is_headless=1) ]; then' >> $startfile
-    echo '        exec startx' >> $startfile
-    echo '    else' >> $startfile
-    echo '        bash $client_run_script' >> $startfile
-    echo '    fi' >> $startfile
-    echo 'fi' >> $startfile
+	echo '' >> $startfile
+	echo '# Run SEPIA-Client on login?' >> $startfile
+	echo 'sepia_run_on_login="$HOME/sepia-client/on-login.sh"' >> $startfile
+	echo 'if [ -f "$sepia_run_on_login" ]; then' >> $startfile
+	echo '    bash $sepia_run_on_login' >> $startfile
+	echo 'fi' >> $startfile
 fi
 echo "=========================================="
 #
@@ -70,6 +67,9 @@ fi
 echo "node.js $(node -v)"
 git clone https://github.com/bytemind-de/nodejs-client-extension-interface.git ~/clexi
 cp clexi_settings.json ~/clexi/settings.json
+# copy additional runtime commands
+mkdir -p ~/clexi/runtime_commands
+cp runtime_commands/. ~/clexi/runtime_commands/
 cd ~/clexi
 sudo apt-get install -y bluetooth bluez libbluetooth-dev libudev-dev libnss3-tools libcap2-bin openssl
 npm install --loglevel error
