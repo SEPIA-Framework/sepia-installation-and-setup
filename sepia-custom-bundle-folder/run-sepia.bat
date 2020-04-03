@@ -35,7 +35,7 @@ cd..
 if "%exitcode%" == "0" (
 	echo # Elasticsearch looks GOOD.
 ) else (
-	echo # Elasticsearch is NOT yet setup (or not running with default settings)! Run setup.bat first.
+	echo # Elasticsearch is NOT yet setup ^(or not running with default settings^)^! Run setup.bat first.
 	pause
 	exit
 )
