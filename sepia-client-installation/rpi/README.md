@@ -53,7 +53,7 @@ network={
 
 ### 5) Fine Tuning
 
-* Optional: Open the CLEXI settings.json file located at `~/clexi/settings.json` to tweak your client (e.g. activate "Hey SEPIA"). NOTE: please do this AFTER a successful configuration and reboot (previous step)
+* Optional: Open the CLEXI settings.json file located at `~/clexi/www/sepia/settings.js` to tweak your client (e.g. activate "Hey SEPIA"). NOTE: please do this AFTER a successful configuration and reboot (previous step)
 * Done. Enjoy! :-)
 
 ## Variant 1: USB Mic - Speakers via audio jack
