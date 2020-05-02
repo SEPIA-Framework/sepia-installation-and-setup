@@ -70,7 +70,7 @@ if "%option%" == "4" (
 	goto enteroption
 )
 if "%option%" == "5" (
-	echo Please check the README file located in the folder 'sepia-assist-server\Xtensions\TTS\espeak-ng\'. Basically you need to install espeak-ng and copy the files from 'programs' to 'Xtensions\TTS\espeak-ng\'.
+	echo Please check the folder 'sepia-assist-server\Xtensions\TTS' and its sub-folders to learn how to install TTS extensions (e.g. Espeak or MaryTTS).
 	echo.
 	pause
 	goto enteroption

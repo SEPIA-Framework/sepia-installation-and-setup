@@ -197,6 +197,8 @@ while true; do
 		rm -rf tmp
 		echo "------------------------"
 		echo "DONE."
+		echo "NOTE: MaryTTS server is available as extension, see folder: "
+		echo "sepia-assist-server/Xtensions/TTS/marytts/INSTALL.md"
 		echo "------------------------"
 	elif [ $option = "8" ] 
 	then

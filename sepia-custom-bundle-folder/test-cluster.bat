@@ -46,9 +46,27 @@ if "%exitcode%" == "0" (
 ) else (
 	echo KO
 )
+SETLOCAL EnableDelayedExpansion
+IF EXIST "Xtensions\TTS\marytts\bin\marytts-server.bat" (
+	echo. 
+	echo Checking Extension: MaryTTS Server ...
+	java -jar !TOOLS_JAR! connection-check httpGetJson -url=http://localhost:59125/voices -maxTries=3 -waitBetween=1000 -expectKey=result -expectValue=success
+	set exitcode=!errorlevel!
+	if "!exitcode!" == "0" (
+		echo OK
+	) else (
+		echo DEACTIVATED
+	)
+)
+SETLOCAL DisableDelayedExpansion
 echo. 
 echo DONE.
 echo If all looks OK you should be able to reach your SEPIA server via: %computername%.local
-echo Example: %computername%.local:20721/tools/index.html
+echo Example1: %computername%.local:20721/tools/index.html
+echo Example2: %computername%.local:20721/app/index.html
+echo Example3: http://localhost:20721/app/index.html (recommended for secure context)
+echo.
+echo For more info about secure context and microphone access in the SEPIA client see:
+echo https://github.com/SEPIA-Framework/sepia-docs/wiki/SSL-for-your-Server
 pause
 exit
