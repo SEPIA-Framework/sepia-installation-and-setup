@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 echo.
 SET thispath=%~dp0
-SET javaurl="https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u232-b09/OpenJDK8U-jdk_x64_windows_hotspot_8u232b09.zip"
+SET javaurl="https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u252-b09/OpenJDK8U-jdk_x64_windows_hotspot_8u252b09.zip"
 echo Downloading Java OpenJDK 8. This might take a few minutes ...
 echo.
 echo URL: %javaurl%
