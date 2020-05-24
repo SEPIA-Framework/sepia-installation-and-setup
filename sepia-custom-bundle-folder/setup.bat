@@ -70,7 +70,7 @@ if "%option%" == "4" (
 	goto enteroption
 )
 if "%option%" == "5" (
-	echo Please check the folder 'sepia-assist-server\Xtensions\TTS' and its sub-folders to learn how to install TTS extensions (e.g. Espeak or MaryTTS).
+	echo Please check the folder 'sepia-assist-server\Xtensions\TTS' and its sub-folders to learn how to install TTS extensions ^(e.g. Espeak or MaryTTS^).
 	echo.
 	pause
 	goto enteroption
