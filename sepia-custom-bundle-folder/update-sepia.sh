@@ -11,6 +11,7 @@ get_latest_release() {
 if [ -n "$1" ]; then
 	echo "Welcome!"
 	echo "You've selected a custom file to update SEPIA: $1"
+	echo "NOTE: use abolute path ONLY!"
 else
 	echo "Welcome! Checking version number of latest SEPIA release, just a second ..."
 	SEPIA_VERSION=$(get_latest_release "SEPIA-Framework/sepia-installation-and-setup")
@@ -51,7 +52,6 @@ if [ -n "$1" ]; then
 else
 	wget https://github.com/SEPIA-Framework/sepia-installation-and-setup/releases/latest/download/SEPIA-Home.zip
 fi
-#cp ~/SEPIA-Home.zip $ORG_FOLDER/update/	# use this for custom download
 unzip SEPIA-Home.zip -d $ORG_FOLDER
 cd ~
 LAST_BACKUP=$(ls -Art SEPIA-Backup_* | tail -n 1)
