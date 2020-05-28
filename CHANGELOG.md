@@ -1,5 +1,98 @@
 ## Release history and changelog
 
+### v2.5.0 - 2020.05.29
+
+Updated client to v0.22.0:
+* Major updates to Teach-UI to make creation of custom commands easier and more intuitive including examples and input pop-up for parameter data
+* Added function to open Teach-UI via long-press on custom command button to edit command (uses new server endpoint, see below)
+* Exported **wake-word** configuration to 'wakeWord.js' file (folder 'xtensions'), implemented switching of Porcupine engine (v1.4-1.6) and added all free wake-words (>40). Instructions included in folder.
+* Updates for new weather service including new icons, styles and card updates
+* Load new TTS voices list from SEPIA server (TTS endpoint) + smaller TTS fixes
+* New skin 'historic future' as homage to 80s science fiction including **new avatar** for always-on mode 
+* Fixed bugs in 'geocoder' module and related errors in my-view page update
+* Fixed a bug in speech recognition that could sometimes prevent the result from loading at first try
+* Updated CLEXI lib to v0.8.2, added support for 'runtime-commands' (e.g to handle DIY client reboot and shutdown) and fixed a bug in CLEXI connection
+* Added broadcasting of speech events via CLEXI connection (intended for DIY client e.g. to set LED status lights)
+* Added support for integrated speech recognition in Firefox Nightly (currently requires activation of 'media.webspeech.recognition.enable' and 'media.webspeech.recognition.force_enable' flags in FF)
+* Improved security by restricting access to certain SEPIA library functions via session token and by escaping all HTML code inside plain chat messages (includes adjustments to handle new chat server behavior)
+* Improved 'inputControls' module, fixed gamepad support and remote trigger
+* Improved handling of 'lastAudioStream' and stream title
+* Added proper chat labels (indicators that show when messages were posted) for 'today' and improved 'UI.showInfo'
+* Improved 'intent://' handling of Android inApp browser
+* Added URL param 'autoSetup' (similar to headless-mode) to load settings.js at start and enter setup mode after 8s if no user is logged in
+* Added basic web-worker interface that can be used to run code in background thread
+* Optimized app start-up, initial page and skin loading
+* Improved logger (for dev tools console)
+* Smaller and bigger skin and style tweaks all over the place (skin upgrades, Firefox scrollbar support, etc.)
+  
+Updated Control-HUB (admin-tools) to v1.3.2:
+* Several updates and improvements to 'smart home' page including full suport for new internal HUB, custom interfaces (including ioBroker and MQTT), smart device creation and more intuitive server settings handling
+* Implemented new 'user list' endpoint and added request button to 'user management' page
+* Added 'runtime-commands' support (new CLEXI feature) to 'client connection' page and updated CLEXI lib to v0.8.2
+* More colors for CLEXI remote-terminal connection broadcasts + log filter options
+* Adjustments to handle all server changes (see below, e.g. camel-case in JSON etc.)
+* Improved automatic hostname detection for public URLs during login
+* Improved logger (for dev tools console)
+  
+Updated Assist-server to v2.5.0:
+* Added completely new weather services with improved results, new icons and NO API KEY requirements
+* Integrated TTS engines 'Pico' (3 voices) and 'Mary-TTS' (5 voices + X, requires server) + automatic handling of Mary-TTS server at SEPIA start
+* Manage smart devices inside SEPIA and handle multiple smart HUB interfaces at the same time via the new interface 'SmartDevicesDb' using the new database indices 'smart-devices' and 'smart-interfaces' (implementation: 'SmartDevicesElasticsearch')
+* Added new smart home HUB connectors (partially supporting 'SmartHomeHub') for **ioBroker** and **MQTT**
+* Added new smart home HUB interface 'InternalHub' that stores smart devices inside the internal SEPIA DB and can connect to multiple instances of: openHAB, FHEM, ioBroker and MQTT to read/control devices
+* Several improvements to 'SmartDevice' NLU parameter to find best device match for example extraction of known (buffered) device names
+* Several improvements to 'SmartHomeHub' interface to support new implementations
+* New types 'terrace' and 'balcony' for parameter 'Room' and tweaks for type 'other'
+* Added GZIP header for FHEM interface to avoid (potential) bug with large 'getDevices' results
+* Changed 'SmartHomeDevice' JSON fields to use camel-case consistently
+* Improved smart home service to use all new features and fixed some bugs
+* Updated news with sections for 'health' and 'corona' and added answer for devices without active display
+* Created new 'ThreadManager' class to better handle all (most) active threads of the server and offer some convenience methods e.g. for parallel processing
+* Added new worker type 'DuplexConnectionInterface' + MQTT implementation and improved existing workers
+* Improved collection and presentation of server statistics to include smart home APIs, new workers and threads
+* Added 'processTime' field to 'NluResult' JSON output with details about NLU and service time
+* Updated 'ClientControls' service and 'ClientFunction' parameter to support new 'runtime-commands' feature (related to CLEXI updates)
+* Added 'resume' to NLU parameter 'Action' and improved music and radio related services
+* Extended 'UserManagementEndpoint' to accept action 'list' and return a basic overview of all user accounts
+* Added general support for **Kotlin** and added 'com.willowtreeapps.fuzzywuzzy' (0.1.1) Kotlin library 
+* Added new new fuzzy match methods to 'StringCompare'
+* Added class 'ParameterTools' to run performance critical methods via a profiler that will auto-skip slow calls
+* Changed NLU sentence normalizers to keep '?' if its in the MIDDLE of a sentence
+* Improved 'WebsearchBasic' service to handle devices that don't have an active display (via 'ENVIRONMENTS.deviceHasActiveDisplay')
+* Improved 'OpenCustomLink' service security for links that contain Javascript code
+* Improved RSS feed reader error correction
+* Improved account data validation
+* Many smaller tweaks to parameters, services and answers
+* Code clean-ups for Java 11
+  
+Updated WebSocket Chat-Server to v1.3.0:
+* Updated 'SepiaMqttClient' and 'SepiaMqttClientOptions' with new methods, e.g. for topic subscriptions and connection checks
+* Introduced server-side HTML encoding for the 'text' field in 'SocketMessage' to prevent HTML injections by default
+* NOTE: Due to the changes in 'SocketMessage' SEPIA services cannot use HTML content in plain answers anymore (use actions or cards instead)
+  
+Updated Teach-Server to v2.2.0:
+* New endpoint 'getPersonalCommandsByIds'
+* Restructuring of 'common.json' file used by Teach-UI to define shared parameters + general improvements and more info for commands. 
+* NOTE: Due to the format changes of 'common.json' old SEPIA clients (<0.22.0) need to be updated
+  
+Updated Core-tools to v2.2.6:
+* Added new user roles: infant, kid, teen, elderly
+* Extended 'AuthenticationInterface' and 'Elasticsearch' with methods for 'listUsers' and 'getDocuments'
+* Optimized Http GET/POST/etc. methods in 'Connectors' to support GZIP encoding header, fixed some header issues and added timeout parameter
+* Added 'CsvUtils' to tools to read CSV data
+* Added 'deviceHasActiveDisplay' to 'ENVIRONMENTS'
+* Added 'org.owasp.encoder' lib and new HTML encode and escape methods to 'Converters' class
+* Added Apache Commons-IO lib
+* Improvements to 'JSON', 'StringTools', 'URLBuilder', 'RuntimeInterface' and 'EsQueryBuilder'
+* Updated jackson-databind to v2.9.10.3
+  
+Other servers, tools and common changes:
+* Improved server setup, run and test scripts including support for Mary-TTS server
+* Improved server update and backup scripts and added script to import backups
+* Added script to import SSL certificates into Java truststore (Linux, beta, useful for self-signed SSL)
+* Improved DIY client installation and setup (more info soon)
+* Updated all servers and tools to use core-tools v2.2.6
+  
 ### v2.4.1 - 2020.02.17
 
 Updated client to v0.21.0:
