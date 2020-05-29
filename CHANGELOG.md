@@ -1,6 +1,6 @@
 ## Release history and changelog
 
-### v2.5.0 - 2020.05.29
+### v2.5.0 - 2020.05.30
 
 Updated client to v0.22.0:
 * Major updates to Teach-UI to make creation of custom commands easier and more intuitive including examples and input pop-up for parameter data
@@ -30,6 +30,7 @@ Updated Control-HUB (admin-tools) to v1.3.2:
 * Implemented new 'user list' endpoint and added request button to 'user management' page
 * Added 'runtime-commands' support (new CLEXI feature) to 'client connection' page and updated CLEXI lib to v0.8.2
 * More colors for CLEXI remote-terminal connection broadcasts + log filter options
+* Added save file button to 'Code-UI' page and implemented auto-loading of class name on code paste event (if possible)
 * Adjustments to handle all server changes (see below, e.g. camel-case in JSON etc.)
 * Improved automatic hostname detection for public URLs during login
 * Improved logger (for dev tools console)
@@ -78,6 +79,7 @@ Updated Teach-Server to v2.2.0:
 Updated Core-tools to v2.2.6:
 * Added new user roles: infant, kid, teen, elderly
 * Extended 'AuthenticationInterface' and 'Elasticsearch' with methods for 'listUsers' and 'getDocuments'
+* Extended 'ConnectionCheck' tool to optionally print error via 'printError' argument
 * Optimized Http GET/POST/etc. methods in 'Connectors' to support GZIP encoding header, fixed some header issues and added timeout parameter
 * Added 'CsvUtils' to tools to read CSV data
 * Added 'deviceHasActiveDisplay' to 'ENVIRONMENTS'
