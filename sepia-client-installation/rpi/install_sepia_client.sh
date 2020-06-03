@@ -69,7 +69,7 @@ git clone https://github.com/bytemind-de/nodejs-client-extension-interface.git ~
 cp clexi_settings.json ~/clexi/settings.json
 # copy additional runtime commands
 mkdir -p ~/clexi/runtime_commands
-cp runtime_commands/. ~/clexi/runtime_commands/
+cp runtime_commands/* ~/clexi/runtime_commands/
 cd ~/clexi
 sudo apt-get install -y bluetooth bluez libbluetooth-dev libudev-dev libnss3-tools libcap2-bin openssl
 npm install --loglevel error
