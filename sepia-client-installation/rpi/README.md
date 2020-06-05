@@ -29,7 +29,7 @@ network={
 
 ### 3) Run SEPIA Client Setup
 
-* Run `bash setup.sh` from the `~/install` folder
+* Run `bash setup.sh` from the `~/sepia-client` folder
 * Set SEPIA server host address (as you would inside your SEPIA app login box)
 * Optional: Define a unique device ID (default is 'o1', Android apps have 'a1' and browsers 'b1' by default)
 * Optional: Define a new CLEXI-ID (this can be used as password for the remote terminal later, default is: clexi-123)
@@ -53,8 +53,12 @@ network={
 
 ### 5) Fine Tuning
 
-* Optional: Open the CLEXI settings.json file located at `~/clexi/settings.json` to tweak your client (e.g. activate "Hey SEPIA"). NOTE: please do this AFTER a successful configuration and reboot (previous step)
+* Optional: Open the CLEXI settings.json file located at `~/clexi/www/sepia/settings.js` to tweak your client (e.g. activate "Hey SEPIA"). NOTE: please do this AFTER a successful configuration and reboot (previous step)
 * Done. Enjoy! :-)
+
+## Variants
+
+Choose one of the following variants that fits best to your hardware.
 
 ## Variant 1: USB Mic - Speakers via audio jack
 
@@ -63,9 +67,14 @@ Tested with: Raspian Buster, RPi3, RPi4
 ### Install
 
 * Create installation folder `mkdir -p ~/install` and switch to directory `cd ~/install`
-* Download scripts `wget https://github.com/SEPIA-Framework/sepia-installation-and-setup/raw/dev/sepia-client-installation/sepia_client_rpi_raspbian_buster.zip` (TODO: REPLACE WITH MASTER)
+* Download one of the install scripts:
+  * Current release version: `wget https://github.com/SEPIA-Framework/sepia-installation-and-setup/raw/master/sepia-client-installation/sepia_client_rpi_raspbian_buster.zip`
+  * Most recent developer version: `wget https://github.com/SEPIA-Framework/sepia-installation-and-setup/raw/dev/sepia-client-installation/sepia_client_rpi_raspbian_buster.zip`
 * `unzip sepia_client_rpi_raspbian_buster.zip`
-* `bash install_sepia_client.sh dev` (TODO: REPLACE WITH MASTER)
+* Run the install script with one of these options:
+  * Default: `bash install_sepia_client.sh`
+  * Skip Bluetooth components: `bash install_sepia_client.sh skipBLE`
+  * Use dev branch client: `bash install_sepia_client.sh dev`
 * `bash install_usb_mic.sh`
 * Reboot the system
 * Continue with the step 'SEPIA Client Setup' of the common instruction above
@@ -92,6 +101,7 @@ Tested with: Raspian Buster, RPi4
 
 * Install the Hyperpixel touchscreen first: `curl https://get.pimoroni.com/hyperpixel4 | bash`
 * Continue with variant 1 installation procedure
+* Use `bash setup.sh` to switch between 'display', 'headless' or 'pseudo-headless' mode
 * If you have problems with the touchscreen (swapped axis etc.) run `bash update_hyperpixel4_boot.sh`
-* Use `bash setup.sh` to switch between 'display' and 'headless' mode
+* If your screen width is smaller than 500px, e.g. 480px (typical Hyperpixel width) you can use `bash adapt_to_small_screen.sh 20` to shift the screen by 20px (chromium bug)
 * Continue with the step 'SEPIA Client Setup' of the common instruction above or configure system via display/touchscreen

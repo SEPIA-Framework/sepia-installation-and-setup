@@ -9,6 +9,8 @@ IF EXIST "java\version" (
 	set PATH=!JAVA_HOME!\bin;!PATH!
 )
 SETLOCAL DisableDelayedExpansion
+echo # Starting SEPIA
+echo #
 echo # Checking Elasticsearch access...
 cd sepia-assist-server
 FOR /F "delims=|" %%I IN ('DIR "sepia-core-tools-*.jar" /B /O:D') DO SET TOOLS_JAR=%%I
@@ -27,6 +29,47 @@ if "%exitcode%" == "0" (
 	java -jar %TOOLS_JAR% connection-check httpGetJson -url=http://localhost:20724 -maxTries=25 -waitBetween=2000
 	cd..
 )
+echo # Checking Elasticsearch setup ...
+cd sepia-assist-server
+java -jar %TOOLS_JAR% connection-check httpGetJson -url=http://localhost:20724/users -maxTries=3 -waitBetween=1000
+set exitcode=%errorlevel%
+cd..
+if "%exitcode%" == "0" (
+	echo # Elasticsearch looks GOOD.
+) else (
+	echo # Elasticsearch is NOT yet setup ^(or not running with default settings^)^! Run setup.bat first.
+	pause
+	exit
+)
+echo # Checking extensions ...
+SETLOCAL EnableDelayedExpansion
+IF EXIST "sepia-assist-server\Xtensions\TTS\marytts\bin\marytts-server.bat" (
+	echo # Found MaryTTS Text-To-Speech extension. 
+	echo # Looking for TTS server at default address "http://localhost:59125" ...
+	cd sepia-assist-server
+	java -jar !TOOLS_JAR! connection-check httpGetJson -url=http://localhost:59125/voices -maxTries=3 -waitBetween=1000
+	set exitcode=!errorlevel!
+	if "!exitcode!" == "0" (
+		echo # MaryTTS server is running.
+		cd..
+	) else (
+		echo # Starting MaryTTS server, please wait ...
+		cd Xtensions\TTS\marytts\bin
+		set MARYTTS_SERVER_OPTS="-Xmx300m"
+		start /MIN "MaryTTS-Server" marytts-server.bat
+		cd..\..\..\..
+		java -jar !TOOLS_JAR! connection-check httpGetJson -url=http://localhost:59125/voices -maxTries=30 -waitBetween=2000
+		set exitcode=!errorlevel!
+		if "!exitcode!" == "0" (
+			echo # MaryTTS server looks GOOD.
+		) else (
+			echo # MaryTTS server did NOT respond, ignoring it for now.
+			echo # Plz check "sepia-assist-server\Xtensions\TTS\marytts" for more info.
+		)
+		cd..
+	)
+)
+SETLOCAL DisableDelayedExpansion
 echo # Starting SEPIA Assist-Server, please wait ...
 cd sepia-assist-server
 start /b "SEPIA-Assist" run.bat > nul

@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
-# TODO: Option1: change CLEXI ID (in CLEXI config and client settings.js)
-# TODO: Option2: switch between headless and display
+
 # check commandline arguments
 option=""
 breakafterfirst="false"
@@ -9,10 +8,10 @@ if [ -n "$1" ]; then
     option=$1
 	breakafterfirst="true"
 fi
+
 # env
 client_settings="$HOME/clexi/www/sepia/settings.js"
 clexi_settings="$HOME/clexi/settings.json"
-#client_run_script="$HOME/.config/openbox/autostart"
 client_run_script="$HOME/sepia-client/run.sh"
 	
 # stat menu loop
@@ -25,8 +24,9 @@ while true; do
 	echo "2: Set SEPIA Client mode to 'headless'"
 	echo "3: Set SEPIA Client mode to 'pseudo-headless' (headless settings + display)"
 	echo "4: Set SEPIA Client mode to 'display'"
-	echo "5: Set hostname of SEPIA Server"
+	echo "5: Enter hostname of your SEPIA Server"
 	echo "6: Set SEPIA Client device ID"
+	echo "7: Activate CLEXI Bluetooth support"
 	echo ""
 	if [ -z "$option" ]; then
 		read -p "Enter a number plz (0 to exit): " option
@@ -77,6 +77,25 @@ while true; do
 	then
 		read -p "Enter new SEPIA Client device ID (e.g. o1): " new_device_id
 		sed -i "s/\"deviceId\": \".*\"/\"deviceId\": \"$new_device_id\"/" $client_settings
+		echo "------------------------"
+		echo "DONE."
+		echo "------------------------"
+	elif [ $option = "7" ]
+	then
+		echo "NOTE: This will only work if you did NOT skip Bluetooth during the client installation (skipBLE flag)!"
+		read -p "Type 'ok' to add CLEXI 'ble-beacon-scanner' module to settings.json: " add_ble_mod
+		if [ -n "$add_ble_mod" ] && [ "$add_ble_mod" = "ok" ]
+		then
+			has_ble="$(cat "$clexi_settings" | grep ble-beacon-scanner)"
+			if [ -z "$has_ble" ]
+			then
+				sed -i "s|\"clexi-broadcaster\",|\"clexi-broadcaster\",\"ble-beacon-scanner\",|" $clexi_settings
+			else
+				echo "It seems the module was already active."
+			fi
+		else
+			echo "Ok, maybe later."
+		fi
 		echo "------------------------"
 		echo "DONE."
 		echo "------------------------"

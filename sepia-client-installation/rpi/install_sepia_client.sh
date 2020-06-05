@@ -1,5 +1,8 @@
 #!/bin/bash
-#parameter 1: SEPIA client git branch (e.g. dev)
+#usage examples: 
+#bash install_sepia_client.sh dev 			-> CLIENT_BRANCH=dev, 		SKIP_BLE=false
+#bash install_sepia_client.sh skipBLE 		-> CLIENT_BRANCH=master, 	SKIP_BLE=true
+#bash install_sepia_client.sh dev skipBLE 	-> CLIENT_BRANCH=dev, 		SKIP_BLE=true
 set -e
 this_folder=$(pwd)
 is_armv6l() {
@@ -8,6 +11,21 @@ is_armv6l() {
     *) return 1 ;;
   esac
 }
+# kind of clumsy but easy way to allow combination of arguments CLIENT_BRANCH, SKIP_BLE
+CLIENT_BRANCH="master"
+SKIP_BLE="false"
+if [ -n "$1" ]; then
+    if [ "$1" = "skipBLE" ]; then
+		SKIP_BLE="true"
+	else
+		CLIENT_BRANCH="$1"
+	fi
+fi
+if [ -n "$2" ]; then
+    if [ "$2" = "skipBLE" ]; then
+		SKIP_BLE="true"
+	fi
+fi
 #
 # Prepare
 echo "Preparing installation of SEPIA Client for Raspberry Pi ..."
@@ -34,25 +52,19 @@ echo "Installing app environment ..."
 sudo apt-get install -y --no-install-recommends xserver-xorg x11-xserver-utils xinit openbox xvfb
 sudo apt-get install -y --no-install-recommends chromium-browser unclutter
 mkdir -p ~/sepia-client/chromium
-cp setup.sh ~/sepia-client/
-cp run.sh ~/sepia-client/
-cp shutdown.sh ~/sepia-client/
+cp sepia-client/* ~/sepia-client/
 mkdir -p ~/.config/openbox
 cp openbox ~/.config/openbox/autostart
 startfile=~/.bashrc
-if grep -q "exec startx" $startfile; then
-    echo "Found 'startx' in .bashrc already"
+if grep -q "sepia_run_on_login" $startfile; then
+    echo "Found 'sepia_run_on_login' in .bashrc already"
 else
-    echo '' >> $startfile
-    echo '# SEPIA-Client auto-start at (non SSH) login' >> $startfile
-    echo 'if [[ ! $DISPLAY && $XDG_VTNR -eq 1 ]]; then' >> $startfile
-    echo '    client_run_script="$HOME/sepia-client/run.sh"' >> $startfile
-    echo '    if [ -z $(cat "$client_run_script" | grep is_headless=1) ]; then' >> $startfile
-    echo '        exec startx' >> $startfile
-    echo '    else' >> $startfile
-    echo '        bash $client_run_script' >> $startfile
-    echo '    fi' >> $startfile
-    echo 'fi' >> $startfile
+	echo '' >> $startfile
+	echo '# Run SEPIA-Client on login?' >> $startfile
+	echo 'sepia_run_on_login="$HOME/sepia-client/on-login.sh"' >> $startfile
+	echo 'if [ -f "$sepia_run_on_login" ]; then' >> $startfile
+	echo '    bash $sepia_run_on_login' >> $startfile
+	echo 'fi' >> $startfile
 fi
 echo "=========================================="
 #
@@ -70,8 +82,18 @@ fi
 echo "node.js $(node -v)"
 git clone https://github.com/bytemind-de/nodejs-client-extension-interface.git ~/clexi
 cp clexi_settings.json ~/clexi/settings.json
+# copy additional runtime commands
+mkdir -p ~/clexi/runtime_commands
+cp runtime_commands/* ~/clexi/runtime_commands/
 cd ~/clexi
-sudo apt-get install -y bluetooth bluez libbluetooth-dev libudev-dev libnss3-tools libcap2-bin openssl
+if [ "$SKIP_BLE" != "true" ]; then
+    sudo apt-get install -y bluetooth bluez libbluetooth-dev libudev-dev libnss3-tools libcap2-bin openssl
+else
+	# Skip Bluetooth - TODO: if CLEXI changes the package.json this will break ...
+	sed -ri "s|\"node-beacon-scanner.*github:bytemind-de/node-beacon-scanner\"||" package.json
+	sed -ri "s|1.0.1\",|1.0.1\"|" package.json
+	sudo apt-get install -y libnss3-tools libcap2-bin openssl
+fi
 npm install --loglevel error
 sudo setcap cap_net_raw+eip $(eval readlink -f `which node`)
 cd $this_folder
@@ -81,11 +103,7 @@ echo "=========================================="
 echo "Downloading latest SEPIA Client version ..."
 mkdir -p ~/clexi/www/sepia
 mkdir -p ~/tmp
-if [ -z "$1" ]; then
-    git clone https://github.com/SEPIA-Framework/sepia-html-client-app.git ~/tmp/sepia-client-git
-else
-    git clone --single-branch -b $1 https://github.com/SEPIA-Framework/sepia-html-client-app.git ~/tmp/sepia-client-git
-fi
+git clone --single-branch -b $CLIENT_BRANCH https://github.com/SEPIA-Framework/sepia-html-client-app.git ~/tmp/sepia-client-git
 mv ~/tmp/sepia-client-git/www/* ~/clexi/www/sepia/
 rm -rf ~/tmp/sepia-client-git
 echo "=========================================="

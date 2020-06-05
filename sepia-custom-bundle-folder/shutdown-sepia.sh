@@ -21,7 +21,9 @@ cd ..
 cd elasticsearch
 ./shutdown.sh
 cd ..
+echo "Shutting down Extensions: MaryTTS server"
+pkill -f 'java .*sepia-assist.*marytts.server.*'
 echo -e '\n---- wait a second (or 3) ----\n'
 sleep 3
-echo -e '\n---- testing ----\n'
+echo -e '---- testing ----\n'
 ./sepia-status.sh

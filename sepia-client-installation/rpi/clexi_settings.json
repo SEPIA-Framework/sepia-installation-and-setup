@@ -10,6 +10,6 @@
 	"xtensions": [
 		"clexi-broadcaster",
 		"clexi-http-events",
-		"ble-beacon-scanner"
+		"runtime-commands"
 	]
 }
