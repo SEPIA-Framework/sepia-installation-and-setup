@@ -1,6 +1,6 @@
 ## Release history and changelog
 
-### v2.5.0 - 2020.05.30
+### v2.5.0 - 2020.06.06
 
 Updated client to v0.22.0:
 * Major updates to Teach-UI to make creation of custom commands easier and more intuitive including examples and input pop-up for parameter data
