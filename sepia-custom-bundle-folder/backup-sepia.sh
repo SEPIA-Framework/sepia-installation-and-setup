@@ -21,8 +21,8 @@ mkdir -p $BCK_FOLDER/sepia-websocket-server-java/Xtensions
 mkdir -p $BCK_FOLDER/sepia-reverse-proxy/settings
 cp sepia-assist-server/Xtensions/assist.custom.properties $BCK_FOLDER/sepia-assist-server/Xtensions/
 cp -r sepia-assist-server/Xtensions/Plugins $BCK_FOLDER/sepia-assist-server/Xtensions/
-cp sepia-assist-server/Xtensions/Assistant/commands/*_custom.txt $BCK_FOLDER/sepia-assist-server/Xtensions/Assistant/commands/
-cp sepia-assist-server/Xtensions/Assistant/answers/*_custom.txt $BCK_FOLDER/sepia-assist-server/Xtensions/Assistant/answers/
+find ./sepia-assist-server/Xtensions/Assistant/commands/ -maxdepth 1 -iname "*_custom.txt" -exec cp {} $BCK_FOLDER/sepia-assist-server/Xtensions/Assistant/commands/ \;
+find ./sepia-assist-server/Xtensions/Assistant/answers/ -maxdepth 1 -iname "*_custom.txt" -exec cp {} $BCK_FOLDER/sepia-assist-server/Xtensions/Assistant/answers/ \;
 cp sepia-assist-server/Xtensions/DynamicDNS/duck-dns.properties $BCK_FOLDER/sepia-assist-server/Xtensions/DynamicDNS/
 cp letsencrypt/duck-dns-settings.sh $BCK_FOLDER/letsencrypt/
 cp -r letsencrypt/work $BCK_FOLDER/letsencrypt/
