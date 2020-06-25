@@ -70,11 +70,13 @@ IF EXIST "sepia-assist-server\Xtensions\TTS\marytts\bin\marytts-server.bat" (
 	)
 )
 SETLOCAL DisableDelayedExpansion
+timeout 2 > nul
 echo # Starting SEPIA Assist-Server, please wait ...
 cd sepia-assist-server
 start /b "SEPIA-Assist" run.bat > nul
+timeout 3 > nul
+java -jar %TOOLS_JAR% connection-check httpGetJson -url=http://localhost:20721/ping -maxTries=10 -waitBetween=2500 -expectKey=result -expectValue=success
 cd..
-timeout 4 > nul
 echo # Starting SEPIA Chat-Server, please wait ...
 cd sepia-websocket-server-java
 start /b "SEPIA-Chat" run.bat > nul

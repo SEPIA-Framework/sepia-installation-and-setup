@@ -58,6 +58,7 @@ if [ -f "sepia-assist-server/Xtensions/TTS/marytts/bin/marytts-server" ]; then
 		cd ../../../../..
 	fi
 fi
+sleep 2
 echo -e '\nStarting SEPIA servers ...\n'
 cd sepia-assist-server
 ./run.sh
