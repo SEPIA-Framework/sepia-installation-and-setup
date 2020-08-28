@@ -54,6 +54,9 @@ if [ -f "$chromedatadir/Default/Preferences" ]; then
     sed -i 's/"geolocation":{}/"geolocation":{"http:\/\/localhost:8080,http:\/\/localhost:8080":{"last_modified":"13224291716729005","setting":1}}/' $chromedatadir/Default/Preferences
     sed -i 's/"media_stream_mic":{}/"media_stream_mic":{"http:\/\/localhost:8080,*":{"last_modified":"13224291643099497","setting":1}}/' $chromedatadir/Default/Preferences
 fi
+audio_input_device='default'
+audio_output_device='default'
+default_chrome_flags="--user-data-dir=$chromedatadir --alsa-output-device=$audio_output_device --alsa-input-device=$audio_input_device --allow-insecure-localhost --autoplay-policy=no-user-gesture-required --disable-infobars --enable-features=OverlayScrollbar --hide-scrollbars --no-default-browser-check --check-for-update-interval=31536000"
 # headless or with display:
 pi_model=$(tr -d '\0' </proc/device-tree/model)
 is_pi4=0
@@ -61,16 +64,16 @@ case "$pi_model" in *"Pi 4"*) is_pi4=1;; *) is_pi4=0;; esac
 echo "RPi model: $pi_model - Is Pi4: $is_pi4"
 if [ "$is_headless" -eq "0" ]; then
 	echo "Running SEPIA-Client in 'display' mode. Use SEPIA Control-HUB to connect and control via remote terminal, default URL is: $clexi_ws_url"
-	chromium-browser --user-data-dir=$chromedatadir --alsa-output-device=default --allow-insecure-localhost --autoplay-policy=no-user-gesture-required --disable-infobars --enable-features=OverlayScrollbar --hide-scrollbars --kiosk "$client_url?isApp=true" >/dev/null 2>&1
+	chromium-browser $default_chrome_flags --kiosk "$client_url?isApp=true" >/dev/null 2>&1
 elif [ "$is_headless" -eq "2" ]; then
 	echo "Running SEPIA-Client in 'pseudo-headless' mode. Use SEPIA Control-HUB to connect and control via remote terminal, default URL is: $clexi_ws_url"
-	chromium-browser --user-data-dir=$chromedatadir --alsa-output-device=default --allow-insecure-localhost --autoplay-policy=no-user-gesture-required --disable-infobars --enable-features=OverlayScrollbar --hide-scrollbars --kiosk "$client_url?isApp=true&isHeadless=true" >/dev/null 2>&1
+	chromium-browser $default_chrome_flags --kiosk "$client_url?isApp=true&isHeadless=true" >/dev/null 2>&1
 elif [ "$is_pi4" = "1" ]; then
 	echo "Running SEPIA-Client in 'headless Pi4' mode. Use SEPIA Control-HUB to connect and control via remote terminal, default URL is: $clexi_ws_url"
-    xvfb-run -n 2072 --server-args="-screen 0 500x800x24" chromium-browser --disable-features=VizDisplayCompositor --user-data-dir=$chromedatadir --alsa-output-device=default --allow-insecure-localhost --autoplay-policy=no-user-gesture-required --disable-infobars --enable-features=OverlayScrollbar --hide-scrollbars --kiosk "$client_url?isApp=true&isHeadless=true" >/dev/null 2>&1
+    xvfb-run -n 2072 --server-args="-screen 0 500x800x24" chromium-browser --disable-features=VizDisplayCompositor $default_chrome_flags --kiosk "$client_url?isApp=true&isHeadless=true" >/dev/null 2>&1
 else
 	echo "Running SEPIA-Client in 'headless' mode. Use SEPIA Control-HUB to connect and control via remote terminal, default URL is: $clexi_ws_url"
-    xvfb-run -n 2072 --server-args="-screen 0 320x480x16" chromium-browser --user-data-dir=$chromedatadir --alsa-output-device=default --allow-insecure-localhost --autoplay-policy=no-user-gesture-required --disable-infobars --enable-features=OverlayScrollbar --hide-scrollbars --kiosk "$client_url?isApp=true&isHeadless=true" >/dev/null 2>&1
+    xvfb-run -n 2072 --server-args="-screen 0 320x480x16" chromium-browser $default_chrome_flags --kiosk "$client_url?isApp=true&isHeadless=true" >/dev/null 2>&1
 fi
 echo "Closed SEPIA-Client. Cu later :-)"
 espeak-ng "Bye bye, see you!"

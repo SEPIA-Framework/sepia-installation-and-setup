@@ -105,3 +105,16 @@ Tested with: Raspian Buster, RPi4
 * If you have problems with the touchscreen (swapped axis etc.) run `bash update_hyperpixel4_boot.sh`
 * If your screen width is smaller than 500px, e.g. 480px (typical Hyperpixel width) you can use `bash adapt_to_small_screen.sh 20` to shift the screen by 20px (chromium bug)
 * Continue with the step 'SEPIA Client Setup' of the common instruction above or configure system via display/touchscreen
+
+## Basic uninstallation steps
+
+There is no uninstall script yet and some things will depend on your specific installation variant. The easiest way is to simply reinstall the OS but here are roughly the required steps:
+* Open the folder `~/sepia-client` and run `shutdown.sh`
+* Delete folder `~/sepia-client`
+* Delete folder `~/clexi`
+* Delete folder `~/.config/openbox` and remove 'openbox' via `sudo apt-get remove openbox`
+* Remove Chromium via `sudo apt-get remove chromium-browser`
+* Open `~/.bashrc` and remove the SEPIA entry below '# Run SEPIA-Client on login?'
+* Delete, check or adjust your ALSA config `~/.asoundrc` prüfen oder entfernen
+
+Whats left are packages like Node.js, Xserver and hardware related stuff (if you've installed a touchscreen or microphone etc.).
