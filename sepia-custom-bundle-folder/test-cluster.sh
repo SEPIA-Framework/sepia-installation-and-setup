@@ -8,8 +8,16 @@ if [ -f "java/version" ]; then
 	echo "Found local Java version: $JAVA_HOME"
 	echo
 fi
+# check commandline arguments
+do_all_tests=0
+if [ -n "$1" ]; then
+	if [ $1 = "all" ]; then
+		do_all_tests=1
+	fi
+fi
 #
 RES_CODE=0
+#
 cd sepia-assist-server
 TOOLS_JAR=$(ls | grep "^sepia-core-tools.*jar" | tail -n 1)
 echo -e "\n-----Assist API-----\n"
@@ -18,10 +26,12 @@ if [ $? -eq 0 ]
 then
 	echo "OK"
 else
-	echo "Error:"
+	echo "Error: Assist API NOT working or NOT reachable (localhost:20721)"
 	curl --silent -X GET http://localhost:20721/ping
 	RES_CODE=1
-	exit 1
+	if [ $do_all_tests -eq 0 ]; then
+		exit 1
+	fi
 fi
 echo -e "\n-----Teach API-----\n"
 java -jar $TOOLS_JAR connection-check httpGetJson -url=http://localhost:20722/ping -maxTries=3 -waitBetween=1500 -expectKey=result -expectValue=success
@@ -29,7 +39,7 @@ if [ $? -eq 0 ]
 then
 	echo "OK"
 else
-	echo "Error:"
+	echo "Error: Teach API NOT working or NOT reachable (localhost:20722)"
 	curl --silent -X GET http://localhost:20722/ping
 	RES_CODE=1
 fi
@@ -39,9 +49,17 @@ if [ $? -eq 0 ]
 then
 	echo "OK"
 else
-	echo "Error:"
+	echo "Error: Chat API NOT working or NOT reachable (localhost:20723)"
 	curl --silent -X GET http://localhost:20723/ping
 	RES_CODE=1
+fi
+echo -e "\n-----Proxy-----\n"
+java -jar $TOOLS_JAR connection-check httpGetJson -url=http://localhost:20726/sepia/assist/ping -maxTries=3 -waitBetween=1500 -expectKey=result -expectValue=success
+if [ $? -eq 0 ]
+then
+	echo "Proxy OK"
+else
+	echo "Info: Proxy seems to be OFFLINE! (Checked via 'localhost:20726/sepia/assist/' route)"
 fi
 if [ -f "Xtensions/TTS/marytts/bin/marytts-server" ]; then
 	echo -e '\n-----Extensions-----\n'
@@ -55,19 +73,21 @@ fi
 echo -e '\n-----Database: Elasticsearch-----\n'
 ES_RES=$(curl --silent -X GET http://localhost:20724/_cluster/health?pretty | grep 'yellow\|green')
 if [ -z "$ES_RES" ]; then
-	echo "Error:"
+	echo "Error: Elasticsearch NOT working or NOT reachable (localhost:20724)"
 	curl --silent -X GET http://localhost:20724/_cluster/health?pretty
 	RES_CODE=1
-	exit 1
+	if [ $do_all_tests -eq 0 ]; then
+		exit 1
+	fi
 else
 	echo "OK"
 fi
 if [ $RES_CODE -eq 1 ]; then
-	echo -e '\nDONE - It seems there were one ore more ERRORS, please check the output!'
+	echo -e '\nDONE - It seems there were one ore more critical ERRORS, please check the output!'
 	echo -e 'Before you continue consider running the shutdown script once.\n'
 	exit 1
 fi
-echo -e '\nDONE - If you made it this far all should be GOOD, but please double-check the output.\n'
+echo -e '\nDONE - If you made it this far the basic setup looks GOOD, but please double-check the output.\n'
 ip_adr=""
 if [ -x "$(command -v ip)" ]; then
 	# old: ifconfig
