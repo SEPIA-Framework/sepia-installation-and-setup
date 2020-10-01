@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-javaurl="https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.7%2B10/OpenJDK11U-jdk_arm_linux_hotspot_11.0.7_10.tar.gz"
+javaurl="https://api.adoptopenjdk.net/v3/binary/latest/11/ga/linux/arm/jdk/hotspot/normal/adoptopenjdk"
 echo "Downloading Java OpenJDK 11. This might take a few minutes ..."
 echo
 echo "URL: $javaurl"

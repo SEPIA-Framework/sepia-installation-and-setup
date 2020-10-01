@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-javaurl="https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u252-b09/OpenJDK8U-jdk_arm_linux_hotspot_8u252b09.tar.gz"
+javaurl="https://api.adoptopenjdk.net/v3/binary/latest/8/ga/linux/arm/jdk/hotspot/normal/adoptopenjdk"
 echo "Downloading Java OpenJDK 8. This might take a few minutes ..."
 echo
 echo "URL: $javaurl"
