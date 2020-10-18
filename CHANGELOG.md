@@ -1,5 +1,135 @@
 ## Release history and changelog
 
+### v2.5.1 - 2020.10.XX
+
+Updated client to v0.23.0:
+* Added support for PWA (progressive web app) feature of browsers/OS via new basic service worker and PWA manifest file
+* Android 10 support aka set 'targetSdkVersion' to 29, updated Cordova to v9, android-platform plugin to v8.1.0 and several other plugins
+* Implemented context menu for every result card, e.g. radio/music-stream (+ playlist button, if available), news (read or copy), weather, etc.
+* Improved presentation of weather results and added more mini icons
+* Greatly extended capabilities of custom view frames with proper integration of microphone, new scoped functions (e.g. 'handleSpeechToTextInput') and secure loading from SEPIA client (folder available in Android as well) or server (SEPIA web-server folder)
+* New folders for HTML 'templates', 'custom-data' and 'local_data' + automatic file path expansion for the tags '<custom_data>/', '<local_data>/', '<app_data>/' (root folder), '<assist_server>/' (URL to SEPIA web-server), '<teach_server>/' and '<chat_server>/'
+* Added example custom view to new 'xtensions/custom-data/' folder
+* Support for new service-actions 'open_settings', 'frames_view_action', 'close_frames_view' and 'switch_stt_engine'
+* Support for new service-action 'custom_event' to trigger internal events that can e.g. be captured in the new custom view frames (works very well with SDK services)
+* Added new remote-action type 'sync' for remote my-view, list and time-event updates and implemented it to update timers instantly across active devices
+* Start and stop audio streams via new remote-action type 'audio_stream' + 'control' and changed data type 'music' to 'media'
+* Added functions to get and show user clients and to send remote-actions via WebSocket chat-server
+* Added 'connect', 'disconnect', 'wakeWordOn', 'wakeWordOff' and 'reload' to remote-action "hotkeys" (shortcuts: 'co', 'dc', 'ww', 'wm', 'F5')
+* Added request source check to some remote-actions to allow e.g. 'mic' or 'connect' only if source is "protected" (aka coming from 'sepia-chat-server' or 'clexi-remote' + clexi-ID)
+* Automatically mark open lists as out-of-date if any active client changes the data
+* New client event 'sepia_alarm_event' that will be broadcasted (to CLEXI) when an alarm is triggered/removed/stopped
+* New client event 'sepia-audio-player-event' that will inform about audio streams (start/stop/URL etc.)
+* Additional client events for 'sepia-account-error' and 'sepia-client-error' + 'sepia-state' event will now inform about 'connection' state (active, closed, etc.)
+* Increased maximal number of custom buttons from 16 to 42 and in addition load custom buttons that were stored via assistant user (this way admins can create buttons for all users at once)
+* Updated icon-set for custom command buttons and improved material-icons loading procedure
+* Improved login-restore procedure on app start and added automatic login-retry after connection or server error
+* Improved checks and handling of expired login tokens and prevent login-refresh try if client-ID was changed
+* Added settings button to login-box to quickly change device ID etc. before login
+* New touch-bar control style selectable via settings that uses only the bottom of the screen for swipe and automatically minimizes text input field (double-tap triggers back button)
+* New animations for speech input (speech-bubble-box 'processing')
+* Very basic dual-screen support (e.g. Surface-Duo, wip)
+* Added (very) basic big-screen mode to optionally remove size-limit of client window (settings)
+* Added 'deviceId' to all account related API calls
+* Interpret double-space as line-break in chat messages
+* Added support for automatic-actions to UI pop-up and used it to trigger several retry-button actions automatically after few seconds delay (e.g. after connection loss)
+* Fixed a bug that could sometimes crash the event queue after an empty speech result so that the client would not return to idle state
+* Fixed a bug in Android speech recognition that could crash the app when the service was not supported/activated
+* Added an auto-reset trigger if client is in 'loading' state for more than 45s and (if enabled) made sure that the wake-word listener will restart reliably
+* Added 'keywords' field to remote terminal cmd 'get wakeword'
+* Improved audio-player error handling
+* Made the client more secure by adding 'DOMPurify' library and better sanitizing injected HTML code in cards, actions and chat
+* Improved demo mode with new test actions (e.g. for 'open_frames_view' action via "action frame_1")
+* Added some more language codes to the experimental ASR settings
+* Improved audio recorder code + added ability to define custom sound for mic activation confirm and default recorder buffer length (hidden in "Hey SEPIA" settings page)
+* Added settings option to select avatar independently from skin, made possible by splitting CSS files for skin and avatar + added ability to load 'base' skins and avatars when adding new skins
+* New skins "flaming squirrel" and "flaming squirrel dark"
+* Added support for "alive-ping" messages from WebSocket chat-server
+* Send device info (device local-site etc.) to chat-server ('userOrDeviceInfo' via 'Client.sendOrRequestDataUpdate')
+* Added new smart-home room types to local device-site menu
+* Added support for 'userPreferredSearchEngine' and search-engine selector to settings
+* Added new 'Assistant.waitForOpportunitySayLocalTextAndRunAction' function to make it easier to trigger text + action etc. via custom views
+* Fixed an occasional render bug in chat (Chromium only)
+* Improved support for storage-access API (web-dev)
+* UI + UX improvements, better error messages, fixes and smaller improvements for very old browsers (e.g. IE11 and old Androids)
+  
+Updated Control-HUB (admin-tools) to v1.4.0:
+* Improved code-ui with new user custom-services manager to load, edit and delete previously uploaded services (source-code)
+* Improved code-ui to automatically select smart-service extension type when service file is opened
+* New user-roles editor UI (replaces old, error-prone input field)
+* Optimized CLEXI connection flow by using 'pingAndConnect' instead of just 'connect'
+* Added new CLEXI remote terminal 'set' command examples ('micReset', 'connect', 'disconnect') and tweaked log colors
+* Added button to client-connections page to show active clients via new 'getOwnClientConnections' chat-server endpoint
+* Added 'DOMPurify' library with new function 'sanitizeHtml' and applied it to code, tts and smart home page
+* Added statistics button to chat-server card in server overview page
+* New room types 'entrance' and 'attic' for smart-home page
+* Several smaller UI tweaks (e.g. for pop-up messages), updated material icons and improved icon loading
+* Added support for PWA (progressive web app) feature of browsers/OS via new basic service worker and PWA manifest file
+  
+Updated Assist-server to v2.5.1:
+* New news section 'maker' and new news outlets 'NY Times', 'The Guardian', '1E9', 'SPIEGEL Start' (replaces 'Bento'), 'Raspberry Pi' and 'SEPIA' + improved default selection for different sections
+* Added SDK endpoint 'get-services' to load a list of user installed services
+* Improved SDK service upload, store source code and load it via new '/get-service-source' endpoint
+* New 'EventsBroadcaster' class, adaptations to 'RemoteActionEndpoint' and new method 'sendRemoteAction' (ServiceBuilder) for services
+* New 'changeEvent' class and broadcaster to push e.g. user-data updates like changed lists and alarms directly to active clients
+* Added new "custom view demo" (Xtensions/WebContent/views/custom-view-demo.html)
+* Added new command 'frame_control' to create custom commands for custom view frames more easily
+* Allow parameter extraction in services via named-groups in 'setCustomTriggerRegX' 
+* Added 'qwant' and 'ecosia' as default web search options and evaluate user preference (if given via client 'prefSearchEngine')
+* Fixed a nasty bug inside the string conversion method for optional parameters (could prevent runtime commands from working when custom JSON was used)
+* Renamed legacy service 'OpenDashboard' to 'SettingsService' and fixed it to open settings info page
+* Added new 'ActionBuilder' class to make usage in services easier + adjustments to handle changes in 'ACTIONS' class (core-tools)
+* Fixes and improvements for some NLU parameters and services (e.g. 'AlarmName', 'NewsSection', 'SportsTeam', 'OpenCustomLink') + slightly improved 'RssFeedReader'
+* New 'Room' parameter types 'entrance' and 'attic'
+* Fixed a bug in smart device type filter that could prevent automatic device loading from HUBs like 'FHEM' or 'openHAB'
+* Sanitized device loading procedure for internal smart home HUB to improve timing for larger lists of items
+* Automatically replace "/" at the end of smart home interface URLs to improve UX
+* Added new 'validUntil' field to authentication endpoint and improved error code for expired tokens
+* Added 'playlistURL' to card-data of each radio station if available
+* Added CORS support for static file hosting + 2 new config options for assist.[].properties: 'enable_cors' and 'enable_file_cors'
+* Updated Bundesliga service and teams for new season
+* Moved 'ThreadManager' to core tools and adjusted code
+* Changed threshold for failed login attempts from 3 to 5 
+* Tweaked 'saveStatistics' method to introduce random delay of 0-1s to reduce multiple quasi-simultaneous requests to DB
+* Increased WebSocket maximal message size from 64 KB to 256 KB
+* Smaller fixes and improvements (as usual)
+  
+Updated WebSocket Chat-Server to v1.3.1:
+* Increased WebSocket maximal message size from 64 KB to 256 KB
+* Added "broadcast to all devices" feature to remote-action handler and allow client-to-client actions for devices with same user
+* Improved error messages for several handlers, e.g. 'SepiaAuthenticationHandler'
+* Added new 'ClientManager' class and related endpoint '/getOwnClientConnections' to get a list of active clients for a specific user-id
+* Added message data type 'ping' and new background service to test if a client is still alive and active (ClientPingRequestHandler)
+* Added new statistics and endpoint (basically identical to the other servers)
+* Added 'userOrDeviceInfo' to 'updateData' handler to obtain 'deviceLocalSite' and 'deviceGlobalLocation' info from client
+* Changed remote-action type 'music' to 'media'
+  
+Updated Teach-Server to v2.2.1:
+* Added 'frame_control' with examples and description to Teach-UI config ('common.js')
+* New 'getAllCustomAssistantCommands' endpoint to get commands that were defined via assistant user
+* Improved server statistics log
+* Minor tweaks and fixes, e.g. in teach-ui 'common.js'
+  
+Updated Core-tools to v2.2.7:
+* Moved 'ThreadManager' class from assist server to core tools, merged with old class and improved code
+* Added 'frame_control' command to 'CMD'
+* Cleaned up 'ACTIONS' class, fixed some legacy stuff and added 'button_custom_event', 'close_frames_view', 'frames_view_action' and 'switch_stt_engine'
+* Fixed and improved 'unescapeHTML' method (Converters)
+* Added CORS control method for static server files
+* Smaller fix to avoid 'user agent' issues with 'Connectors' class
+* Added 'node_red' name to 'CLIENTS' for future integrations
+* Improved error code handling for failed user-account login requests
+* Added "authentication time" statistics to 'BasicStatistics' class (for all servers)
+* Replaced old 'javax.xml.bind.DatatypeConverter' with 'org.apache.commons.codec.DecoderException' to resolve Java version conflicts
+* A few new methods, e.g. 'writeStringToFile' (FilesAndStreams) and 'getId' (UserDataList)
+  
+Other servers, tools and common changes:
+* Updated all servers to core-tools v2.2.7
+* Improvements to README files and more API docs (see API folder in sepia-docs repository)
+* Improved server scripts with: new embedded Java download links, extended backup procedure (added custom views), proxy test during server start ('test-cluster.sh' only)
+* Experimental Node.js support + Node-RED Nodes: https://github.com/SEPIA-Framework/sepia-node-js-client (check dev branch too)
+* In preparation: updated SDK, DIY client scripts and Docker containers
+  
 ### v2.5.0 - 2020.06.06
 
 Updated client to v0.22.0:
