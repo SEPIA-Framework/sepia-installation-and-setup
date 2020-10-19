@@ -124,7 +124,7 @@ Updated Core-tools to v2.2.7:
 * A few new methods, e.g. 'writeStringToFile' (FilesAndStreams) and 'getId' (UserDataList)
   
 Other servers, tools and common changes:
-* Updated all servers to core-tools v2.2.7
+* Updated all servers to core-tools v2.2.7 and JUnit 14.3.1
 * Improvements to README files and more API docs (see API folder in sepia-docs repository)
 * Improved server scripts with: new embedded Java download links, extended backup procedure (added custom views), proxy test during server start ('test-cluster.sh' only)
 * Experimental Node.js support + Node-RED Nodes: https://github.com/SEPIA-Framework/sepia-node-js-client (check dev branch too)
