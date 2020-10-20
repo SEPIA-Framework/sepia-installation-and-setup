@@ -16,11 +16,17 @@ mkdir -p $BCK_FOLDER/letsencrypt
 mkdir -p $BCK_FOLDER/sepia-assist-server/Xtensions/Assistant/commands
 mkdir -p $BCK_FOLDER/sepia-assist-server/Xtensions/Assistant/answers
 mkdir -p $BCK_FOLDER/sepia-assist-server/Xtensions/DynamicDNS
+mkdir -p $BCK_FOLDER/sepia-assist-server/Xtensions/WebContent/views
 mkdir -p $BCK_FOLDER/sepia-teach-server/Xtensions
 mkdir -p $BCK_FOLDER/sepia-websocket-server-java/Xtensions
 mkdir -p $BCK_FOLDER/sepia-reverse-proxy/settings
 cp sepia-assist-server/Xtensions/assist.custom.properties $BCK_FOLDER/sepia-assist-server/Xtensions/
-cp -r sepia-assist-server/Xtensions/Plugins $BCK_FOLDER/sepia-assist-server/Xtensions/
+if [ -d "sepia-assist-server/Xtensions/Plugins" ]; then
+	cp -r sepia-assist-server/Xtensions/Plugins $BCK_FOLDER/sepia-assist-server/Xtensions/
+fi
+if [ -d "sepia-assist-server/Xtensions/WebContent/views" ]; then
+	cp -r sepia-assist-server/Xtensions/WebContent/views $BCK_FOLDER/sepia-assist-server/Xtensions/WebContent/
+fi
 find ./sepia-assist-server/Xtensions/Assistant/commands/ -maxdepth 1 -iname "*_custom.txt" -exec cp {} $BCK_FOLDER/sepia-assist-server/Xtensions/Assistant/commands/ \;
 find ./sepia-assist-server/Xtensions/Assistant/answers/ -maxdepth 1 -iname "*_custom.txt" -exec cp {} $BCK_FOLDER/sepia-assist-server/Xtensions/Assistant/answers/ \;
 cp sepia-assist-server/Xtensions/DynamicDNS/duck-dns.properties $BCK_FOLDER/sepia-assist-server/Xtensions/DynamicDNS/
@@ -36,13 +42,14 @@ cd $BCK_FOLDER
 echo "Zipping backup..."
 zip -r ~/SEPIA-Backup_$NOW.zip *
 cd ..
-rm -r $BCK_FOLDER
+rm -rf $BCK_FOLDER
 echo ""
 echo "Created backup for default SEPIA-Home installation at: ~/SEPIA-Backup_$NOW.zip"
 echo ""
 echo "The backup includes:"
 echo "- Server configurations (.properties files)"
 echo "- SDK services (Assist-server plugins)"
+echo "- Custom views for HTML services (Assist-server 'WebContent/views')"
 echo "- Complete Elasticsearch database"
 echo "- Custom files for 'commands' and 'answers' (Assist-server)"
 echo "- Duck-DNS config + Let's Encrypt files + self-signed SSL certs"
@@ -50,7 +57,7 @@ echo ""
 echo "NOT included (please backup manually as required!):"
 echo "- Custom modifications to 'radio-stations' and 'news-outlets'"
 echo "- Custom modifications to 'common.json' Teach-UI file"
-echo "- Custom web-server data from 'sepia-assist-server/Xtensions/WebContent'"
+echo "- Custom web-server data from 'sepia-assist-server/Xtensions/WebContent' (except 'views')"
 echo "- Mary-TTS server data from 'sepia-assist-server/Xtensions/TTS/marytts'"
 echo "- Java installation stored in 'java' folder"
 echo "- Log files and cached data (e.g. RSS feeds)"

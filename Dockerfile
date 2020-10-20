@@ -62,6 +62,10 @@ RUN echo "Downloading SEPIA-Home (custom bundle) ..." && \
 #	Set up Nginx (HTTP)
 	sudo cp nginx/sites-available/sepia-fw-http.conf /etc/nginx/sites-enabled/sepia-fw-http.conf
 #
+# Optional, final modifications imported from build folder:
+# ADD *.sh /home/admin/SEPIA/
+# RUN cd ~/SEPIA && sudo find . -iname "*.sh" -exec chmod +x {} \;
+#
 #	---------------------
 #	Please read: https://github.com/SEPIA-Framework/sepia-docs/wiki/SEPIA-inside-virtual-environments
 #
@@ -70,12 +74,13 @@ RUN echo "Downloading SEPIA-Home (custom bundle) ..." && \
 #	Comment: https://www.elastic.co/guide/en/elasticsearch/reference/5.3/vm-max-map-count.html (the container will inherit this from the host)
 #
 #	Set up SEPIA
-#	Before you can run the server you first need to set up the database and core-accounts. Data will be stored in a shared folder, e.g.:
-#	- Create an EMPTY shared folder:	SEPIA_SHARE=/home/[my-user]/sepia-home-share && mkdir -p $SEPIA_SHARE
-#	- Make a Docker volume out of it:	docker volume create --opt type=none --opt device=$SEPIA_SHARE --opt o=bind sepia-home-share
-#	- Run container with terminal:		docker run --rm --name=sepia_home -it -v sepia-home-share:/home/admin/SEPIA sepia/home:vX.Y.Z /bin/bash
-#	- Inside container finish setup:	bash setup.sh 	(steps 4 and 1)
-#	- Exit container and run server:	docker run --rm --name=sepia_home -p 20726:20726 -it -v sepia-home-share:/home/admin/SEPIA sepia/home:vX.Y.Z
+#	NOTE: This has to be done (e.g. by sharing external config folder) before server can run without error
+#	e.g.:
+#	0 - Create an EMPTY shared folder:	SEPIA_SHARE=/home/[my-user]/sepia-home-share && mkdir -p $SEPIA_SHARE
+#	1 - Make a Docker volume out of it:	docker volume create --opt type=none --opt device=$SEPIA_SHARE --opt o=bind sepia-home-share
+#	1 - Run container with terminal:	docker run --rm --name=sepia_home -it -v sepia-home-share:/home/admin/SEPIA sepia/home:vX.X.X /bin/bash
+#	2 - Inside container finish setup:	bash setup.sh (run at least setup steps 4 and 1)
+#	3 - Exit container and run as server:	docker run --rm --name=sepia_home -p 20726:20726 -d -v sepia-home-share:/home/admin/SEPIA sepia/home:vX.X.X
 #	---------------------
 
 # Start

@@ -27,6 +27,8 @@ while true; do
 	echo "5: Enter hostname of your SEPIA Server"
 	echo "6: Set SEPIA Client device ID"
 	echo "7: Activate CLEXI Bluetooth support"
+	echo "8: Set audio input device (ALSA device)"
+	echo "9: Set audio output device (ALSA device)"
 	echo ""
 	if [ -z "$option" ]; then
 		read -p "Enter a number plz (0 to exit): " option
@@ -95,6 +97,28 @@ while true; do
 			fi
 		else
 			echo "Ok, maybe later."
+		fi
+		echo "------------------------"
+		echo "DONE."
+		echo "------------------------"
+	elif [ $option = "8" ]
+	then
+		current_audio_input="$(cat "$client_run_script" | grep ^audio_input_device)"
+		echo "Current audio input device: $current_audio_input"
+		read -p "Enter new input device (e.g. from '/etc/asound.conf'): " new_audio_input
+		if [ -n "$new_audio_input" ]; then
+			sed -i "s/audio_input_device=.*/audio_input_device='$new_audio_input'/" $client_run_script
+		fi
+		echo "------------------------"
+		echo "DONE."
+		echo "------------------------"
+	elif [ $option = "9" ]
+	then
+		current_audio_output="$(cat "$client_run_script" | grep ^audio_output_device)"
+		echo "Current audio output device: $current_audio_output"
+		read -p "Enter new output device (e.g. from '/etc/asound.conf'): " new_audio_output
+		if [ -n "$new_audio_output" ]; then
+			sed -i "s/audio_output_device=.*/audio_output_device='$new_audio_output'/" $client_run_script
 		fi
 		echo "------------------------"
 		echo "DONE."
