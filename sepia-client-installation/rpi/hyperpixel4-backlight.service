@@ -1,0 +1,14 @@
+[Unit]
+Description=Sets up gpio-poweroff to handle Hyperpixel backlight upon shutdown/reboot
+ConditionPathExists=/usr/bin/hyperpixel4-init
+ConditionPathExists=/boot/overlays/gpio-poweroff.dtbo
+ConditionPathExists=/usr/bin/dtoverlay
+DefaultDependencies=no
+Before=umount.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c '/sbin/rmmod gpio-backlight;/usr/bin/dtoverlay /boot/overlays/gpio-poweroff.dtbo gpiopin=19 active_low=1'
+
+[Install]
+WantedBy=reboot.target halt.target poweroff.target

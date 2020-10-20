@@ -39,7 +39,7 @@ network={
 
 ### 4) Configure the Client via Remote Connection
 
-* Continue the setup in your [SEPIA Control HUB](https://github.com/SEPIA-Framework/sepia-admin-tools/tree/master/admin-web-tools) by opening the 'client connections' page
+* Continue the setup in your [SEPIA Control HUB](https://github.com/SEPIA-Framework/sepia-admin-tools/tree/master/admin-web-tools) by opening the 'client connections' page. Make sure to use the HTTP address (not HTTPS) to avoid mixed-content errors due to the 'ws://' URL below!
 * The CLEXI server of your newly installed SEPIA Client should be reachable at `ws://[rpi-IP]:9090/clexi` (via Nginx proxy)
 * Enter your CLEXI-ID from the previous step (or use the default) and press the 'CONNECT' button. The remote terminal window at the bottom will show the status of the connection.
 * By default your headless client will start the 'setup mode'. This might take a while, depending on your RPi model. You should hear the audio message "ready for setup" at some point
