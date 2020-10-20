@@ -1,6 +1,6 @@
 ## Release history and changelog
 
-### v2.5.1 - 2020.10.XX
+### v2.5.1 - 2020.10.21
 
 Updated client to v0.23.0:
 * Added support for PWA (progressive web app) feature of browsers/OS via new basic service worker and PWA manifest file
