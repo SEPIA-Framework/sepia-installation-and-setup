@@ -15,9 +15,9 @@ NOTE: Setup and scripts included in this bundle assume you are using the framewo
   
 If you are using Raspian for Raspberry Pi check out the more detailed [guide](https://github.com/SEPIA-Framework/sepia-docs/wiki/Installation) including an installation script.  
   
-* Make sure you have at least Java 8 installed (tested extensively with [Oracle Java 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html) and OpenJDK 11 (recommended))
+* Make sure you have Java JDK 11 installed (recommended: OpenJDK 11). [Oracle Java JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html) will work as well.
 * Optional: Update your local clock for precise timers (Linux), e.g.: with `sudo apt-get install ntpdate` and `sudo ntpdate -u ntp.ubuntu.com`
-* Place the content of the [SEPIA-Home bundle](https://github.com/SEPIA-Framework/sepia-installation-and-setup/releases) in any folder you like. On Linux "~/SEPIA/" is (highly) recommended if you want to use the boot and SSL scripts later: `unzip SEPIA-Home.zip -d ~/SEPIA`.
+* Place the content of the [SEPIA-Home bundle](https://github.com/SEPIA-Framework/sepia-installation-and-setup/releases) in any folder you like. On Linux "~/SEPIA/" (no root!) is highly recommended if you want to use the boot and SSL scripts later: `unzip SEPIA-Home.zip -d ~/SEPIA`.
 * Run `setup.bat` (Windows) or `bash setup.sh` (Mac, Linux) to setup your SEPIA servers
 * Inside the setup choose 4 to start Elasticsearch and then 1 to setup the SEPIA-Framework. Remember the passwords you set! Optionally install the TTS engine (recommended for Linux). You can skip the other options for now.
 * If everything worked out (check console for errors) you can use "run-sepia" (.bat for Windows, .sh for Linux/Mac) to start all servers.
