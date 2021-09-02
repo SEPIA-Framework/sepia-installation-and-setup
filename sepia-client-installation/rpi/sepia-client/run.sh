@@ -26,6 +26,7 @@ headphone_count=$(amixer scontrols | grep "Headphone" | wc -l)
 if [ $headphone_count -gt 0 ];
 then
     amixer sset 'Headphone' 80%
+    echo "Note: Automatically set headphone input volume to 80%"
 fi
 espeak-ng "Hello friend! I'll be right there, just a second."
 
