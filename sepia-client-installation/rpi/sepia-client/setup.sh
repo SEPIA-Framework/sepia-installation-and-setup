@@ -29,6 +29,7 @@ while true; do
 	echo "7: Activate CLEXI Bluetooth support"
 	echo "8: Set audio input device (ALSA device)"
 	echo "9: Set audio output device (ALSA device)"
+	echo "10: Set and store input/output volume (alsamixer)"
 	echo ""
 	if [ -z "$option" ]; then
 		read -p "Enter a number plz (0 to exit): " option
@@ -123,6 +124,28 @@ while true; do
 		echo "------------------------"
 		echo "DONE."
 		echo "------------------------"
+	elif [ $option = "10" ]
+	then
+		sound_card_player_count=$(aplay -l | grep "^card" | wc -l)
+		sound_card_recorder_count=$(arecord -l | grep "^card" | wc -l)
+		if [ $sound_card_player_count -eq 0 ] && [ $sound_card_recorder_count -eq 0 ]; then
+			echo ""
+			echo "No sound-cards found - RPi Audio HAT service down or service restart required?"
+			seeed_voicecard_service=$(systemctl list-units --full -all | grep "seeed-voicecard.service")
+			if [ -n "$seeed_voicecard_service" ]; then
+				echo "Try: sudo service seeed-voicecard restart"
+			fi
+			echo ""
+			exit
+		else
+			alsamixer
+			alsamixerstate=~/sepia-client/my_amixer_volumes.state
+			alsactl --file "$alsamixerstate" store
+			echo "Stored alsamixer settings at: $alsamixerstate"
+			echo "------------------------"
+			echo "DONE."
+			echo "------------------------"
+		fi
 	else
 		echo "------------------------"
 		echo "Not an option, please try again."
