@@ -2,7 +2,8 @@
 
 # Check Chromium
 is_chromium_running=0
-case "$(ps aux | grep chromium-browser)" in *"sepia-client"*) is_chromium_running=1;; *) is_chromium_running=0;; esac
+# Stop Chromium - NOTE: 'chromium-browser' was replaced by 'chromium' because of version issues
+case "$(ps aux | grep chromium)" in *"sepia-client"*) is_chromium_running=1;; *) is_chromium_running=0;; esac
 if [ "$is_chromium_running" -eq "1" ]; then
     echo "Chromium with SEPIA is: active"
 else

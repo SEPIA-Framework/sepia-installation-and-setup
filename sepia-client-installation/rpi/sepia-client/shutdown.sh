@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Stop Chromium
+# Stop Chromium - NOTE: 'chromium-browser' was replaced by 'chromium' because of version issues
 is_chromium_running=0
-case "$(ps aux | grep chromium-browser)" in *"sepia-client"*) is_chromium_running=1;; *) is_chromium_running=0;; esac
+case "$(ps aux | grep chromium)" in *"sepia-client"*) is_chromium_running=1;; *) is_chromium_running=0;; esac
 if [ "$is_chromium_running" -eq "1" ]; then
     echo "Stopping Chromium with SEPIA"
     #kill $(ps aux | grep "[c]hromium-browser .*sepia-client" | awk '{print $2}')
-    kill $(ps aux | grep "[c]hromium-browser.*sepia-client.*index.html" | awk '{print $2}')
+    kill $(ps aux | grep "[c]hromium.*sepia-client.*index.html" | awk '{print $2}')
     sleep 2
 else
     echo "It seems no Chromium with SEPIA was running"

@@ -2,11 +2,12 @@
 
 ## Common Instructions
 
-Tested with: Raspian Buster, RPi3, RPi4, RPi Zero.
+Last tested with Raspberry Pi OS 2021-05 (aka Raspian Buster) and RPi4 B 2GB-4GB.  
+Expected to work with RPi3 1GB and might even work with RPi Zero 512GB if wake-word is disabled.
 
-### 1) Install Raspbian Buster Lite
+### 1) Install Raspberry Pi OS Lite
 
-* Download Raspbian Buster
+* Download Raspberry Pi OS Lite (the version without desktop)
 * Flash MicroSD with Etcher
 * Remove MicroSD and replug (to reload filesystem)
 * Add an empty file called 'ssh' to the boot folder ([microSD]/boot) to enable SSH
@@ -18,6 +19,7 @@ update_config=1
 network={
     ssid="NETWORK-NAME"
     psk="NETWORK-PASSWORD"
+	id_str="Home"
 }
 ```
 * Eject the MicroSD and plug it into your RPi
@@ -92,7 +94,7 @@ There is no uninstall script yet and some things will depend on your specific in
 * Delete folder `~/sepia-client`
 * Delete folder `~/clexi`
 * Delete folder `~/.config/openbox` and remove 'openbox' via `sudo apt-get remove openbox`
-* Remove Chromium via `sudo apt-get remove chromium-browser`
+* Remove (any) Chromium via `sudo apt-get remove chromium chromium-browser`
 * Open `~/.bashrc` and remove the SEPIA entry below '# Run SEPIA-Client on login?'
 * Delete, check or adjust your ALSA config `~/.asoundrc` prüfen oder entfernen
 

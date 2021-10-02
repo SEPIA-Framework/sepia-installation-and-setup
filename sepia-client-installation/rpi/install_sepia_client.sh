@@ -50,8 +50,10 @@ echo "=========================================="
 # Openbox with Chromium
 echo "Installing app environment ..."
 sudo apt-get install -y --no-install-recommends xserver-xorg x11-xserver-utils xinit openbox xvfb
-sudo apt-get install -y --no-install-recommends chromium-browser unclutter
+# NOTE: 'chromium-browser' has been replaced with 'chromium' for now:
+sudo apt-get install -y --no-install-recommends chromium unclutter
 mkdir -p ~/sepia-client/chromium
+mkdir -p ~/sepia-client/chromium-extensions
 cp sepia-client/* ~/sepia-client/
 mkdir -p ~/.config/openbox
 cp openbox ~/.config/openbox/autostart
@@ -89,7 +91,8 @@ cd ~/clexi
 if [ "$SKIP_BLE" != "true" ]; then
     sudo apt-get install -y bluetooth bluez libbluetooth-dev libudev-dev libnss3-tools libcap2-bin openssl
 else
-	# Skip Bluetooth - TODO: if CLEXI changes the package.json this will break ...
+	# Skip Bluetooth
+	# TODO: if CLEXI changes the package.json this will break ...
 	sed -ri "s|\"node-beacon-scanner.*github:bytemind-de/node-beacon-scanner\"||" package.json
 	sed -ri "s|1.0.1\",|1.0.1\"|" package.json
 	sudo apt-get install -y libnss3-tools libcap2-bin openssl
@@ -102,10 +105,14 @@ echo "=========================================="
 # SEPIA Client
 echo "Downloading latest SEPIA Client version ..."
 mkdir -p ~/clexi/www/sepia
+mkdir -p ~/sepia-client/chromium-extensions/sepia-fw
 mkdir -p ~/tmp
 git clone --single-branch -b $CLIENT_BRANCH https://github.com/SEPIA-Framework/sepia-html-client-app.git ~/tmp/sepia-client-git
+git clone --single-branch -b master https://github.com/SEPIA-Framework/sepia-browser-extensions ~/tmp/sepia-client-browser-ex-git
 mv ~/tmp/sepia-client-git/www/* ~/clexi/www/sepia/
+mv ~/tmp/sepia-client-browser-ex-git/chromium/* ~/sepia-client/chromium-extensions/sepia-fw/
 rm -rf ~/tmp/sepia-client-git
+rm -rf ~/tmp/sepia-client-browser-ex-git
 echo "=========================================="
 #
 # Nginx
