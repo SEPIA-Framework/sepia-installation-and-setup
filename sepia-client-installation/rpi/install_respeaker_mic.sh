@@ -4,6 +4,9 @@ echo "This script will install WM8960 boards like ReSpeaker (2 and 4 mic HAT), W
 echo "Please follow the instructions precisely!"
 echo "The installation may require you to reboot -> install 2nd time (after kernal updates) -> reboot again."
 echo ""
+echo "You can use 'bash update_respeaker_boot.sh' to deactivate RPi's default audio jack and HDMI (audio)."
+echo "Depending on your setup you might need to edit ~/.asoundrc as well to set the correct defaults."
+echo ""
 read -p "Press Enter to continue."
 echo ""
 sudo apt-get update

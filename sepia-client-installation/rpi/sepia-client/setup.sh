@@ -128,19 +128,26 @@ while true; do
 	then
 		sound_card_player_count=$(aplay -l | grep "^card" | wc -l)
 		sound_card_recorder_count=$(arecord -l | grep "^card" | wc -l)
+		seeed_voicecard_service=$(systemctl list-units --full -all | grep "seeed-voicecard.service")
 		if [ $sound_card_player_count -eq 0 ] && [ $sound_card_recorder_count -eq 0 ]; then
 			echo ""
 			echo "No sound-cards found - RPi Audio HAT service down or service restart required?"
-			seeed_voicecard_service=$(systemctl list-units --full -all | grep "seeed-voicecard.service")
 			if [ -n "$seeed_voicecard_service" ]; then
-				echo "Try: sudo service seeed-voicecard restart"
+				echo "Try:"
+				echo "sudo service seeed-voicecard stop && sudo service seeed-voicecard start && aplay -l"
 			fi
 			echo ""
 			exit
 		else
+			echo "Inside alsamixer use F5 to show input and output. If your sound-card doesn't show up by default use F6 to switch. You might need to edit ~/.asoundrc in this case."
+			if [ -n "$seeed_voicecard_service" ]; then
+				echo "For WM8960 boards (ReSpeaker etc.) check 'Playback' and 'Capture' volumes."
+			fi
+			read -p "Press any key to continue (or CTRL+C to abort)."
 			alsamixer
 			alsamixerstate=~/sepia-client/my_amixer_volumes.state
 			alsactl --file "$alsamixerstate" store
+			echo ""
 			echo "Stored alsamixer settings at: $alsamixerstate"
 			echo "------------------------"
 			echo "DONE."

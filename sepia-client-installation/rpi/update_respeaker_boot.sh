@@ -7,10 +7,11 @@ else
 fi
 bootfile="/boot/config.txt"
 sed -i 's/^dtparam=audio=on/dtparam=audio=off/' $bootfile
-sed -i 's/#.*dtoverlay=seeed-2mic-voicecard/dtoverlay=seeed-2mic-voicecard/' $bootfile
-if grep -q "dtoverlay=seeed-2mic-voicecard" $bootfile; then 
-    echo "Found 'dtoverlay=seeed-2mic-voicecard'"
-else
-    echo "dtoverlay=seeed-2mic-voicecard" >> $bootfile
-fi
+# previously required (now problematic):
+# sed -i 's/#.*dtoverlay=seeed-2mic-voicecard/dtoverlay=seeed-2mic-voicecard/' $bootfile
+# if grep -q "dtoverlay=seeed-2mic-voicecard" $bootfile; then 
+#     echo "Found 'dtoverlay=seeed-2mic-voicecard'"
+# else
+#     echo "dtoverlay=seeed-2mic-voicecard" >> $bootfile
+# fi
 echo "DONE"

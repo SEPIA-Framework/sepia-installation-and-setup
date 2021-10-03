@@ -29,14 +29,11 @@ network={
 ### 2a) SEPIA Client Installation
 
 * Connect your hardware to the RPi (USB mic, ReSpeaker HAT, Hyperpixel touchscreen, etc.)
-* Create installation folder `mkdir -p ~/install` and switch to directory `cd ~/install`
-* Download one of the install packages:
-  * Current release version: `wget https://github.com/SEPIA-Framework/sepia-installation-and-setup/raw/master/sepia-client-installation/sepia_client_rpi_raspbian_buster.zip`
-  * Developer version: `wget https://github.com/SEPIA-Framework/sepia-installation-and-setup/raw/dev/sepia-client-installation/sepia_client_rpi_raspbian_buster.zip`
-* `unzip sepia_client_rpi_raspbian_buster.zip`
+* To help with the setup download the RPi client script: `wget https://sepia-framework.github.io/install/sepia-client-rpi.sh`
+* Run the script `bash sepia-client-rpi.sh` (use the `dev` argument if you want the latest, unstable version)
 * If you have hardware like a ReSpeaker mic HAT or Hyperpixel touchscreen etc. consider to run step "2b) Install Hardware" (see below) first
 * Run the install script. Optionally use the arguments `dev` and/or `skipBLE`, e.g.:
-  * Default: `bash install_sepia_client.sh`
+  * Default (recommended): `bash install_sepia_client.sh`
   * Most recent developer version (client dev branch): `bash install_sepia_client.sh dev`
   * Skip installation of Bluetooth interface: `bash install_sepia_client.sh skipBLE`
 * **Reboot** the system
@@ -48,7 +45,7 @@ network={
   * **Reboot** the system
 * For **WM8960 microphone boards** like ReSpeaker (2 and 4 mic HAT), Waveshare Audio-HAT, Adafruit Voice Bonnet:
   * Install drivers: `bash install_respeaker_mic.sh`
-  * Run `bash update_respeaker_boot.sh` to deactivate unused RPi default audio jack
+  * Run `bash update_respeaker_boot.sh` to deactivate the default RPi audio jack and HDMI (audio) if you don't use it
   * **Reboot** the system
 * For **Hyperpixel** touchscreen:
   * Install drivers: `curl https://get.pimoroni.com/hyperpixel4 | bash`
@@ -64,8 +61,9 @@ network={
 * Set SEPIA server host address (as you would inside your SEPIA app login box)
 * Optional: Define a unique device ID (default is 'o1', Android apps have 'a1' and browsers 'b1' by default)
 * Optional: Define a new CLEXI-ID (this can be used as password for the remote terminal later, default is: clexi-123)
+* Optional: Set input/output volume (via alsamixer)
 * Finish your setup by setting automatic login via `sudo raspi-config` (Boot options - Desktop/CLI - Console Autologin)
-* Reboot your system 
+* **Reboot** your system 
 * Your headless client should automatically start and notify you via a short audio message that he'll be "right there"
 
 ### 4) Configure the Client via Remote Connection
@@ -80,7 +78,7 @@ network={
 * Use the remote terminal command `call login user [user-ID] password [user-pwd]` (message type: 'SEPIA Client') to login your user
 * You should see a "login successful" message in the terminal. If not you can use the command `call ping` to see if the client can reach the SEPIA server. Check your "hostname" settings from the previous step (Client Setup) if ping fails
 * Use the command `call test` (message type: 'SEPIA Client') or corresponding shortcut button 'test client' to ... test your client. You should hear an acoustic confirmation
-* Reboot your system one last time to finish the configuration (NOTE: your microphone will only have access permission AFTER the reboot)
+* **Reboot** your system one last time to finish the configuration (NOTE: your microphone will only have access permission AFTER the reboot)
 
 ### 5) Fine Tuning
 

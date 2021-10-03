@@ -64,8 +64,8 @@ echo "$NOW - Installing app environment (X-Server, Xvfb, Openbox, Chromium, etc.
 #sudo apt-get install -y --no-install-recommends xserver-xorg x11-xserver-utils xinit openbox xvfb
 sudo apt-get install -y xserver-xorg x11-xserver-utils xinit openbox xvfb
 # NOTE: 'chromium' can be an alternative if 'chromium-browser' has issues but currently 'chromium' has graphic glitches :-/
-#sudo apt-get install -y --no-install-recommends chromium unclutter
 sudo apt-get install -y chromium-browser unclutter
+#sudo apt-get install -y --no-install-recommends chromium unclutter
 mkdir -p ~/sepia-client/chromium
 mkdir -p ~/sepia-client/chromium-extensions
 cp sepia-client/* ~/sepia-client/

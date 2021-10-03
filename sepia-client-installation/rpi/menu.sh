@@ -36,6 +36,7 @@ while true; do
 		echo "https://github.com/SEPIA-Framework/sepia-installation-and-setup/"
 		echo ""
 		read -p "Press any key to continue (or CTRL+C to abort)."
+		clear
 		bash install_respeaker_mic.sh
 		break
 	elif [ $option = "2" ] 
@@ -48,6 +49,7 @@ while true; do
 		echo "https://github.com/SEPIA-Framework/sepia-installation-and-setup/"
 		echo ""
 		read -p "Press any key to continue (or CTRL+C to abort)."
+		clear
 		curl https://get.pimoroni.com/hyperpixel4 | bash
 		break
 	elif [ $option = "3" ] 
@@ -60,6 +62,7 @@ while true; do
 		echo "https://github.com/SEPIA-Framework/sepia-installation-and-setup/"
 		echo ""
 		read -p "Press any key to continue (or CTRL+C to abort)."
+		clear
 		bash install_sepia_client.sh $BRANCH
 		break
 	elif [ $option = "4" ] 
@@ -72,6 +75,7 @@ while true; do
 		echo "https://github.com/SEPIA-Framework/sepia-installation-and-setup/"
 		echo ""
 		read -p "Press any key to continue (or CTRL+C to abort)."
+		clear
 		bash install_sepia_client.sh $BRANCH skipBLE
 		break
 	else
