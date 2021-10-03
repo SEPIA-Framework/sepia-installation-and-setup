@@ -30,7 +30,7 @@ network={
 
 * Connect your hardware to the RPi (USB mic, ReSpeaker HAT, Hyperpixel touchscreen, etc.)
 * To help with the setup download the RPi client script: `wget https://sepia-framework.github.io/install/sepia-client-rpi.sh`
-* Run the script `bash sepia-client-rpi.sh` (use the `dev` argument if you want the latest, unstable version)
+* Run the script `bash sepia-client-rpi.sh` (use the `dev` argument if you want the latest, experimental version)
 * If you have hardware like a ReSpeaker mic HAT or Hyperpixel touchscreen etc. consider to run step "2b) Install Hardware" (see below) first
 * Run the install script. Optionally use the arguments `dev` and/or `skipBLE`, e.g.:
   * Default (recommended): `bash install_sepia_client.sh`
