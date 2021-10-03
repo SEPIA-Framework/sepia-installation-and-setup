@@ -40,6 +40,8 @@ echo "Preparing installation of SEPIA Client for Raspberry Pi ..."
 echo "$NOW - Updating/installing required Linux packages ..." >> "$LOG"
 sudo apt-get update
 sudo apt-get install -y git
+mkdir -p tmp
+rm -rf tmp/*
 echo "=========================================="
 #
 # Voices
@@ -47,7 +49,6 @@ echo "Installing TTS voices ..."
 echo "$NOW - Installing TTS voices ..." >> "$LOG"
 sudo apt-get install -y espeak-ng espeak-ng-espeak
 sudo apt-get install -y --no-install-recommends flite-dev flite libttspico-data
-mkdir -p tmp
 cd tmp
 wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_armhf.deb
 wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_armhf.deb
@@ -60,9 +61,11 @@ echo "=========================================="
 # Openbox with Chromium
 echo "Installing app environment ..."
 echo "$NOW - Installing app environment (X-Server, Xvfb, Openbox, Chromium, etc.) ..." >> "$LOG"
-sudo apt-get install -y --no-install-recommends xserver-xorg x11-xserver-utils xinit openbox xvfb
-# NOTE: 'chromium-browser' has been replaced with 'chromium' for now:
-sudo apt-get install -y --no-install-recommends chromium unclutter
+#sudo apt-get install -y --no-install-recommends xserver-xorg x11-xserver-utils xinit openbox xvfb
+sudo apt-get install -y xserver-xorg x11-xserver-utils xinit openbox xvfb
+# NOTE: 'chromium' can be an alternative if 'chromium-browser' has issues but currently 'chromium' has graphic glitches :-/
+#sudo apt-get install -y --no-install-recommends chromium unclutter
+sudo apt-get install -y chromium-browser unclutter
 mkdir -p ~/sepia-client/chromium
 mkdir -p ~/sepia-client/chromium-extensions
 cp sepia-client/* ~/sepia-client/
@@ -88,7 +91,7 @@ echo "=========================================="
 # CLEXI
 echo "Installing Node.js and CLEXI ..."
 echo "$NOW - Installing Node.js ..." >> "$LOG"
-if [ -n $(command -v node) ] && [ -n $(command -v npm) ]; then
+if [ -n "$(command -v node)" ] && [ -n "$(command -v npm)" ]; then
 	echo "Found Node.js and skipped installation - Recommended Node.js is 10, please double-check!"
 	echo "$NOW - Skipped: Found Node.js: $(node -v), npm: $(npm -v)" >> "$LOG"
 	echo "$NOW - NOTE: Recommended Node.js is 10 - Please double-check!" >> "$LOG"
@@ -137,16 +140,25 @@ echo "=========================================="
 # SEPIA Client
 echo "Downloading latest SEPIA Client version ..."
 echo "$NOW - Downloading SEPIA Client version from branch $CLIENT_BRANCH ..." >> "$LOG"
-mkdir -p ~/clexi/www/sepia
-mkdir -p ~/sepia-client/chromium-extensions/sepia-fw
-mkdir -p ~/tmp
-git clone --single-branch -b $CLIENT_BRANCH https://github.com/SEPIA-Framework/sepia-html-client-app.git ~/tmp/sepia-client-git
+if [ -d ~/clexi/www/sepia ]; then
+	echo "$NOW - Cleaning up existing folder ~/clexi/www/sepia ..." >> "$LOG"
+	rm -rf ~/clexi/www/sepia/*
+else
+	mkdir -p ~/clexi/www/sepia
+fi
+if [ -d ~/sepia-client/chromium-extensions/sepia-fw ]; then
+	echo "$NOW - Cleaning up existing folder ~/sepia-client/chromium-extensions/sepia-fw ..." >> "$LOG"
+	rm -rf ~/sepia-client/chromium-extensions/sepia-fw/*
+else
+	mkdir -p ~/sepia-client/chromium-extensions/sepia-fw
+fi
+git clone --single-branch -b $CLIENT_BRANCH https://github.com/SEPIA-Framework/sepia-html-client-app.git tmp/sepia-client-git
 echo "$NOW - Downloading SEPIA Client browser extension from branch master ..." >> "$LOG"
-git clone --single-branch -b master https://github.com/SEPIA-Framework/sepia-browser-extensions ~/tmp/sepia-client-browser-ex-git
-mv ~/tmp/sepia-client-git/www/* ~/clexi/www/sepia/
-mv ~/tmp/sepia-client-browser-ex-git/chromium/* ~/sepia-client/chromium-extensions/sepia-fw/
-rm -rf ~/tmp/sepia-client-git
-rm -rf ~/tmp/sepia-client-browser-ex-git
+git clone --single-branch -b master https://github.com/SEPIA-Framework/sepia-browser-extensions tmp/sepia-client-browser-ex-git
+mv tmp/sepia-client-git/www/* ~/clexi/www/sepia/
+mv tmp/sepia-client-browser-ex-git/chromium/* ~/sepia-client/chromium-extensions/sepia-fw/
+rm -rf tmp/sepia-client-git
+rm -rf tmp/sepia-client-browser-ex-git
 echo "=========================================="
 #
 # Nginx

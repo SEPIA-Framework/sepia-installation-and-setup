@@ -27,7 +27,7 @@ fi
 script_source=""
 is_xserver_running=0
 if [ -n "$1" ]; then
-    script_source=$1
+	script_source=$1
 fi
 if [ "$script_source" = "xserver" ] || [ -n "$DISPLAY" ]; then
 	is_xserver_running=1
@@ -66,12 +66,12 @@ cd ~/clexi
 is_clexi_running=0
 case "$(ps aux | grep clexi)" in *clexi-server.js*) is_clexi_running=1;; *) is_clexi_running=0;; esac
 if [ "$is_clexi_running" -eq "1" ]; then
-    echo "Restarting CLEXI server"
+	echo "Restarting CLEXI server"
 	echo "$NOW - CLEXI already running, restarting ..." >> "$LOG"
-    pkill -f "clexi-server.js"
-    sleep 2
+	pkill -f "clexi-server.js"
+	sleep 2
 else
-    echo "Starting CLEXI server"
+	echo "Starting CLEXI server"
 fi
 nohup node --title=clexi-server.js server.js &> log-clexi.out&
 echo "$NOW - CLEXI ready" >> "$LOG"
@@ -82,19 +82,23 @@ echo "$NOW - Preparing Chromium ..." >> "$LOG"
 client_url="http://localhost:8080/sepia/index.html"
 clexi_ws_url="ws://[IP]:9090/clexi"
 # NOTE: 'chromium-browser' was replaced by 'chromium' because of version issues - Better keep an eye on this
-chromecmd="chromium"
-chromedatadir=~/sepia-client/chromium
-if [ -z $(command -v chromium) ]; then
-	echo "$NOW - Chromium seems to be missing! Please check if you're still using 'chromium-browser' instead!" >> "$LOG"
+chromecmd=""
+if [ -n "$(command -v chromium-browser)" ]; then
+	chromecmd="chromium-browser"
+elif [ -n "$(command -v chromium)" ]; then
+	chromecmd="chromium"
+else
+	echo "$NOW - Chromium seems to be missing! Please reinstall browser!" >> "$LOG"
 	exit
 fi
+chromedatadir=~/sepia-client/chromium
 if [ -f "$chromedatadir/Default/Preferences" ]; then
 	echo "$NOW - Setting default preferences for Chromium (permissions: mic, location, notifications)" >> "$LOG"
-    sed -i 's/"exited_cleanly":false/"exited_cleanly":true/' $chromedatadir/'Local State'
-    sed -i 's/"exited_cleanly":false/"exited_cleanly":true/; s/"exit_type":"[^"]\+"/"exit_type":"Normal"/' $chromedatadir/Default/Preferences
-    sed -i 's/"notifications":{}/"notifications":{"http:\/\/localhost:8080,*":{"last_modified":"13224291659276737","setting":1}}/' $chromedatadir/Default/Preferences
-    sed -i 's/"geolocation":{}/"geolocation":{"http:\/\/localhost:8080,http:\/\/localhost:8080":{"last_modified":"13224291716729005","setting":1}}/' $chromedatadir/Default/Preferences
-    sed -i 's/"media_stream_mic":{}/"media_stream_mic":{"http:\/\/localhost:8080,*":{"last_modified":"13224291643099497","setting":1}}/' $chromedatadir/Default/Preferences
+	sed -i 's/"exited_cleanly":false/"exited_cleanly":true/' $chromedatadir/'Local State'
+	sed -i 's/"exited_cleanly":false/"exited_cleanly":true/; s/"exit_type":"[^"]\+"/"exit_type":"Normal"/' $chromedatadir/Default/Preferences
+	sed -i 's/"notifications":{}/"notifications":{"http:\/\/localhost:8080,*":{"last_modified":"13224291659276737","setting":1}}/' $chromedatadir/Default/Preferences
+	sed -i 's/"geolocation":{}/"geolocation":{"http:\/\/localhost:8080,http:\/\/localhost:8080":{"last_modified":"13224291716729005","setting":1}}/' $chromedatadir/Default/Preferences
+	sed -i 's/"media_stream_mic":{}/"media_stream_mic":{"http:\/\/localhost:8080,*":{"last_modified":"13224291643099497","setting":1}}/' $chromedatadir/Default/Preferences
 else
 	echo "$NOW - Could not set default preferences for Chromium (yet?) - Please restart client once more and check if 'chromium/Default/Preferences' was created." >> "$LOG"
 fi
