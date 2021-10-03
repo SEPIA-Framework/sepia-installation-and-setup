@@ -1,7 +1,8 @@
 #!/bin/bash
 # SEPIA-Client auto-start on (non SSH) login
+SCRIPT_PATH="$(realpath "$BASH_SOURCE")"
+LOG="$(dirname "$SCRIPT_PATH")""/log-autostart.out"
 NOW=$(date +"%Y_%m_%d_%H:%M:%S")
-LOG=$(dirname "$BASH_SOURCE")"/log-autostart.out"
 echo "Last autostart: $NOW via on-login.sh" > "$LOG"
 if [[ ! $DISPLAY && $XDG_VTNR -eq 1 ]]; then
     client_run_script="$HOME/sepia-client/run.sh"

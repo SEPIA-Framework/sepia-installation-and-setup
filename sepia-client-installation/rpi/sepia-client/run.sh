@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
+SCRIPT_PATH="$(realpath "$BASH_SOURCE")"
+LOG="$(dirname "$SCRIPT_PATH")""/log-run.out"
 NOW=$(date +"%Y_%m_%d_%H:%M:%S")
-LOG=$(dirname "$BASH_SOURCE")"/log-run.out"
 echo "Last run attempt: $NOW - via: run.sh" > "$LOG"
 
 # Client mode

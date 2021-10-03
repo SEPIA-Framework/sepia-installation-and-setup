@@ -89,13 +89,13 @@ network={
 
 ## Basic uninstallation steps
 
-There is no uninstall script yet and some things will depend on your specific installation variant. The easiest way is to simply reinstall the OS but here are roughly the required steps:
+There is no uninstall script yet and some things will depend on your specific installation. The easiest way is to simply flash a new image but here is a rough list of the required steps:
 * Open the folder `~/sepia-client` and run `shutdown.sh`
 * Delete folder `~/sepia-client`
 * Delete folder `~/clexi`
 * Delete folder `~/.config/openbox` and remove 'openbox' via `sudo apt-get remove openbox`
 * Remove (any) Chromium via `sudo apt-get remove chromium chromium-browser`
 * Open `~/.bashrc` and remove the SEPIA entry below '# Run SEPIA-Client on login?'
-* Delete, check or adjust your ALSA config `~/.asoundrc` prüfen oder entfernen
+* Delete, check or adjust your ALSA config `~/.asoundrc`
 
-Whats left are packages like Node.js, Xserver and hardware related stuff (if you've installed a touchscreen or microphone etc.).
+Whats left are packages like Node.js, Xserver and hardware related stuff (if you've installed a touchscreen or microphone HAT etc.).
