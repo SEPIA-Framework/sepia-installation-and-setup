@@ -139,10 +139,13 @@ while true; do
 			echo ""
 			exit
 		else
-			echo "Inside alsamixer use F5 to show input and output. If your sound-card doesn't show up by default use F6 to switch. You might need to edit ~/.asoundrc in this case."
+			echo ""
+			echo "Inside alsamixer use F5 to show input and output. If your sound-card doesn't show up by default use F6 to switch."
+			echo "You might need to edit ~/.asoundrc in certain cases to set the correct default devices (see asound examples in install folder)."
 			if [ -n "$seeed_voicecard_service" ]; then
 				echo "For WM8960 boards (ReSpeaker etc.) check 'Playback' and 'Capture' volumes."
 			fi
+			echo ""
 			read -p "Press any key to continue (or CTRL+C to abort)."
 			alsamixer
 			alsamixerstate=~/sepia-client/my_amixer_volumes.state

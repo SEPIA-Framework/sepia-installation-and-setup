@@ -31,11 +31,10 @@ network={
 * Connect your hardware to the RPi (USB mic, ReSpeaker HAT, Hyperpixel touchscreen, etc.)
 * To help with the setup download the RPi client script: `wget https://sepia-framework.github.io/install/sepia-client-rpi.sh`
 * Run the script `bash sepia-client-rpi.sh` (use the `dev` argument if you want the latest, experimental version)
+* Go to the new folder `cd ~/install`
 * If you have hardware like a ReSpeaker mic HAT or Hyperpixel touchscreen etc. consider to run step "2b) Install Hardware" (see below) first
-* Run the install script. Optionally use the arguments `dev` and/or `skipBLE`, e.g.:
-  * Default (recommended): `bash install_sepia_client.sh`
-  * Most recent developer version (client dev branch): `bash install_sepia_client.sh dev`
-  * Skip installation of Bluetooth interface: `bash install_sepia_client.sh skipBLE`
+* Run `bash menu.sh` or `bash menu.sh dev` (latest, experimental version) to open the installation helper
+* Choose your installation method (skip Bluetooth if you are not planning to use any BLE devices)
 * **Reboot** the system
 
 ### 2b) Install Hardware (optional)
@@ -66,7 +65,7 @@ network={
 * **Reboot** your system 
 * Your headless client should automatically start and notify you via a short audio message that he'll be "right there"
 
-### 4) Configure the Client via Remote Connection
+### 4) Configure the (headless) Client via Remote Connection
 
 * Continue the setup in your [SEPIA Control HUB](https://github.com/SEPIA-Framework/sepia-admin-tools/tree/master/admin-web-tools) by opening the 'client connections' page. Make sure to use the HTTP address (not HTTPS) to avoid mixed-content errors due to the 'ws://' URL below!
 * The CLEXI server of your newly installed SEPIA Client should be reachable at `ws://[rpi-IP]:9090/clexi` (via Nginx proxy)
@@ -82,7 +81,7 @@ network={
 
 ### 5) Fine Tuning
 
-* Optional: Open the CLEXI settings.json file located at `~/clexi/www/sepia/settings.js` to tweak your client (e.g. activate "Hey SEPIA"). NOTE: please do this AFTER a successful configuration and reboot (previous step)
+* Optional: Open the CLEXI settings.json file located at `~/clexi/www/sepia/settings.js` to tweak your client (e.g. activate "Hey SEPIA" or other wake-words). NOTE: please do this AFTER a successful configuration and reboot (previous step)
 * Done. Enjoy! :-)
 
 ## Basic uninstallation steps

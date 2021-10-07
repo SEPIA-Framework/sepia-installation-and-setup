@@ -63,7 +63,9 @@ echo "Installing app environment ..."
 echo "$NOW - Installing app environment (X-Server, Xvfb, Openbox, Chromium, etc.) ..." >> "$LOG"
 sudo apt-get install -y --no-install-recommends xserver-xorg x11-xserver-utils xinit openbox xvfb xterm
 # NOTE: 'chromium' can be an alternative if 'chromium-browser' has issues but currently 'chromium' has graphic glitches :-/
-sudo apt-get install -y --no-install-recommends chromium-browser libgtk-3-0 libgtk-3-bin libgtk-3-common unclutter
+sudo apt-get install -y --no-install-recommends chromium-browser unclutter
+# Some fixes (previously not required - pulseaudio req. is very strange but fixes Chromium IPC semaphore errors):
+sudo apt-get install -y --no-install-recommends libgtk-3-0 libgtk-3-bin libgtk-3-common libgles2-mesa upower pulseaudio
 mkdir -p ~/sepia-client/chromium
 mkdir -p ~/sepia-client/chromium-extensions
 cp sepia-client/* ~/sepia-client/

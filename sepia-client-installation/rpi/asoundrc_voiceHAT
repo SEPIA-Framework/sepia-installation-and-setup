@@ -1,0 +1,35 @@
+# use samplerate to resample as speexdsp resample is bad
+# defaults.pcm.rate_converter "samplerate"
+
+pcm.!default {
+    type asym
+    playback.pcm "playback"
+    capture.pcm "capture"
+}
+
+pcm.playback {
+    type plug
+    slave.pcm "dmixed"
+}
+
+pcm.capture {
+    type plug
+    slave.pcm "array"
+}
+
+pcm.dmixed {
+    type dmix
+    slave.pcm "hw:seeed2micvoicec"
+    ipc_key 555555
+    ipc_perm 0666
+}
+
+pcm.array {
+    type dsnoop
+    slave {
+        pcm "hw:seeed2micvoicec"
+        channels 2
+    }
+    ipc_key 666666
+    ipc_perm 0666
+}

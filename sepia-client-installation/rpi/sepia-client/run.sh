@@ -2,6 +2,8 @@
 set -e
 SCRIPT_PATH="$(realpath "$BASH_SOURCE")"
 LOG="$(dirname "$SCRIPT_PATH")""/log-run.out"
+LOG_CLIENT="/dev/null"
+#LOG_CLIENT="$(dirname "$SCRIPT_PATH")""/log-client.out"
 NOW=$(date +"%Y_%m_%d_%H:%M:%S")
 echo "Last run attempt: $NOW - via: run.sh" > "$LOG"
 
@@ -19,7 +21,8 @@ if [ $sound_card_recorder_count -eq 0 ]; then
 	seeed_voicecard_service=$(systemctl list-units --full -all | grep "seeed-voicecard.service")
 	if [ -n "$seeed_voicecard_service" ]; then
 		echo "$NOW - Trying to restart seeed-voicecard.service" >> "$LOG"
-		sudo service seeed-voicecard restart
+		sudo service seeed-voicecard stop && sudo service seeed-voicecard start
+		sleep 3
 	fi
 fi
 
@@ -47,6 +50,7 @@ if [ -f "$alsamixerstate" ]; then
 	echo "Restoring alsamixer settings from: $alsamixerstate"
 	echo "$NOW - Restoring alsamixer settings from: $alsamixerstate" >> "$LOG"
 	alsactl --file "$alsamixerstate" restore
+	echo "$NOW - alsamixer settings restored." >> "$LOG"
 fi
 # Set volume for specific amixer controls
 # headphone_count=$(amixer scontrols | grep "Headphone" | wc -l)
@@ -115,16 +119,16 @@ echo "RPi model: $pi_model - Is Pi4: $is_pi4"
 echo "$NOW - Starting Chromium - Mode: $is_headless - Is RPi4: $is_pi4" >> "$LOG"
 if [ "$is_headless" -eq "0" ]; then
 	echo "Running SEPIA-Client in 'display' mode. Use SEPIA Control-HUB to connect and control via remote terminal, default URL is: $clexi_ws_url"
-	$chromecmd $default_chrome_flags $chrome_extensions --kiosk "$client_url?isApp=true" >/dev/null 2>&1
+	$chromecmd $default_chrome_flags $chrome_extensions --kiosk "$client_url?isApp=true" >"$LOG_CLIENT" 2>&1
 elif [ "$is_headless" -eq "2" ]; then
 	echo "Running SEPIA-Client in 'pseudo-headless' mode. Use SEPIA Control-HUB to connect and control via remote terminal, default URL is: $clexi_ws_url"
-	$chromecmd $default_chrome_flags --kiosk "$client_url?isApp=true&isHeadless=true" >/dev/null 2>&1
+	$chromecmd $default_chrome_flags --kiosk "$client_url?isApp=true&isHeadless=true" >"$LOG_CLIENT" 2>&1
 elif [ "$is_pi4" = "1" ]; then
 	echo "Running SEPIA-Client in 'headless Pi4' mode. Use SEPIA Control-HUB to connect and control via remote terminal, default URL is: $clexi_ws_url"
-	xvfb-run -n 2072 --server-args="-screen 0 500x800x24" $chromecmd --disable-features=VizDisplayCompositor $default_chrome_flags --kiosk "$client_url?isApp=true&isHeadless=true" >/dev/null 2>&1
+	xvfb-run -n 2072 --server-args="-screen 0 500x800x24" $chromecmd --disable-features=VizDisplayCompositor $default_chrome_flags --kiosk "$client_url?isApp=true&isHeadless=true" >"$LOG_CLIENT" 2>&1
 else
 	echo "Running SEPIA-Client in 'headless' mode. Use SEPIA Control-HUB to connect and control via remote terminal, default URL is: $clexi_ws_url"
-	xvfb-run -n 2072 --server-args="-screen 0 320x480x16" $chromecmd $default_chrome_flags --kiosk "$client_url?isApp=true&isHeadless=true" >/dev/null 2>&1
+	xvfb-run -n 2072 --server-args="-screen 0 320x480x16" $chromecmd $default_chrome_flags --kiosk "$client_url?isApp=true&isHeadless=true" >"$LOG_CLIENT" 2>&1
 fi
 echo "Closed SEPIA-Client. Cu later :-)"
 echo "$NOW - Closed SEPIA-Client" >> "$LOG"
