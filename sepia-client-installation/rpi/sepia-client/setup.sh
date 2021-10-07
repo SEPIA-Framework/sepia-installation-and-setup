@@ -89,12 +89,13 @@ while true; do
 		read -p "Type 'ok' to add CLEXI 'ble-beacon-scanner' module to settings.json: " add_ble_mod
 		if [ -n "$add_ble_mod" ] && [ "$add_ble_mod" = "ok" ]
 		then
-			has_ble="$(cat "$clexi_settings" | grep ble-beacon-scanner)"
-			if [ -z "$has_ble" ]
+			has_ble="$(cat "$clexi_settings" | grep ble-beacon-scanner | wc -l)"
+            if [ "$has_ble" = "0" ]
 			then
 				sed -i "s|\"clexi-broadcaster\",|\"clexi-broadcaster\",\"ble-beacon-scanner\",|" $clexi_settings
+				echo "Added 'ble-beacon-scanner' to $clexi_settings."
 			else
-				echo "It seems the module was already active."
+				echo "It seems the module was already active. Check $clexi_settings for 'ble-beacon-scanner'."
 			fi
 		else
 			echo "Ok, maybe later."
