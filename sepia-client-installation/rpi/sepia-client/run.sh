@@ -37,10 +37,19 @@ if [ "$script_source" = "xserver" ] || [ -n "$DISPLAY" ]; then
 fi
 if [ "$is_xserver_running" -eq "0" ]; then
 	if [ "$is_headless" -eq "0" ] || [ "$is_headless" -eq "2" ]; then
-		echo "Starting X-Server to support display ..."
-		echo "$NOW - Starting X-Server to support display ..." >> "$LOG"
-		startx
-		exit
+		if [[ ! $DISPLAY && $XDG_VTNR -eq 1 ]]; then
+			# On device call
+			echo "Starting X-Server to support display ..."
+			echo "$NOW - Starting X-Server to support display ..." >> "$LOG"
+			startx
+			exit
+		else
+			# Call from SSH terminal
+			echo "Cannot start client in display-mode via SSH terminal (no X-Server support)."
+			echo "Please use reboot + auto-login or call directly on device."
+			echo "$NOW - Cannot start client in display-mode via SSH terminal (no X-Server support) - Use reboot + auto-login or call directly on device." >> "$LOG"
+			exit
+		fi
 	fi
 fi
 
@@ -122,13 +131,13 @@ if [ "$is_headless" -eq "0" ]; then
 	$chromecmd $default_chrome_flags $chrome_extensions --kiosk "$client_url?isApp=true" >"$LOG_CLIENT" 2>&1
 elif [ "$is_headless" -eq "2" ]; then
 	echo "Running SEPIA-Client in 'pseudo-headless' mode. Use SEPIA Control-HUB to connect and control via remote terminal, default URL is: $clexi_ws_url"
-	$chromecmd $default_chrome_flags --kiosk "$client_url?isApp=true&isHeadless=true" >"$LOG_CLIENT" 2>&1
+	$chromecmd $default_chrome_flags $chrome_extensions --kiosk "$client_url?isApp=true&isHeadless=true" >"$LOG_CLIENT" 2>&1
 elif [ "$is_pi4" = "1" ]; then
 	echo "Running SEPIA-Client in 'headless Pi4' mode. Use SEPIA Control-HUB to connect and control via remote terminal, default URL is: $clexi_ws_url"
-	xvfb-run -n 2072 --server-args="-screen 0 500x800x24" $chromecmd --disable-features=VizDisplayCompositor $default_chrome_flags --kiosk "$client_url?isApp=true&isHeadless=true" >"$LOG_CLIENT" 2>&1
+	xvfb-run -n 2072 --server-args="-screen 0 500x800x24" $chromecmd --disable-features=VizDisplayCompositor $default_chrome_flags $chrome_extensions --kiosk "$client_url?isApp=true&isHeadless=true" >"$LOG_CLIENT" 2>&1
 else
 	echo "Running SEPIA-Client in 'headless' mode. Use SEPIA Control-HUB to connect and control via remote terminal, default URL is: $clexi_ws_url"
-	xvfb-run -n 2072 --server-args="-screen 0 320x480x16" $chromecmd $default_chrome_flags --kiosk "$client_url?isApp=true&isHeadless=true" >"$LOG_CLIENT" 2>&1
+	xvfb-run -n 2072 --server-args="-screen 0 320x480x16" $chromecmd $default_chrome_flags $chrome_extensions --kiosk "$client_url?isApp=true&isHeadless=true" >"$LOG_CLIENT" 2>&1
 fi
 echo "Closed SEPIA-Client. Cu later :-)"
 echo "$NOW - Closed SEPIA-Client" >> "$LOG"

@@ -4,10 +4,10 @@ SCRIPT_PATH="$(realpath "$BASH_SOURCE")"
 LOG="$(dirname "$SCRIPT_PATH")""/log-autostart.out"
 NOW=$(date +"%Y_%m_%d_%H:%M:%S")
 echo "Last autostart: $NOW via on-login.sh" > "$LOG"
-# Ignore SSH logins:
+# Trigger only on device (ignore SSH logins):
 if [[ ! $DISPLAY && $XDG_VTNR -eq 1 ]]; then
     client_run_script="$HOME/sepia-client/run.sh"
-    if [ -z $(cat "$client_run_script" | grep is_headless=1) ]; then
+    if [ "$(cat "$client_run_script" | grep is_headless=1 | wc -l)" = "0" ]; then
 		# Client with display:
 		echo "Command: startx" >> "$LOG"
 		exec startx
