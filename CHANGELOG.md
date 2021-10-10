@@ -1,5 +1,54 @@
 ## Release history and changelog
 
+### v2.6.0 - 2021.10.10
+
+Updated client to v0.24.0:
+* 
+
+Updated Control-HUB (admin-tools) to v1.4.1:
+* Added 'get mediadevices' command to CLEXI help
+* Updated icon set
+* Improved service-worker and offline.html
+
+Updated Assist-server to v2.5.2:
+* Created new 'WebContent/widgets' folder and added default media-player (YouTube etc.) files
+* Added new 'clock' demo view to 'WebContent/views' folder and updated old demo view
+* Updated 'MusicSearch' service to support new media-player widgets and 'data' parameter
+* Added new YouTubeAPI class and updated config and property files to support API key
+* Tweaked YouTube web-search results
+* Updated radio stations
+* Updated news outlets
+* Updated radio and music service answer sets
+* Prepared open-liga worker and parameters for new season (Bundesliaga)
+* Added Porcupine wake-word files for HTML client to 'WebContent/files' folder
+* Added support for option 'skipIfEmbeddable' to URL action
+* Added support for optional 'delayUntilIdle' parameter of client_control_fun ACTION
+* Updated 'ActionBuilder' class with more convenience methods
+* Updated MaryTTS info
+* Added 'updateListData' to DB methods and test script for list data CRUD operations
+* Optimized alarms and lists code using new 'UserDataList.createEntry' methods
+* Allow "_id" as filter when loading user-data lists
+* Updated rome-tools (as usual) and fixed a bug in 'RssFeedReader'
+
+Updated WebSocket Chat-Server to v1.3.2:
+* Added notify as 'RemoteActionType'
+
+Updated Teach-Server to v2.2.2:
+* Added support for sorting commands by date
+* Added teach-UI service 'music' (music search)
+* Allow custom (success) answers for music stream commands
+* Minor code tweaks
+
+Updated Core-tools to v2.2.9:
+* Added fields to UserDataList 'checkable' item: 'itemId', 'priority' and 'dateAdded'
+* Added optional 'delayUntilIdle' to client_control_fun ACTION
+* Moved class 'RandomGen' from 'assist.tools' to 'core.tools'
+* Updated spark-core to 2.9.3
+* Updated commons-io and apache.httpcomponents
+
+Other servers, tools and common changes:
+* Updated all servers to core-tools v2.2.9
+
 ### v2.5.1 - 2020.10.21
 
 Updated client to v0.23.0:
