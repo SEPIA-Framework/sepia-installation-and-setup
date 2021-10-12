@@ -3,7 +3,53 @@
 ### v2.6.0 - 2021.10.10
 
 Updated client to v0.24.0:
-* 
+* Complete rework of audio system and switch to new **SEPIA Web-Audio library**:
+  * Split old, monolithic speech library into smaller, more specific files + completely new, modular audio recorder
+  * Handle audio processing in 'AudioWorklets' and 'Worker' threads
+  * Support for new **SEPIA STT Server v2** with many new features (Docker container for all platforms available)
+  * New WebRTC VAD (voice-activity-detection) module and experimental custom VAD module
+  * Replaced old Porcupine wake-word library with new module to support v1.4-1.9
+  * Support for many new Porcupine wake-words like Computer, Jarvis, Alexa, Hey Siri, Hey Edison, etc.
+  * Support for external TTS server (Mary-TTS compatible API)
+  * Added support for media-device selection (set 'sinkId' for mic and speaker) + media-devices settings view
+  * Added microphone test-page
+  * New audio.effects library (e.g. for TTS filter effects etc.)
+  * Support for 'one-time' language option in TTS (switch to specific language for just one output)
+  * Global recorder events
+  * Support for MediaSession API
+* Greatly improved features and support for custom voice-widgets (aka custom views/frames) including handling of speech events, input and animations (build your own voice interface)
+* Improved Teach-UI commands overview + new search field
+* Added support for Teach-UI service 'music' (music search)
+* Implemented remote action 'notify' and updated 'broadcast' interface and button (broadcast TTS messages to clients with same account)
+* Improved media-control actions + optional 'delayUntilIdle' for client-control actions
+* Completely new embedded media-player with custom widget support and powerful interface (build your own audio players)
+* New 'Cards.embed' library for embedded card widgets + new YouTube embedded player + YouTube URL detection
+* Added a few extra sounds for mic-trigger (original: coin, new: blob, chirp, bleeb, click)
+* Fixes and ASR support for Microsoft Edge and Apple's Safari browser
+* Added 'sections' to my-view
+* Improved card context-menus, e.g. send music to other clients via media-player share button (new 'embedded_player' remote media action) etc.
+* Style tweaks for big-screen mode + landscape mode for smaller screens
+* Implemented screen orientation API and added setting to choose between landscape, portrait and automatic mode
+* Added µPlot (lazy) library for visualizations and graph cards
+* Added 'Cards' functions for WAV and line plot
+* Added new 'UI.myView' module and improved 'add to my-view' feature
+* Improved old skins and added new: 'Alabaster' (3 variants), 'Essential' (green + orange), 'Orange Style 2.0' (OS2)
+* New avatars: 'The Dots', 'Classy', ILA O-Five (3 variants), 'S-Tech'
+* New create-account info view and optimized labels of login box
+* Improved list items and added properties ID, lastEdit, eleType
+* Added ability to reload/refresh basic lists via context menu button
+* Always remove old timer cards on sync + improved stability of 'Events.syncTimeEvents'
+* Many style and UI improvements + updated icon-set
+* Improved main menu (settings view)
+* Updated tutorial
+* Optimized 'UI.setup' and 'Config.loadAppSettings' to handle async. ready events
+* Added support for a general 'sepia-info-event' dispatch (e.g. for CLEXI log)
+* Added button to export (show) client settings as JSON (handy for headless client setup)
+* Made experimental languages accessible via language selector
+* Introduced new URL path variable '<sepia_website>' (in addition to existing '<assist_server>' etc.)
+* Improved service-worker handling + offline page and disabled service-worker by deafult (use new URL param. 'pwa' to enable)
+* Android: Added 'android.intent.action.VOICE_COMMAND' handling
+* Improved security checks for URLs and actions
 
 Updated Control-HUB (admin-tools) to v1.4.1:
 * Added 'get mediadevices' command to CLEXI help
@@ -35,7 +81,7 @@ Updated WebSocket Chat-Server to v1.3.2:
 
 Updated Teach-Server to v2.2.2:
 * Added support for sorting commands by date
-* Added teach-UI service 'music' (music search)
+* Added Teach-UI service 'music' (music search)
 * Allow custom (success) answers for music stream commands
 * Minor code tweaks
 
