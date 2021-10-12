@@ -18,6 +18,7 @@ Updated client to v0.24.0:
   * Global recorder events
   * Support for MediaSession API
 * Greatly improved features and support for custom voice-widgets (aka custom views/frames) including handling of speech events, input and animations (build your own voice interface)
+* Added demo custom voice-widget: clock (use client demo-mode to get a first impression)
 * Improved Teach-UI commands overview + new search field
 * Added support for Teach-UI service 'music' (music search)
 * Implemented remote action 'notify' and updated 'broadcast' interface and button (broadcast TTS messages to clients with same account)
@@ -36,7 +37,7 @@ Updated client to v0.24.0:
 * Improved old skins and added new: 'Alabaster' (3 variants), 'Essential' (green + orange), 'Orange Style 2.0' (OS2)
 * New avatars: 'The Dots', 'Classy', ILA O-Five (3 variants), 'S-Tech'
 * New create-account info view and optimized labels of login box
-* Improved list items and added properties ID, lastEdit, eleType
+* Improved list items and added properties 'id', 'lastEdit', 'eleType'
 * Added ability to reload/refresh basic lists via context menu button
 * Always remove old timer cards on sync + improved stability of 'Events.syncTimeEvents'
 * Many style and UI improvements + updated icon-set
@@ -47,7 +48,7 @@ Updated client to v0.24.0:
 * Added button to export (show) client settings as JSON (handy for headless client setup)
 * Made experimental languages accessible via language selector
 * Introduced new URL path variable '<sepia_website>' (in addition to existing '<assist_server>' etc.)
-* Improved service-worker handling + offline page and disabled service-worker by deafult (use new URL param. 'pwa' to enable)
+* Improved service-worker handling + offline page and disabled service-worker by default (use new URL param. 'pwa' to enable)
 * Android: Added 'android.intent.action.VOICE_COMMAND' handling
 * Improved security checks for URLs and actions
 
@@ -93,7 +94,10 @@ Updated Core-tools to v2.2.9:
 * Updated commons-io and apache.httpcomponents
 
 Other servers, tools and common changes:
+* Improved DIY client (installation, logging, features)
+* Added new sections to 'sepia-extensions' repository for custom media-player widgets and client-views
 * Updated all servers to core-tools v2.2.9
+* In preparation: updated SDK, demo Docker containers
 
 ### v2.5.1 - 2020.10.21
 
