@@ -29,6 +29,7 @@ while true; do
 	echo "7: Activate CLEXI Bluetooth support"
 	echo "8: Set audio input device (ALSA device)"
 	echo "9: Set audio output device (ALSA device)"
+	echo "10: Set and store input/output volume (alsamixer)"
 	echo ""
 	if [ -z "$option" ]; then
 		read -p "Enter a number plz (0 to exit): " option
@@ -88,12 +89,13 @@ while true; do
 		read -p "Type 'ok' to add CLEXI 'ble-beacon-scanner' module to settings.json: " add_ble_mod
 		if [ -n "$add_ble_mod" ] && [ "$add_ble_mod" = "ok" ]
 		then
-			has_ble="$(cat "$clexi_settings" | grep ble-beacon-scanner)"
-			if [ -z "$has_ble" ]
+			has_ble="$(cat "$clexi_settings" | grep ble-beacon-scanner | wc -l)"
+            if [ "$has_ble" = "0" ]
 			then
 				sed -i "s|\"clexi-broadcaster\",|\"clexi-broadcaster\",\"ble-beacon-scanner\",|" $clexi_settings
+				echo "Added 'ble-beacon-scanner' to $clexi_settings."
 			else
-				echo "It seems the module was already active."
+				echo "It seems the module was already active. Check $clexi_settings for 'ble-beacon-scanner'."
 			fi
 		else
 			echo "Ok, maybe later."
@@ -123,6 +125,38 @@ while true; do
 		echo "------------------------"
 		echo "DONE."
 		echo "------------------------"
+	elif [ $option = "10" ]
+	then
+		sound_card_player_count=$(aplay -l | grep "^card" | wc -l)
+		sound_card_recorder_count=$(arecord -l | grep "^card" | wc -l)
+		seeed_voicecard_service=$(systemctl list-units --full -all | grep "seeed-voicecard.service")
+		if [ $sound_card_player_count -eq 0 ] && [ $sound_card_recorder_count -eq 0 ]; then
+			echo ""
+			echo "No sound-cards found - RPi Audio HAT service down or service restart required?"
+			if [ -n "$seeed_voicecard_service" ]; then
+				echo "Try:"
+				echo "sudo service seeed-voicecard stop && sudo service seeed-voicecard start && aplay -l"
+			fi
+			echo ""
+			exit
+		else
+			echo ""
+			echo "Inside alsamixer use F5 to show input and output. If your sound-card doesn't show up by default use F6 to switch."
+			echo "You might need to edit ~/.asoundrc in certain cases to set the correct default devices (see asound examples in install folder)."
+			if [ -n "$seeed_voicecard_service" ]; then
+				echo "For WM8960 boards (ReSpeaker etc.) check 'Playback' and 'Capture' volumes."
+			fi
+			echo ""
+			read -p "Press any key to continue (or CTRL+C to abort)."
+			alsamixer
+			alsamixerstate=~/sepia-client/my_amixer_volumes.state
+			alsactl --file "$alsamixerstate" store
+			echo ""
+			echo "Stored alsamixer settings at: $alsamixerstate"
+			echo "------------------------"
+			echo "DONE."
+			echo "------------------------"
+		fi
 	else
 		echo "------------------------"
 		echo "Not an option, please try again."

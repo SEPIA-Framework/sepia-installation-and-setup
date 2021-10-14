@@ -1,5 +1,107 @@
 ## Release history and changelog
 
+### v2.6.0 - 2021.10.10
+
+Updated client to v0.24.0:
+* Complete rework of audio system and switch to new **SEPIA Web-Audio library**:
+  * Split old, monolithic speech library into smaller, more specific files + completely new, modular audio recorder
+  * Handle audio processing in 'AudioWorklets' and 'Worker' threads
+  * Support for new **SEPIA STT Server v2** with many new features (Docker container for all platforms available)
+  * New WebRTC VAD (voice-activity-detection) module and experimental custom VAD module
+  * Replaced old Porcupine wake-word library with new module to support v1.4-1.9
+  * Support for many new Porcupine wake-words like Computer, Jarvis, Alexa, Hey Siri, Hey Edison, etc.
+  * Support for external TTS server (Mary-TTS compatible API)
+  * Added support for media-device selection (set 'sinkId' for mic and speaker) + media-devices settings view
+  * Added microphone test-page
+  * New audio.effects library (e.g. for TTS filter effects etc.)
+  * Support for 'one-time' language option in TTS (switch to specific language for just one output)
+  * Global recorder events
+  * Support for MediaSession API
+* Greatly improved features and support for custom voice-widgets (aka custom views/frames) including handling of speech events, input and animations (build your own voice interface)
+* Added demo custom voice-widget: clock (use client demo-mode to get a first impression)
+* Improved Teach-UI commands overview + new search field
+* Added support for Teach-UI service 'music' (music search)
+* Implemented remote action 'notify' and updated 'broadcast' interface and button (broadcast TTS messages to clients with same account)
+* Improved media-control actions + optional 'delayUntilIdle' for client-control actions
+* Completely new embedded media-player with custom widget support and powerful interface (build your own audio players)
+* New 'Cards.embed' library for embedded card widgets + new YouTube embedded player + YouTube URL detection
+* Added a few extra sounds for mic-trigger (original: coin, new: blob, chirp, bleeb, click)
+* Fixes and ASR support for Microsoft Edge and Apple's Safari browser
+* Added 'sections' to my-view
+* Improved card context-menus, e.g. send music to other clients via media-player share button (new 'embedded_player' remote media action) etc.
+* Style tweaks for big-screen mode + landscape mode for smaller screens
+* Implemented screen orientation API and added setting to choose between landscape, portrait and automatic mode
+* Added µPlot (lazy) library for visualizations and graph cards
+* Added 'Cards' functions for WAV and line plot
+* Added new 'UI.myView' module and improved 'add to my-view' feature
+* Improved old skins and added new: 'Alabaster' (3 variants), 'Essential' (green + orange), 'Orange Style 2.0' (OS2)
+* New avatars: 'The Dots', 'Classy', ILA O-Five (3 variants), 'S-Tech'
+* New create-account info view and optimized labels of login box
+* Improved list items and added properties 'id', 'lastEdit', 'eleType'
+* Added ability to reload/refresh basic lists via context menu button
+* Always remove old timer cards on sync + improved stability of 'Events.syncTimeEvents'
+* Many style and UI improvements + updated icon-set
+* Improved main menu (settings view)
+* Updated tutorial
+* Optimized 'UI.setup' and 'Config.loadAppSettings' to handle async. ready events
+* Added support for a general 'sepia-info-event' dispatch (e.g. for CLEXI log)
+* Added button to export (show) client settings as JSON (handy for headless client setup)
+* Made experimental languages accessible via language selector
+* Introduced new URL path variable '<sepia_website>' (in addition to existing '<assist_server>' etc.)
+* Improved service-worker handling + offline page and disabled service-worker by default (use new URL param. 'pwa' to enable)
+* Android: Added 'android.intent.action.VOICE_COMMAND' handling
+* Improved security checks for URLs and actions
+
+Updated Control-HUB (admin-tools) to v1.4.1:
+* Added 'get mediadevices' command to CLEXI help
+* Updated icon set
+* Improved service-worker and offline.html
+
+Updated Assist-server to v2.5.2:
+* Created new 'WebContent/widgets' folder and added default media-player (YouTube etc.) files
+* Added new 'clock' demo view to 'WebContent/views' folder and updated old demo view
+* Updated 'MusicSearch' service to support new media-player widgets and 'data' parameter
+* Added new YouTubeAPI class and updated config and property files to support API key
+* Tweaked YouTube web-search results
+* Updated radio stations
+* Updated news outlets
+* Updated radio and music service answer sets
+* Prepared open-liga worker and parameters for new season (Bundesliaga)
+* Added Porcupine wake-word files for HTML client to 'WebContent/files' folder
+* Added support for option 'skipIfEmbeddable' to URL action
+* Added support for optional 'delayUntilIdle' parameter of client_control_fun ACTION
+* Updated 'ActionBuilder' class with more convenience methods
+* Updated MaryTTS info
+* Added 'updateListData' to DB methods and test script for list data CRUD operations
+* Optimized alarms and lists code using new 'UserDataList.createEntry' methods
+* Allow "_id" as filter when loading user-data lists
+* Updated rome-tools (as usual) and fixed a bug in 'RssFeedReader'
+
+Updated WebSocket Chat-Server to v1.3.2:
+* Added notify as 'RemoteActionType'
+
+Updated Teach-Server to v2.2.2:
+* Added support for sorting commands by date
+* Added Teach-UI service 'music' (music search)
+* Allow custom (success) answers for music stream commands
+* Minor code tweaks
+
+Updated Core-tools to v2.2.9:
+* Added fields to UserDataList 'checkable' item: 'itemId', 'priority' and 'dateAdded'
+* Added optional 'delayUntilIdle' to client_control_fun ACTION
+* Moved class 'RandomGen' from 'assist.tools' to 'core.tools'
+* Updated spark-core to 2.9.3
+* Updated commons-io and apache.httpcomponents
+* Removed dependency 'google.guava' (use 'Apache Utils' and Java 8 classes instead)
+* Tweaked HTTP connection methods
+
+Other servers, tools and common changes:
+* Removed SEPIA reverse-proxy from SEPIA-Home package (use Nginx or Apache instead)
+* Updated all servers to core-tools v2.2.9
+* Added new sections to 'sepia-extensions' repository for custom media-player widgets and client-views
+* In preparation: improved DIY client (installation, logging, features)
+* In preparation: updated SDK, demo Docker containers
+
 ### v2.5.1 - 2020.10.21
 
 Updated client to v0.23.0:

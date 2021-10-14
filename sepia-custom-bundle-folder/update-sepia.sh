@@ -11,7 +11,7 @@ get_latest_release() {
 if [ -n "$1" ]; then
 	echo "Welcome!"
 	echo "You've selected a custom file to update SEPIA: $1"
-	echo "NOTE: use abolute path ONLY!"
+	echo "NOTE: use ONLY absolute paths please!"
 else
 	echo "Welcome! Checking version number of latest SEPIA release, just a second ..."
 	SEPIA_VERSION=$(get_latest_release "SEPIA-Framework/sepia-installation-and-setup")

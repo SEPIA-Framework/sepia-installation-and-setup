@@ -15,9 +15,9 @@ NOTE: Setup and scripts included in this bundle assume you are using the framewo
   
 If you are using Raspian for Raspberry Pi check out the more detailed [guide](https://github.com/SEPIA-Framework/sepia-docs/wiki/Installation) including an installation script.  
   
-* Make sure you have at least Java 8 installed (tested extensively with [Oracle Java 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html) and OpenJDK 11 (recommended))
-* Optional: Update your local clock for precise timers (Linux), e.g.: with `sudo apt-get install ntpdate` and `sudo ntpdate -u ntp.ubuntu.com`
-* Place the content of the [SEPIA-Home bundle](https://github.com/SEPIA-Framework/sepia-installation-and-setup/releases) in any folder you like. On Linux "~/SEPIA/" is (highly) recommended if you want to use the boot and SSL scripts later: `unzip SEPIA-Home.zip -d ~/SEPIA`.
+* Make sure you have Java JDK 11 installed (recommended: OpenJDK 11). [Oracle Java JDK 8](https://www.oracle.com/java/technologies/downloads/#java8-windows) will work as well.
+* Optional (Linux): Update your local clock for precise timers, e.g. (Debian): `sudo timedatectl set-ntp true`
+* Place the content of the [SEPIA-Home bundle](https://github.com/SEPIA-Framework/sepia-installation-and-setup/releases) in any folder you like. On Linux "~/SEPIA/" (no root!) is highly recommended if you want to use the boot and SSL scripts later: `unzip SEPIA-Home.zip -d ~/SEPIA`.
 * Run `setup.bat` (Windows) or `bash setup.sh` (Mac, Linux) to setup your SEPIA servers
 * Inside the setup choose 4 to start Elasticsearch and then 1 to setup the SEPIA-Framework. Remember the passwords you set! Optionally install the TTS engine (recommended for Linux). You can skip the other options for now.
 * If everything worked out (check console for errors) you can use "run-sepia" (.bat for Windows, .sh for Linux/Mac) to start all servers.
@@ -44,14 +44,6 @@ If your local tests worked well it is time to create your own (non-admin) accoun
 Creating your own web-server with SSL encryption will make sure that you can use all features of the app without problems and will also make your server reachable from outside your network (e.g. when you're using the mobile app and want to check your shopping-list inside a supermarket).
 To upgrade you local server to a full-blown web-server with SSL it is recommended to use [Nginx](https://de.wikipedia.org/wiki/Nginx) and [Letsencrypt](https://letsencrypt.org/). There are some scripts included in the SEPIA-Home release to make your life easier.
 To get started check the Wiki entry about [how to secure your server, use all features and open it to the world](https://github.com/SEPIA-Framework/sepia-docs/wiki/SSL-for-your-Server).  
-  
-If you want a super-fast (2min), zero-configuration, temporary solution you can use the included SEPIA Reverse-Proxy (Java) together with a neat little tool called "ngrok" to create a temporary, secure web-server:
-* Download and extract ngrok for your OS: https://ngrok.com/download
-* Start the SEPIA Reverse-Proxy with one of the scripts inside the "sepia-reverse-proxy"-folder
-* Call `./ngrok http 20726` (or `.\ngrok.exe http 20726` in Windows) and you will get a HTTPS URL for your SEPIA server
-* Use this URL as hostname ([your-ngrok-url]/sepia) in your SEPIA web-app: [your-ngrok-url]/sepia/assist/app/index.html (or in the official, public web-app: https://sepia-framework.github.io/app/index.html)
-* **The drawback:** your ngrok-server will expire after a while (~7h) and you need to manually restart it. In this process your URL will change as well.
-* TO BE CONTINUED ...
 
 ## Build-your-own release (for experts)
 
