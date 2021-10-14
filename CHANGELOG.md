@@ -92,11 +92,14 @@ Updated Core-tools to v2.2.9:
 * Moved class 'RandomGen' from 'assist.tools' to 'core.tools'
 * Updated spark-core to 2.9.3
 * Updated commons-io and apache.httpcomponents
+* Removed dependency 'google.guava' (use 'Apache Utils' and Java 8 classes instead)
+* Tweaked HTTP connection methods
 
 Other servers, tools and common changes:
-* Improved DIY client (installation, logging, features)
-* Added new sections to 'sepia-extensions' repository for custom media-player widgets and client-views
+* Removed SEPIA reverse-proxy from SEPIA-Home package (use Nginx or Apache instead)
 * Updated all servers to core-tools v2.2.9
+* Added new sections to 'sepia-extensions' repository for custom media-player widgets and client-views
+* In preparation: improved DIY client (installation, logging, features)
 * In preparation: updated SDK, demo Docker containers
 
 ### v2.5.1 - 2020.10.21
