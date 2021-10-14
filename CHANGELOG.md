@@ -56,6 +56,7 @@ Updated Control-HUB (admin-tools) to v1.4.1:
 * Added 'get mediadevices' command to CLEXI help
 * Updated icon set
 * Improved service-worker and offline.html
+* Replaced legacy STT page with new info page
 
 Updated Assist-server to v2.5.2:
 * Created new 'WebContent/widgets' folder and added default media-player (YouTube etc.) files
