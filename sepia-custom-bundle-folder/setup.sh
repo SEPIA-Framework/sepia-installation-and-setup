@@ -13,19 +13,6 @@ if [[ $EUID -eq 0 ]]; then
         exit
     fi
 fi
-# system check methods
-is_arm() {
-  case "$(uname -m)" in
-    *arm*) return 0 ;;
-    *) return 1 ;;
-  esac
-}
-is_64() {
-  case "$(uname -m)" in
-    *64*) return 0 ;;
-    *) return 1 ;;
-  esac
-}
 #
 # make scripts executable
 find . -name "*.sh" -exec chmod +x {} \;
@@ -169,27 +156,32 @@ while true; do
 		sudo apt-get update
 		sudo apt-get install -y espeak-ng espeak-ng-espeak
 		sudo apt-get install -y --no-install-recommends flite-dev flite
-		if is_arm;
-		then
-			sudo apt-get install -y --no-install-recommends libttspico-data
+		# common:
+		#sudo apt-get install -y --no-install-recommends libttspico-data
+		wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-data_1.0+git20130326-9_all.deb
+		sudo dpkg -i libttspico-data_1.0+git20130326-9_all.deb
+		if [ -n "$(uname -m | grep aarch64)" ]; then
+			echo "Platform: aarch64"
+			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_arm64.deb
+			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_arm64.deb
+			sudo dpkg -i libttspico0_1.0+git20130326-9_arm64.deb
+			sudo dpkg -i libttspico-utils_1.0+git20130326-9_arm64.deb
+		elif [ -n "$(uname -m | grep armv7l)" ]; then
+			echo "Platform: armv7l"
 			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_armhf.deb
 			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_armhf.deb
-			# apt-get install -f ./libttspico0_1.0+git20130326-9_armhf.deb ./libttspico-utils_1.0+git20130326-9_armhf.deb
 			sudo dpkg -i libttspico0_1.0+git20130326-9_armhf.deb
 			sudo dpkg -i libttspico-utils_1.0+git20130326-9_armhf.deb
-		elif is_64;
-		then
-			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-data_1.0+git20130326-9_all.deb
+		elif [ -n "$(uname -m | grep x86_64)" ]; then
+			echo "Platform: x86_64"
 			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_amd64.deb
 			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_amd64.deb
-			sudo dpkg -i libttspico-data_1.0+git20130326-9_all.deb
 			sudo dpkg -i libttspico0_1.0+git20130326-9_amd64.deb
 			sudo dpkg -i libttspico-utils_1.0+git20130326-9_amd64.deb
 		else
-			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-data_1.0+git20130326-9_all.deb
+			echo "Platform: x86_32"
 			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_i386.deb
 			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_i386.deb
-			sudo dpkg -i libttspico-data_1.0+git20130326-9_all.deb
 			sudo dpkg -i libttspico0_1.0+git20130326-9_i386.deb
 			sudo dpkg -i libttspico-utils_1.0+git20130326-9_i386.deb
 		fi

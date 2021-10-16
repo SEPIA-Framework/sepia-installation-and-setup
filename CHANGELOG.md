@@ -67,7 +67,7 @@ Updated Assist-server to v2.5.2:
 * Updated radio stations
 * Updated news outlets
 * Updated radio and music service answer sets
-* Prepared open-liga worker and parameters for new season (Bundesliaga)
+* Prepared open-liga worker and parameters for new season (Bundesliga)
 * Added Porcupine wake-word files for HTML client to 'WebContent/files' folder
 * Added support for option 'skipIfEmbeddable' to URL action
 * Added support for optional 'delayUntilIdle' parameter of client_control_fun ACTION
