@@ -18,8 +18,8 @@ echo "$NOW - Found sound-cards to record audio: $sound_card_recorder_count" >> "
 if [ $sound_card_recorder_count -eq 0 ]; then
 	echo "$NOW - No recorder found - RPi Audio HAT service down or restart required?" >> "$LOG"
 	# TODO: restart service if known one exists
-	seeed_voicecard_service=$(systemctl list-units --full -all | grep "seeed-voicecard.service")
-	if [ -n "$seeed_voicecard_service" ]; then
+	seeed_voicecard_service=$(systemctl list-units --full -all | grep "seeed-voicecard.service" | wc -l)
+	if [ $seeed_voicecard_service -eq 1 ]; then
 		echo "$NOW - Trying to restart seeed-voicecard.service" >> "$LOG"
 		sudo service seeed-voicecard stop && sudo service seeed-voicecard start
 		sleep 3

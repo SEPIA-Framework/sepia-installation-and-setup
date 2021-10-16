@@ -129,11 +129,11 @@ while true; do
 	then
 		sound_card_player_count=$(aplay -l | grep "^card" | wc -l)
 		sound_card_recorder_count=$(arecord -l | grep "^card" | wc -l)
-		seeed_voicecard_service=$(systemctl list-units --full -all | grep "seeed-voicecard.service")
+		seeed_voicecard_service=$(systemctl list-units --full -all | grep "seeed-voicecard.service" | wc -l)
 		if [ $sound_card_player_count -eq 0 ] && [ $sound_card_recorder_count -eq 0 ]; then
 			echo ""
 			echo "No sound-cards found - RPi Audio HAT service down or service restart required?"
-			if [ -n "$seeed_voicecard_service" ]; then
+			if [ $seeed_voicecard_service -eq 1 ]; then
 				echo "Try:"
 				echo "sudo service seeed-voicecard stop && sudo service seeed-voicecard start && aplay -l"
 			fi
@@ -143,7 +143,7 @@ while true; do
 			echo ""
 			echo "Inside alsamixer use F5 to show input and output. If your sound-card doesn't show up by default use F6 to switch."
 			echo "You might need to edit ~/.asoundrc in certain cases to set the correct default devices (see asound examples in install folder)."
-			if [ -n "$seeed_voicecard_service" ]; then
+			if [ $seeed_voicecard_service -eq 1 ]; then
 				echo "For WM8960 boards (ReSpeaker etc.) check 'Playback' and 'Capture' volumes."
 			fi
 			echo ""
