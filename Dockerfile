@@ -31,10 +31,10 @@ RUN echo 'Installing SEPIA-Home...' && \
 	adduser admin sudo && \
 	echo "admin ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-# Set JAVA_HOME path ... just in case
-
-ENV JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
-ENV PATH="${JAVA_HOME}:${PATH}"
+# Set JAVA_HOME path ... just in case - TODO: fix path for ARM or remove
+#
+# ENV JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
+# ENV PATH="${JAVA_HOME}:${PATH}"
 
 # Download SEPIA-Home (custom-bundle, single-server, SBC version)
 
