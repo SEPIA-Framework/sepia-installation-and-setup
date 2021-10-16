@@ -119,7 +119,8 @@ while true; do
 		fi
 		echo "IP should be: $ip_adr"
 		echo ""
-		echo "NOTE: The following tool will ask you several questions. You can leave all fields blank except 'common name'."
+		echo "NOTE: The following tool will ask you several questions."
+		echo "Use '$(hostname).local' as 'common name' (your hostname). All other fields can be left blank."
 		echo ""
 		read -p "Press any key to continue"
 		mkdir -p self-signed-ssl
