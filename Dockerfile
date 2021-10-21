@@ -35,6 +35,9 @@ RUN echo 'Installing SEPIA-Home...' && \
 #
 # ENV JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
 # ENV PATH="${JAVA_HOME}:${PATH}"
+#
+# Set a Docker ENV to identify container in scripts
+ENV ISDOCKER="true"
 
 # Download SEPIA-Home (custom-bundle, single-server, SBC version)
 

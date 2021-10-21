@@ -6,7 +6,7 @@ OLD_FOLDER=SEPIA_old_$NOW
 get_latest_release() {
 	curl --silent "https://api.github.com/repos/$1/releases/latest" | # Get latest release from GitHub api
 		grep '"tag_name":' |                                          # Get tag line
-		sed -E 's/.*"([^"]+)".*/\1/'                                  # Pluck JSON value
+		sed -E 's/.*"([^"]+)".*/\1/'                                  # Get JSON value
 }
 if [ -n "$1" ]; then
 	echo "Welcome!"
@@ -28,6 +28,11 @@ else
 	echo ""
 	echo "NOTE: Step 4 will restore your old property files (your SEPIA server settings) removing any newly added property entries. This is usually ok since they have default values, but a proper file merge would be better!"
 fi
+if [ -n "$ISDOCKER" ]; then
+	echo ""
+	echo "NOTE: Due to the Docker environment the backup cannot be stored properly! Be sure to make a copy of your SEPIA folder before you continue."
+	echo ""
+fi
 echo "Do you want to continue?"
 echo ""
 read -p "Enter 'yes' to continue: " yesno
@@ -43,7 +48,12 @@ bash shutdown-sepia.sh
 bash backup-sepia.sh
 echo ""
 cd ..
-mv $ORG_FOLDER $OLD_FOLDER
+if [ -n "$ISDOCKER" ]; then
+	echo "NOTE: Due to the Docker environment the old SEPIA folder will be cleared not moved!"
+	rm -rf $ORG_FOLDER/*
+else
+	mv $ORG_FOLDER $OLD_FOLDER
+fi
 mkdir -p $ORG_FOLDER/update
 cd $ORG_FOLDER/update
 if [ -n "$1" ]; then
