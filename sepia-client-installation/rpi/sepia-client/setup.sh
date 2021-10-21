@@ -141,6 +141,8 @@ while true; do
 			exit
 		else
 			echo ""
+			echo "NOTE: If 'alsamixer' settings don't have any effect on your audio input/output volume try 'pulsemixer'."
+			echo ""
 			echo "Inside alsamixer use F5 to show input and output. If your sound-card doesn't show up by default use F6 to switch."
 			echo "You might need to edit ~/.asoundrc in certain cases to set the correct default devices (see asound examples in install folder)."
 			if [ $seeed_voicecard_service -eq 1 ]; then
