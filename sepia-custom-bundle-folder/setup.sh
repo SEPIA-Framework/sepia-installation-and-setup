@@ -135,8 +135,8 @@ while true; do
 		fi
 	elif [ $option = "5" ] 
 	then
-		sudo sh -c "echo 'sepia-home' > /etc/hostname"
-		sudo sed -i -e 's|127\.0\.1\.1.*|127.0.1.1	sepia-home|g' /etc/hosts
+		sudo sh -c "echo 'sepia-home.local' > /etc/hostname"
+		sudo sed -i -e 's|127\.0\.1\.1.*|127.0.1.1	sepia-home.local|g' /etc/hosts
 		echo "------------------------"
 		echo "Please reboot the system to use new hostname."
 		echo "------------------------"

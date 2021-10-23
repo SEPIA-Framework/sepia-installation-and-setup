@@ -52,8 +52,8 @@ while true; do
 		fi
 		echo "------------------------"
 		echo "DONE."
-		echo "You should be able to reach the server at: http://$ip_adr:20726 or http://$(hostname).local:20726"
-		echo "In your SEPIA client you can use the hostname: http://$ip_adr:20726/sepia or http://$(hostname).local:20726/sepia"
+		echo "You should be able to reach the server at: http://$ip_adr:20726 or http://$(hostname -s).local:20726"
+		echo "In your SEPIA client you can use the hostname: http://$ip_adr:20726/sepia or http://$(hostname -s).local:20726/sepia"
 		echo ""
 		echo "Please note: if this is a virtual machine the external IP might be different and the hostname might not work at all!"
 		echo "------------------------"
@@ -107,12 +107,12 @@ while true; do
 		
 		echo "Creating self-signed SSL certificate ..."
 		echo ""
-		echo "Host URL is: $(hostname).local (can be used as COMMON NAME for certificate)"
+		echo "Host URL is: $(hostname -s).local (can be used as COMMON NAME for certificate)"
 		ip_adr=""
-		if [ -x "$(command -v ifconfig)" ]; then
-			ip_adr=$(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
-		elif [ -x "$(command -v ip)" ]; then
-			ip_adr=$(ip a | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
+		if [ -x "$(command -v ip)" ]; then
+			ip_adr=$(ip a | grep -E 'eth0|wlan0' | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' | head -1)
+		elif [ -x "$(command -v ifconfig)" ]; then
+			ip_adr=$(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' | head -1)
 		fi
 		if [ -z "$ip_adr" ]; then
 			ip_adr="[IP]"
@@ -120,18 +120,18 @@ while true; do
 		echo "IP should be: $ip_adr"
 		echo ""
 		echo "NOTE: The following tool will ask you several questions."
-		echo "Use '$(hostname).local' as 'common name' (your hostname). All other fields can be left blank."
+		echo "Use '$(hostname -s).local' as 'common name' (your hostname). All other fields can be left blank."
 		echo ""
 		read -p "Press any key to continue"
 		mkdir -p self-signed-ssl
 		openssl req -nodes -new -x509 -days 365 -keyout self-signed-ssl/key.pem -out self-signed-ssl/certificate.pem
 		
-		echo "Copying $SEPIA_FOLDER/nginx/sites-available/sepia-fw-https-$(hostname).conf to /etc/nginx/sites-enabled/ ..."
+		echo "Copying $SEPIA_FOLDER/nginx/sites-available/sepia-fw-https-$(hostname -s).conf to /etc/nginx/sites-enabled/ ..."
 		cd $SEPIA_FOLDER/nginx/sites-available
-		cp sepia-fw-https-self-signed.conf sepia-fw-https-self-$(hostname).conf
-		sed -i -e 's|\[my-hostname-or-ip\]|'"$(hostname).local"'|g' sepia-fw-https-self-$(hostname).conf
-		sed -i -e 's|\[my-sepia-path\]|'"$SEPIA_FOLDER"'|g' sepia-fw-https-self-$(hostname).conf
-		sudo cp sepia-fw-https-self-$(hostname).conf /etc/nginx/sites-enabled/
+		cp sepia-fw-https-self-signed.conf sepia-fw-https-self-$(hostname -s).conf
+		sed -i -e 's|\[my-hostname-or-ip\]|'"$(hostname -s).local"'|g' sepia-fw-https-self-$(hostname -s).conf
+		sed -i -e 's|\[my-sepia-path\]|'"$SEPIA_FOLDER"'|g' sepia-fw-https-self-$(hostname -s).conf
+		sudo cp sepia-fw-https-self-$(hostname -s).conf /etc/nginx/sites-enabled/
 		
 		echo "Restarting NGINX to load new config ..."
 		sudo nginx -t
@@ -141,13 +141,13 @@ while true; do
 		echo "------------------------"
 		echo "DONE."
 		echo "You should be able to reach the server now, e.g. at:"
-		echo "https://$(hostname).local:20726, https://$ip_adr:20726 or http://$(hostname).local:20727"
+		echo "https://$(hostname -s).local:20726, https://$ip_adr:20726 or http://$(hostname -s).local:20727"
 		echo ""
 		echo "In your SEPIA client you can use the hostname:"
-		echo "$(hostname).local:20726/sepia or https://$ip_adr:20726/sepia"
+		echo "$(hostname -s).local:20726/sepia or https://$ip_adr:20726/sepia"
 		echo ""
 		echo "If you get problems because the client won't accept your self-signed certificate try:"
-		echo "http://$(hostname).local:20727/sepia or http://$ip_adr:20727/sepia"
+		echo "http://$(hostname -s).local:20727/sepia or http://$ip_adr:20727/sepia"
 		echo ""
 		echo "Please note: if this is a virtual machine the external IP might be different and the hostname might not work at all!"
 		echo "------------------------"

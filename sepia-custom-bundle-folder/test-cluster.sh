@@ -97,15 +97,15 @@ if [ -z "$ip_adr" ]; then
 	ip_adr="[IP]"
 fi
 echo "You should be able to reach your SEPIA server via:"
-echo "$(hostname).local or $ip_adr"
+echo "$(hostname -s).local or $ip_adr"
 echo ''
-echo "Example1: http://$(hostname).local:20721/tools/index.html"
+echo "Example1: http://$(hostname -s).local:20721/tools/index.html"
 echo "Example2: http://$ip_adr:20721/tools/index.html"
 echo "Example3: http://$ip_adr:20721/app/index.html"
 echo ''
 echo "If you've installed NGINX proxy with self-signed SSL try:"
-echo "Example4: https://$(hostname).local:20726/sepia/assist/tools/index.html"
-echo "Example5: https://$(hostname).local:20726/sepia/assist/app/index.html"
+echo "Example4: https://$(hostname -s).local:20726/sepia/assist/tools/index.html"
+echo "Example5: https://$(hostname -s).local:20726/sepia/assist/app/index.html"
 echo ''
 echo "Please note: if this is a virtual machine the hostname might not work to contact the server!"
 echo ''
