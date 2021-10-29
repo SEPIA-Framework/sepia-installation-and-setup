@@ -21,6 +21,7 @@ if [ -z "$es_check" ]; then
 else
 	echo "Elasticsearch looks GOOD."
 fi
+sleep 2
 cd ..
 if [ -f "sepia-assist-server/Xtensions/TTS/marytts/bin/marytts-server" ]; then
 	echo -e '\nChecking extensions ...\n'
@@ -57,8 +58,8 @@ if [ -f "sepia-assist-server/Xtensions/TTS/marytts/bin/marytts-server" ]; then
 		fi
 		cd ../../../../..
 	fi
+	sleep 2
 fi
-sleep 10
 echo -e '\nStarting SEPIA servers ...\n'
 cd sepia-assist-server
 ./run.sh
