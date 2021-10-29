@@ -11,7 +11,8 @@ until $(curl --output /dev/null --silent --head --fail http://localhost:20724); 
 	fi
 done
 echo ''
-es_yellow_or_green=$(curl --silent -XGET 'http://localhost:20724/_cluster/health?pretty=true&wait_for_status=yellow&timeout=30s' | grep -E "status.*(green|yellow)" | wc -l)
+echo 'Connection found. Waiting for cluster health check (max. 60s) ...'
+es_yellow_or_green=$(curl --silent -XGET 'http://localhost:20724/_cluster/health?pretty=true&wait_for_status=yellow&timeout=60s' | grep -E "status.*(green|yellow)" | wc -l)
 if [ $es_yellow_or_green -eq 1 ]; then
 	echo 'Status YELLOW or GREEN: true'
 else
