@@ -12,10 +12,13 @@ echo ""
 sudo apt-get update
 sudo apt-get install -y git
 git clone https://github.com/respeaker/seeed-voicecard
-# If you have issues try: https://github.com/HinTak/seeed-voicecard
+#or: https://github.com/HinTak/seeed-voicecard
 cd seeed-voicecard
 DRIVER_FOLDER=$(pwd)
 #sed -i 's/^FORCE_KERNEL=.*/FORCE_KERNEL="1.20190925-1"/' install.sh
 sudo ./install.sh
 echo ""
 echo "To repeat this setup run 'sudo ./install.sh' from $DRIVER_FOLDER"
+echo ""
+echo "If you keep getting errors try this repository instead:"
+echo "git clone https://github.com/HinTak/seeed-voicecard"
