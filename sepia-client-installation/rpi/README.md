@@ -60,7 +60,7 @@ network={
 * Set SEPIA server host address (as you would inside your SEPIA app login box)
 * Optional: Define a unique device ID (default is 'o1', Android apps have 'a1' and browsers 'b1' by default)
 * Optional: Define a new CLEXI-ID (this can be used as password for the remote terminal later, default is: clexi-123)
-* Optional: Set input/output volume (via alsamixer)
+* Optional: Set input/output volume (via `pulsemixer` if Pulseaudio is active or `alsamixer` if not)
 * Finish your setup by setting automatic login via `sudo raspi-config` (Boot options - Desktop/CLI - Console Autologin)
 * **Reboot** your system 
 * Your headless client should automatically start and notify you via a short audio message that he'll be "right there"

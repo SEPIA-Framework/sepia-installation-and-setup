@@ -53,13 +53,13 @@ if [ "$is_xserver_running" -eq "0" ]; then
 	fi
 fi
 
-# Restore alsamixer settings (and add alsamixer setup to client-setup menu)
+# Restore alsamixer settings (if you use Pulseaudio maybe skip this)
 alsamixerstate=~/sepia-client/my_amixer_volumes.state
 if [ -f "$alsamixerstate" ]; then
 	echo "Restoring alsamixer settings from: $alsamixerstate"
 	echo "$NOW - Restoring alsamixer settings from: $alsamixerstate" >> "$LOG"
 	alsactl --file "$alsamixerstate" restore
-	echo "$NOW - alsamixer settings restored." >> "$LOG"
+	echo "$NOW - alsamixer settings restored. NOTE: If you use Pulseaudio you might need to delete the state file." >> "$LOG"
 fi
 # Set volume for specific amixer controls
 # headphone_count=$(amixer scontrols | grep "Headphone" | wc -l)

@@ -50,11 +50,41 @@ echo "$NOW - Installing TTS voices ..." >> "$LOG"
 sudo apt-get install -y espeak-ng espeak-ng-espeak
 sudo apt-get install -y --no-install-recommends flite-dev flite libttspico-data
 cd tmp
-wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_armhf.deb
-wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_armhf.deb
-# apt-get install -f ./libttspico0_1.0+git20130326-9_armhf.deb ./libttspico-utils_1.0+git20130326-9_armhf.deb
-sudo dpkg -i libttspico0_1.0+git20130326-9_armhf.deb
-sudo dpkg -i libttspico-utils_1.0+git20130326-9_armhf.deb
+# picoTTS - common:
+wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-data_1.0+git20130326-9_all.deb
+sudo dpkg -i libttspico-data_1.0+git20130326-9_all.deb
+if [ -n "$(uname -m | grep aarch64)" ]; then
+	echo "Platform: aarch64"
+	echo "$NOW - Platform: aarch64" >> "$LOG"
+	wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_arm64.deb
+	wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_arm64.deb
+	sudo dpkg -i libttspico0_1.0+git20130326-9_arm64.deb
+	sudo dpkg -i libttspico-utils_1.0+git20130326-9_arm64.deb
+elif [ -n "$(uname -m | grep armv7l)" ]; then
+	echo "Platform: armv7l"
+	echo "$NOW - Platform: armv7l" >> "$LOG"
+	wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_armhf.deb
+	wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_armhf.deb
+	sudo dpkg -i libttspico0_1.0+git20130326-9_armhf.deb
+	sudo dpkg -i libttspico-utils_1.0+git20130326-9_armhf.deb
+elif [ -n "$(uname -m | grep x86_64)" ]; then
+	echo "Platform: x86_64"
+	echo "$NOW - Platform: x86_64" >> "$LOG"
+	wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_amd64.deb
+	wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_amd64.deb
+	sudo dpkg -i libttspico0_1.0+git20130326-9_amd64.deb
+	sudo dpkg -i libttspico-utils_1.0+git20130326-9_amd64.deb
+elif [ -n "$(uname -m | grep armv6l)" ]; then
+	echo "Platform: armv6l - Process skipped"
+	echo "$NOW - Platform: armv6l - Process skipped" >> "$LOG"
+else
+	echo "Platform: x86_32"
+	echo "$NOW - Platform: x86_32" >> "$LOG"
+	wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_i386.deb
+	wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_i386.deb
+	sudo dpkg -i libttspico0_1.0+git20130326-9_i386.deb
+	sudo dpkg -i libttspico-utils_1.0+git20130326-9_i386.deb
+fi
 cd $this_folder
 echo "=========================================="
 #
@@ -75,7 +105,7 @@ cp openbox ~/.config/openbox/autostart
 startfile=~/.bashrc
 echo "$NOW - Updating $startfile ..." >> "$LOG"
 if grep -q "sepia_run_on_login" $startfile; then
-    echo "Found 'sepia_run_on_login' in $startfile already"
+	echo "Found 'sepia_run_on_login' in $startfile already"
 	echo "$NOW - Skipped: Found 'sepia_run_on_login' in $startfile already" >> "$LOG"
 else
 	echo '' >> $startfile
@@ -123,7 +153,7 @@ cp runtime_commands/* ~/clexi/runtime_commands/
 cd ~/clexi
 if [ "$SKIP_BLE" != "true" ]; then
 	echo "$NOW - Installing required packages including Bluetooth ..." >> "$LOG"
-    sudo apt-get install -y bluetooth bluez libbluetooth-dev libudev-dev libnss3-tools libcap2-bin openssl
+	sudo apt-get install -y bluetooth bluez libbluetooth-dev libudev-dev libnss3-tools libcap2-bin openssl
 else
 	# Skip Bluetooth
 	echo "$NOW - Installing required packages skipping Bluetooth ..." >> "$LOG"
