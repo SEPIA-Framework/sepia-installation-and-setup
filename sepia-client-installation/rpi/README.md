@@ -7,24 +7,13 @@ Expected to work with RPi3 1GB and might even work with RPi Zero 512GB if wake-w
 
 ### 1) Install Raspberry Pi OS Lite
 
-* Download Raspberry Pi OS Lite (the version without desktop)
-* Flash MicroSD with Etcher
-* Remove MicroSD and replug (to reload filesystem)
-* Add an empty file called 'ssh' to the boot folder ([microSD]/boot) to enable SSH
-* Add a file called 'wpa_supplicant.conf' with the following content to the boot folder to enable WiFi login (replace 'country' [US, DE, ..], 'ssid' and 'psk'):
-```
-country=US
-ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
-update_config=1
-network={
-    ssid="NETWORK-NAME"
-    psk="NETWORK-PASSWORD"
-	id_str="Home"
-}
-```
+* Download the official [Raspberry Pi Imager](https://www.raspberrypi.com/software/) and start it
+* Choose Raspberry Pi OS Lite (from 'other' menu)
+* Press 'Ctrl + Shift + X' to open Imager expert settings
+* Activate SSH (required), set your timezone (important for timer) and optionally configure Wifi, hostname, etc.
+* Flash the SD card
 * Eject the MicroSD and plug it into your RPi
-* Connect to your RPi via SSH (in Windows you can use [putty](https://www.putty.org/))
-* Finish your RPi setup with `sudo raspi-config` (expand SD card, set timezone, etc.)
+* Connect to your RPi via SSH (in Windows you can use [putty](https://www.putty.org/)) with the username and password previously set
 
 ### 2a) SEPIA Client Installation
 
@@ -41,10 +30,11 @@ network={
 
 * **USB microphone** and the audio jack for sound:
   * This script might be useful to set the correct default devices: `bash install_usb_mic.sh`
+  * Alternatively try `sudo raspi-config` and check the audio settings
   * **Reboot** the system
 * For **WM8960 microphone boards** like ReSpeaker (2 and 4 mic HAT), Waveshare Audio-HAT, Adafruit Voice Bonnet:
   * Install drivers: `bash install_respeaker_mic.sh`
-  * Run `bash update_respeaker_boot.sh` to deactivate the default RPi audio jack and HDMI (audio) if you don't use it
+  * Optionally run `bash update_respeaker_boot.sh` to deactivate the default RPi audio jack and HDMI (audio) if you don't use it
   * **Reboot** the system
 * For **Hyperpixel** touchscreen:
   * Install drivers: `curl https://get.pimoroni.com/hyperpixel4 | bash`
@@ -77,11 +67,13 @@ network={
 * Use the remote terminal command `call login user [user-ID] password [user-pwd]` (message type: 'SEPIA Client') to login your user
 * You should see a "login successful" message in the terminal. If not you can use the command `call ping` to see if the client can reach the SEPIA server. Check your "hostname" settings from the previous step (Client Setup) if ping fails
 * Use the command `call test` (message type: 'SEPIA Client') or corresponding shortcut button 'test client' to ... test your client. You should hear an acoustic confirmation
-* **Reboot** your system one last time to finish the configuration (NOTE: your microphone will only have access permission AFTER the reboot)
+* **Reboot** your system one last time to finish the configuration (NOTE: your **microphone** will only have access permission **AFTER the reboot**)
+* AFTER the reboot you can connect via CLEXI again to test your microphone. See the "?" help button for examples.
 
 ### 5) Fine Tuning
 
-* Optional: Open the CLEXI settings.json file located at `~/clexi/www/sepia/settings.js` to tweak your client (e.g. activate "Hey SEPIA" or other wake-words). NOTE: please do this AFTER a successful configuration and reboot (previous step)
+* Optional: Open the settings file located at `~/clexi/www/sepia/settings.js` to tweak your client (e.g. activate "Hey SEPIA" or other wake-words). NOTE: please do this AFTER a successful configuration and reboot (previous step)
+* The `settings.js` has many available options. To make life easier you can open the SEPIA client in your browser, configure it there and then go to 'settings -> account' and look for the export button. It will show you a popup with settings that you can copy over to your DIY client.
 * Done. Enjoy! :-)
 
 ## Basic uninstallation steps

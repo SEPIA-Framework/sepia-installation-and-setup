@@ -71,3 +71,13 @@ You will get a ZIP-file in the end with the new release build (as well).
 ## Version history
 
 For a detailed list of updates and new features please see the [CHANGELOG](CHANGELOG.md)
+
+# SEPIA DIY Client - Raspberry Pi Smart-Speaker, Smart-Display etc.
+
+Check out the [client section](sepia-client-installation).
+
+# Other SEPIA Projects
+
+* [micro:bit Bluetooth remote](sepia-microbit-projects) - BLE beacon based remote for SEPIA client to trigger microphone and other controls
+* [SEPIA STT Server](https://github.com/SEPIA-Framework/sepia-stt-server) - Offline speech-recognition server with customizable language models
+* There is many more to discover, just browse the project pages ;-)

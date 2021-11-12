@@ -21,7 +21,7 @@ while true; do
 	echo ""
 	echo "Please choose next step:"
 	echo "1: Install Java OpenJDK 11 globally (alternative: download SEPIA-Home first and use local Java installation)"
-	echo "2: Install required packages and update server-clock for precise timers"
+	echo "2: Update server-clock for precise timers"
 	echo "3: Download SEPIA-Home bundle version: $SEPIA_VERSION"
 	echo "4: Extract SEPIA-Home to '~/SEPIA' (currently required home folder for SEPIA)"
 	echo "5: Optional: Install NGINX reverse-proxy (recommended alternative to SEPIA Reverse-Proxy)"
@@ -48,9 +48,8 @@ while true; do
 		sudo apt-get install -y zip unzip curl procps ca-certificates espeak-ng espeak-ng-espeak
 		
 		# UPDATE TIME SYNC
-		echo 'Installing ntpdate to sync time ...'
-		sudo apt-get install -y ntpdate
-		sudo ntpdate -u ntp.ubuntu.com
+		echo "Using 'timedatectl' to sync time ..."
+		sudo timedatectl set-ntp true
 		echo "------------------------"
 		echo "DONE."
 		echo "------------------------"

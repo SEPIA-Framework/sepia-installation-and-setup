@@ -33,12 +33,13 @@ while true; do
 	echo "6: Set SEPIA Client device ID"
 	echo ""
 	echo "Other client settings:"
-	echo "7: Activate CLEXI Bluetooth support"
-	echo "8: Show audio devices (use this BEFORE settings volume)"
+	echo "7: Activate CLEXI Bluetooth support (inactive by default)"
+	echo "8: Show audio devices (use this once BEFORE volume setup)"
 	echo "9: Set and store input/output volume via 'pulsemixer' (new)"
 	echo "10: Set and store input/output volume via 'alsamixer' (old)"
 	echo "11: Set audio input device (ALSA device - skip for Pulseaudio)"
 	echo "12: Set audio output device (ALSA device - skip for Pulseaudio)"
+	echo "13: Edit client settings.js manually"
 	echo ""
 	if [ -z "$option" ]; then
 		read -p "Enter a number plz (0 to exit): " option
@@ -117,17 +118,18 @@ while true; do
 		sound_card_player_count=$(aplay -l | grep "^card" | wc -l)
 		sound_card_recorder_count=$(arecord -l | grep "^card" | wc -l)
 		seeed_voicecard_service=$(systemctl list-units --full -all | grep "seeed-voicecard.service" | wc -l)
-		if [ $sound_card_player_count -eq 0 ] && [ $sound_card_recorder_count -eq 0 ]; then
+		echo "Found $sound_card_player_count devices to PLAY audio:"
+		aplay -l | grep "^card"
+		if [ $sound_card_recorder_count -eq 0 ]; then
 			echo ""
-			echo "No sound-cards found - RPi Audio HAT service down or service restart required?"
+			echo "No recorder sound-cards found - Check 'sudo raspi-config' audio settings if you can select your card."
+			echo "Another idea: RPi Audio HAT service down or service restart required?"
 			if [ $seeed_voicecard_service -eq 1 ]; then
 				echo "Try:"
 				echo "sudo service seeed-voicecard stop && sudo service seeed-voicecard start && aplay -l"
 			fi
 			echo ""
 		else
-			echo "Found $sound_card_player_count devices to PLAY audio:"
-			aplay -l | grep "^card"
 			echo "Found $sound_card_recorder_count devices to RECORD audio:"
 			arecord -l | grep "^card"
 		fi
@@ -189,6 +191,12 @@ while true; do
 		echo "------------------------"
 		echo "DONE."
 		echo "------------------------"
+	elif [ $option = "13" ]
+	then
+		nano $HOME/clexi/www/sepia/settings.js
+		echo "------------------------"
+		echo "DONE."
+		echo "------------------------"
 	else
 		echo "------------------------"
 		echo "Not an option, please try again."
@@ -200,6 +208,7 @@ while true; do
 		break
 	else
 		read -p "Press any key to return to menu (or CTRL+C to abort)."
+		clear
 	fi
 done
 echo "Cu :-) ... ah and don't forget to restart your client ;-)"

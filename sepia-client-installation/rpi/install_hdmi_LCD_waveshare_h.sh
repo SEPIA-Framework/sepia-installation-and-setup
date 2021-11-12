@@ -14,7 +14,7 @@ if [[ $EUID -eq 0 ]]; then
 	echo ""
 	echo "The following lines will be removed:"
 	echo ""
-	echo "dtoverlay=vc4-fkms-v3d"
+	echo "dtoverlay=vc4-fkms-v3d (and 'vc4-kms-v3d')"
 	echo ""
 	echo "NOTE: Old entries with the same name will be removed."
 	echo "If you are not sure if this works for your display or confix.txt please edit the file manually."
@@ -35,6 +35,7 @@ bootfile="/boot/config.txt"
 echo "Updating $bootfile ..."
 # clean up
 sed -i 's/^dtoverlay=vc4-fkms-v3d/#dtoverlay=vc4-fkms-v3d/' $bootfile
+sed -i 's/^dtoverlay=vc4-kms-v3d/#dtoverlay=vc4-kms-v3d/' $bootfile
 sed -i '/^max_usb_current=/d' $bootfile
 sed -i '/^hdmi_force_hotplug=/d' $bootfile
 sed -i '/^config_hdmi_boost=/d' $bootfile

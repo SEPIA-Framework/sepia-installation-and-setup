@@ -18,7 +18,16 @@ DRIVER_FOLDER=$(pwd)
 #sed -i 's/^FORCE_KERNEL=.*/FORCE_KERNEL="1.20190925-1"/' install.sh
 sudo ./install.sh
 echo ""
-echo "To repeat this setup run 'sudo ./install.sh' from $DRIVER_FOLDER"
+echo "Some notes:"
 echo ""
-echo "If you keep getting errors try this repository instead:"
+echo "If you don't see any cards after first reboot (arecord -l) try:"
+echo "sudo service seeed-voicecard stop && sudo service seeed-voicecard start && arecord -l"
+echo ""
+echo "Then check: raspi-config -> system options -> audio (look for seeed or WM8960 etc.)"
+echo ""
+echo "If that doesn't work try to run the setup once more and repeat the steps:"
+echo "cd $DRIVER_FOLDER && sudo ./install.sh"
+echo ""
+echo "If you keep getting errors try this repository instead (remove the old one):"
 echo "git clone https://github.com/HinTak/seeed-voicecard"
+echo ""
