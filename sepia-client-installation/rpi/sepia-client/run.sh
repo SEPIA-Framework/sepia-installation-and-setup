@@ -9,6 +9,7 @@ echo "Last run attempt: $NOW - via: run.sh" > "$LOG"
 
 # Client mode
 is_headless=1
+chromium_remote_debug=0
 
 # Check sound devices
 sound_card_player_count=$(aplay -l | grep "^card" | wc -l)
@@ -118,6 +119,11 @@ fi
 audio_input_device='default'
 audio_output_device='default'
 default_chrome_flags="--user-data-dir=$chromedatadir --alsa-output-device=$audio_output_device --alsa-input-device=$audio_input_device --allow-insecure-localhost --autoplay-policy=no-user-gesture-required --disable-infobars --enable-features=OverlayScrollbar --hide-scrollbars --no-default-browser-check --check-for-update-interval=31536000"
+if [ "$chromium_remote_debug" -eq "1" ]; then
+	default_chrome_flags="--remote-debugging-port=9222 ""$default_chrome_flags"
+	echo "Remote debugging on port 9222 ACTIVE! To access externally use SSH tunnel or proxy port."
+	echo "$NOW - REMOTE DEBUGGING for Chromium on port 9222 ACTIVE" >> "$LOG"
+fi
 # comma separated list of extensions:
 chrome_extensions="--load-extension=~/sepia-client/chromium-extensions/sepia-fw"
 # headless or with display:

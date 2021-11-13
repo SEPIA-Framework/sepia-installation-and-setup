@@ -10,9 +10,9 @@ Expected to work with RPi3 1GB and might even work with RPi Zero 512GB if wake-w
 * Download the official [Raspberry Pi Imager](https://www.raspberrypi.com/software/) and start it
 * Choose Raspberry Pi OS Lite (from 'other' menu)
 * Press 'Ctrl + Shift + X' to open Imager expert settings
-* Activate SSH (required), set your timezone (important for timer) and optionally configure Wifi, hostname, etc.
+* Activate SSH (required), set your time zone (important for timers) and optionally configure Wifi, hostname, etc.
 * Flash the SD card
-* Eject the MicroSD and plug it into your RPi
+* Eject the Micro-SD and plug it into your RPi
 * Connect to your RPi via SSH (in Windows you can use [putty](https://www.putty.org/)) with the username and password previously set
 
 ### 2a) SEPIA Client Installation

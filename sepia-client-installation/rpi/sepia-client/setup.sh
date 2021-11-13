@@ -17,6 +17,7 @@ client_run_script="$HOME/sepia-client/run.sh"
 # stat menu loop
 while true; do
 	headless_mode=$(cat "$client_run_script" | grep is_headless= | grep -o .$)
+	chromium_remote_debug=$(cat "$client_run_script" | grep chromium_remote_debug= | grep -o .$)
 	echo ""
 	echo "What would you like to do?"
 	echo ""
@@ -40,6 +41,12 @@ while true; do
 	echo "11: Set audio input device (ALSA device - skip for Pulseaudio)"
 	echo "12: Set audio output device (ALSA device - skip for Pulseaudio)"
 	echo "13: Edit client settings.js manually"
+	if [ "$chromium_remote_debug" -eq "1" ]; then
+		echo "14: ENABLE remote debugging mode (actually it IS ACTIVE)"
+	else
+		echo "14: ENABLE remote debugging mode"
+	fi
+	echo "15: DISABLE remote debugging mode"
 	echo ""
 	if [ -z "$option" ]; then
 		read -p "Enter a number plz (0 to exit): " option
@@ -194,6 +201,28 @@ while true; do
 	elif [ $option = "13" ]
 	then
 		nano $HOME/clexi/www/sepia/settings.js
+		echo "------------------------"
+		echo "DONE."
+		echo "------------------------"
+	elif [ $option = "14" ]
+	then
+		echo "ENABLING remote debugging mode"
+		sed -i 's/chromium_remote_debug=./chromium_remote_debug=1/' $client_run_script
+		echo ""
+		echo "To use remote debugging you need to forward port 9222 to allow external access."
+		echo "Use Nginx or a SSH tunnel: 'ssh -L 0.0.0.0:9223:localhost:9222 localhost -N'"
+		echo "Then open 'chrome://inspect/#devices' in your Chrome desktop browser and and add"
+		echo "'http://[client-IP]:9223' to your network targets (NOTE: the tunnel port 9223!)."
+		echo ""
+		echo "Please DISABLE this mode when you're done and stay safe ;-)"
+		echo ""
+		echo "------------------------"
+		echo "DONE."
+		echo "------------------------"
+	elif [ $option = "15" ]
+	then
+		echo "DISABLING remote debugging mode"
+		sed -i 's/chromium_remote_debug=./chromium_remote_debug=0/' $client_run_script
 		echo "------------------------"
 		echo "DONE."
 		echo "------------------------"
