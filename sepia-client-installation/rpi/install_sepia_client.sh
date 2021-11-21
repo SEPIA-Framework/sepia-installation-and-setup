@@ -48,42 +48,50 @@ echo "=========================================="
 echo "Installing TTS voices ..."
 echo "$NOW - Installing TTS voices ..." >> "$LOG"
 sudo apt-get install -y espeak-ng espeak-ng-espeak
-sudo apt-get install -y --no-install-recommends flite-dev flite libttspico-data
-cd tmp
+echo "$NOW - Installed: espeak-ng" >> "$LOG"
+sudo apt-get install -y --no-install-recommends flite-dev flite
+echo "$NOW - Installed: flite" >> "$LOG"
 # picoTTS - common:
-wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-data_1.0+git20130326-9_all.deb
-sudo dpkg -i libttspico-data_1.0+git20130326-9_all.deb
-if [ -n "$(uname -m | grep aarch64)" ]; then
-	echo "Platform: aarch64"
-	echo "$NOW - Platform: aarch64" >> "$LOG"
-	wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_arm64.deb
-	wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_arm64.deb
-	sudo dpkg -i libttspico0_1.0+git20130326-9_arm64.deb
-	sudo dpkg -i libttspico-utils_1.0+git20130326-9_arm64.deb
-elif [ -n "$(uname -m | grep armv7l)" ]; then
-	echo "Platform: armv7l"
-	echo "$NOW - Platform: armv7l" >> "$LOG"
-	wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_armhf.deb
-	wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_armhf.deb
-	sudo dpkg -i libttspico0_1.0+git20130326-9_armhf.deb
-	sudo dpkg -i libttspico-utils_1.0+git20130326-9_armhf.deb
-elif [ -n "$(uname -m | grep x86_64)" ]; then
-	echo "Platform: x86_64"
-	echo "$NOW - Platform: x86_64" >> "$LOG"
-	wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_amd64.deb
-	wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_amd64.deb
-	sudo dpkg -i libttspico0_1.0+git20130326-9_amd64.deb
-	sudo dpkg -i libttspico-utils_1.0+git20130326-9_amd64.deb
-elif [ -n "$(uname -m | grep armv6l)" ]; then
-	echo "Platform: armv6l - Process skipped"
-	echo "$NOW - Platform: armv6l - Process skipped" >> "$LOG"
+if [ $(command -v pico2wave | wc -l) -eq 0 ]; then
+	cd tmp
+	wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-data_1.0+git20130326-9_all.deb
+	sudo dpkg -i libttspico-data_1.0+git20130326-9_all.deb
+	if [ -n "$(uname -m | grep aarch64)" ]; then
+		echo "Platform: aarch64"
+		echo "$NOW - Platform: aarch64" >> "$LOG"
+		wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_arm64.deb
+		wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_arm64.deb
+		sudo dpkg -i libttspico0_1.0+git20130326-9_arm64.deb
+		sudo dpkg -i libttspico-utils_1.0+git20130326-9_arm64.deb
+	elif [ -n "$(uname -m | grep armv7l)" ]; then
+		echo "Platform: armv7l"
+		echo "$NOW - Platform: armv7l" >> "$LOG"
+		wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_armhf.deb
+		wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_armhf.deb
+		sudo dpkg -i libttspico0_1.0+git20130326-9_armhf.deb
+		sudo dpkg -i libttspico-utils_1.0+git20130326-9_armhf.deb
+	elif [ -n "$(uname -m | grep x86_64)" ]; then
+		echo "Platform: x86_64"
+		echo "$NOW - Platform: x86_64" >> "$LOG"
+		wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_amd64.deb
+		wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_amd64.deb
+		sudo dpkg -i libttspico0_1.0+git20130326-9_amd64.deb
+		sudo dpkg -i libttspico-utils_1.0+git20130326-9_amd64.deb
+	elif [ -n "$(uname -m | grep armv6l)" ]; then
+		echo "Platform: armv6l - Process skipped"
+		echo "$NOW - Platform: armv6l - Process skipped" >> "$LOG"
+	else
+		echo "Platform: x86_32"
+		echo "$NOW - Platform: x86_32" >> "$LOG"
+		wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_i386.deb
+		wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_i386.deb
+		sudo dpkg -i libttspico0_1.0+git20130326-9_i386.deb
+		sudo dpkg -i libttspico-utils_1.0+git20130326-9_i386.deb
+	fi
+	echo "$NOW - Installed: pico2wave" >> "$LOG"
 else
-	echo "Platform: x86_32"
-	echo "$NOW - Platform: x86_32" >> "$LOG"
-	wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_i386.deb
-	wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_i386.deb
-	sudo dpkg -i libttspico0_1.0+git20130326-9_i386.deb
-	sudo dpkg -i libttspico-utils_1.0+git20130326-9_i386.deb
+	echo "Already installed: pico2wave"
+	echo "$NOW - Already installed: pico2wave" >> "$LOG"
 fi
 cd $this_folder
 echo "=========================================="
@@ -93,7 +101,12 @@ echo "Installing app environment ..."
 echo "$NOW - Installing app environment (X-Server, Xvfb, Openbox, Chromium, etc.) ..." >> "$LOG"
 sudo apt-get install -y --no-install-recommends xserver-xorg x11-xserver-utils xinit openbox xvfb xterm
 # NOTE: 'chromium' can be an alternative if 'chromium-browser' has issues but currently 'chromium' has graphic glitches :-/
-sudo apt-get install -y --no-install-recommends chromium-browser unclutter
+sudo apt-get install -y --no-install-recommends chromium-browser
+if [ $(sudo apt-cache search unclutter | grep ^unclutter-xfixes | wc -l) -eq 0 ]; then
+	sudo apt-get install -y --no-install-recommends unclutter
+else
+	sudo apt-get install -y --no-install-recommends unclutter-xfixes unclutter-startup
+fi
 # Some fixes (previously not required - pulseaudio fixes Chromium IPC semaphore errors and should be new default now):
 sudo apt-get install -y --no-install-recommends libgtk-3-0 libgtk-3-bin libgtk-3-common libgles2-mesa upower pulseaudio pulsemixer
 mkdir -p ~/sepia-client/chromium
@@ -124,7 +137,7 @@ echo "$NOW - Installing Node.js ..." >> "$LOG"
 if [ -n "$(command -v node)" ] && [ -n "$(command -v npm)" ]; then
 	echo "Found Node.js and skipped installation - Recommended Node.js is 10, please double-check!"
 	echo "$NOW - Skipped: Found Node.js: $(node -v), npm: $(npm -v)" >> "$LOG"
-	echo "$NOW - NOTE: Recommended Node.js is 10 - Please double-check!" >> "$LOG"
+	echo "$NOW - NOTE: Recommended Node.js is 14 - Please double-check!" >> "$LOG"
 else
 	if is_armv6l;
 	then
@@ -132,18 +145,20 @@ else
 		wget -O tmp/nodejs-armv6l-v10.x.tar.gz https://nodejs.org/dist/latest-v10.x/$f
 		sudo tar -zxf tmp/nodejs-armv6l-v10.x.tar.gz --strip-components=1 -C /usr
 	else
-		curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+		curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash -
 		sudo apt-get install -y nodejs
 	fi
 	echo "$NOW - Installed Node.js: $(node -v), npm: $(npm -v)" >> "$LOG"
 fi
 echo "Node.js: $(node -v) - npm: $(npm -v)"
-echo "$NOW - Installing CLEXI ..." >> "$LOG"
+echo "$NOW - Installing CLEXI" >> "$LOG"
 if [ -d ~/clexi ]; then
 	echo "Found CLEXI home folder, skipped download - To update CLEXI remove ~/clexi before running this script"
 	echo "$NOW - Found CLEXI home folder, skipped download - To update CLEXI remove ~/clexi before running this script" >> "$LOG"
 else
-	git clone https://github.com/bytemind-de/nodejs-client-extension-interface.git ~/clexi
+	echo "Cloning CLEXI into ~/clexi from branch $CLIENT_BRANCH ..."
+	echo "$NOW - Cloning CLEXI into ~/clexi from branch $CLIENT_BRANCH ..." >> "$LOG"
+	git clone --single-branch -b $CLIENT_BRANCH https://github.com/bytemind-de/nodejs-client-extension-interface.git ~/clexi
 	cp clexi_settings.json ~/clexi/settings.json
 fi
 # copy additional runtime commands
@@ -157,9 +172,7 @@ if [ "$SKIP_BLE" != "true" ]; then
 else
 	# Skip Bluetooth
 	echo "$NOW - Installing required packages skipping Bluetooth ..." >> "$LOG"
-	# TODO: if CLEXI changes the package.json this will break ...
-	sed -ri "s|\"node-beacon-scanner.*github:bytemind-de/node-beacon-scanner\"||" package.json
-	sed -ri "s|1.0.1\",|1.0.1\"|" package.json
+	sed -ri "s|\"node-beacon-scanner\".*||" package.json
 	sudo apt-get install -y libnss3-tools libcap2-bin openssl
 fi
 npm install --loglevel error
