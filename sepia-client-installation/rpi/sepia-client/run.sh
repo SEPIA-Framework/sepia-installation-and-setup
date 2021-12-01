@@ -12,8 +12,8 @@ is_headless=1
 chromium_remote_debug=0
 
 # Check sound devices
-sound_card_player_count=$(aplay -l | grep "^card" | wc -l)
-sound_card_recorder_count=$(arecord -l | grep "^card" | wc -l)
+sound_card_player_count=$(aplay -l | grep -E "^[[:alpha:]]+ [[:digit:]]" | wc -l)
+sound_card_recorder_count=$(arecord -l | grep -E "^[[:alpha:]]+ [[:digit:]]" | wc -l)
 echo "$NOW - Found sound-cards to play audio: $sound_card_player_count" >> "$LOG"
 echo "$NOW - Found sound-cards to record audio: $sound_card_recorder_count" >> "$LOG"
 if [ $sound_card_recorder_count -eq 0 ]; then

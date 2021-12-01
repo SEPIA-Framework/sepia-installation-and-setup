@@ -122,8 +122,8 @@ while true; do
 		echo "------------------------"
 	elif [ $option = "8" ]
 	then
-		sound_card_player_count=$(aplay -l | grep "^card" | wc -l)
-		sound_card_recorder_count=$(arecord -l | grep "^card" | wc -l)
+		sound_card_player_count=$(aplay -l | grep -E "^[[:alpha:]]+ [[:digit:]]" | wc -l)
+		sound_card_recorder_count=$(arecord -l | grep -E "^[[:alpha:]]+ [[:digit:]]" | wc -l)
 		seeed_voicecard_service=$(systemctl list-units --full -all | grep "seeed-voicecard.service" | wc -l)
 		echo "Found $sound_card_player_count devices to PLAY audio:"
 		aplay -l | grep "^card"
