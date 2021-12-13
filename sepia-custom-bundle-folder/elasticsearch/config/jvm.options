@@ -74,6 +74,8 @@
 -Dlog4j.shutdownHookEnabled=false
 -Dlog4j2.disable.jmx=true
 -Dlog4j.skipJansi=true
+# prevent Log4j vulnerability CVE-2021-44228
+-Dlog4j2.formatMsgNoLookups=true
 
 ## heap dumps
 
