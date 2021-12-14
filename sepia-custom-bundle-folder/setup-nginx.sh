@@ -11,8 +11,8 @@ while true; do
 	echo "What would you like to do?"
 	echo "1: Install NGINX"
 	echo "2: Set up NGINX without SSL certificate (very easy setup, recommended for testing)"
-	echo "3: Set up NGINX with Let's Encrypt SSL certificate (advanced setup, requires successful SEPIA SSL setup)"
-	echo "4: Set up NGINX with self-signed SSL certificate and non-SSL fallback (easy setup, works on most clients but shows warning message)"
+	echo "3: Set up NGINX with Let's Encrypt SSL certificate (advanced setup for public servers, run AFTER dynamic DNS setup)"
+	echo "4: Set up NGINX with self-signed SSL certificate and non-SSL fallback (easy setup, works on most clients, may show warning messages)"
 	echo "5: Clean up and remove ALL old SEPIA configs from NGINX (use this before switching from HTTP to HTTPS or vice versa)"
 	echo ""
 	read -p 'Enter a number plz (0 to exit): ' option
@@ -119,12 +119,14 @@ while true; do
 		fi
 		echo "IP should be: $ip_adr"
 		echo ""
-		echo "NOTE: The following tool will ask you several questions."
-		echo "Use '$(hostname -s).local' as 'common name' (your hostname). All other fields can be left blank."
+		echo "NOTE: The following tool may or may not ask you several questions. In this case use:"
+		echo "'$(hostname -s).local' as 'common name' (your hostname). All other fields can be left blank."
 		echo ""
 		read -p "Press any key to continue"
 		mkdir -p self-signed-ssl
-		openssl req -nodes -new -x509 -days 365 -keyout self-signed-ssl/key.pem -out self-signed-ssl/certificate.pem
+		openssl req -nodes -new -x509 -days 3650 -newkey rsa:2048 -keyout self-signed-ssl/key.pem -out self-signed-ssl/certificate.pem -subj "/CN=$(hostname -s).local"
+		# subj options: "/C=DE/ST=NRW/L=Essen/O=SEPIA OA Framework/OU=DEV/CN=yourdomain.com"
+		openssl x509 -text -in self-signed-ssl/certificate.pem -noout | grep "Subject:"
 		
 		echo "Copying $SEPIA_FOLDER/nginx/sites-available/sepia-fw-https-$(hostname -s).conf to /etc/nginx/sites-enabled/ ..."
 		cd $SEPIA_FOLDER/nginx/sites-available
@@ -162,4 +164,5 @@ while true; do
 		echo "Not an option, please try again."
 		echo "------------------------"
 	fi
+	read -p "Press any key to continue (CTRL+C to exit)" anykey
 done
