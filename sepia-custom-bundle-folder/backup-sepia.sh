@@ -19,7 +19,7 @@ mkdir -p $BCK_FOLDER/sepia-assist-server/Xtensions/DynamicDNS
 mkdir -p $BCK_FOLDER/sepia-assist-server/Xtensions/WebContent/views
 mkdir -p $BCK_FOLDER/sepia-teach-server/Xtensions
 mkdir -p $BCK_FOLDER/sepia-websocket-server-java/Xtensions
-mkdir -p $BCK_FOLDER/sepia-reverse-proxy/settings
+#mkdir -p $BCK_FOLDER/sepia-reverse-proxy/settings
 cp sepia-assist-server/Xtensions/assist.custom.properties $BCK_FOLDER/sepia-assist-server/Xtensions/
 if [ -d "sepia-assist-server/Xtensions/Plugins" ]; then
 	cp -r sepia-assist-server/Xtensions/Plugins $BCK_FOLDER/sepia-assist-server/Xtensions/
@@ -36,7 +36,7 @@ cp -r letsencrypt/config $BCK_FOLDER/letsencrypt/
 cp -r nginx/self-signed-ssl $BCK_FOLDER/nginx/
 cp sepia-teach-server/Xtensions/teach.custom.properties $BCK_FOLDER/sepia-teach-server/Xtensions/
 cp sepia-websocket-server-java/Xtensions/websocket.custom.properties $BCK_FOLDER/sepia-websocket-server-java/Xtensions/
-cp sepia-reverse-proxy/settings/proxy.properties $BCK_FOLDER/sepia-reverse-proxy/settings/
+#cp sepia-reverse-proxy/settings/proxy.properties $BCK_FOLDER/sepia-reverse-proxy/settings/
 cp -r es-data $BCK_FOLDER/
 cd $BCK_FOLDER
 echo "Zipping backup..."
