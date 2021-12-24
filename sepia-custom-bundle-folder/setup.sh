@@ -64,7 +64,7 @@ fi
 while true; do
 	echo ""
 	echo "What would you like to do next?"
-	echo "1: Set up all components (except dynamic DNS). Note: requires step 4."
+	echo "1: Set up core components. Note: requires Elasticsearch (4) and will CLEAR old data!"
 	echo "2: Define new admin and assistant passwords"
 	echo "3: Set up dynamic DNS with DuckDNS domain (for public server)"
 	echo "3b: Set up NGINX (e.g. with self-signed SSL for local server)"
