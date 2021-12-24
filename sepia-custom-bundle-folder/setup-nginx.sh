@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 echo ""
 echo "Welcome to NGINX setup for SEPIA."
 echo ""
@@ -124,9 +125,12 @@ while true; do
 		echo ""
 		read -p "Press any key to continue"
 		mkdir -p self-signed-ssl
-		openssl req -nodes -new -x509 -days 3650 -newkey rsa:2048 -keyout self-signed-ssl/key.pem -out self-signed-ssl/certificate.pem -subj "/CN=$(hostname -s).local"
+		openssl req -nodes -new -x509 -days 3650 -newkey rsa:2048 -keyout self-signed-ssl/key.pem -out self-signed-ssl/certificate.pem \
+			-subj "/CN=$(hostname -s).local" \
+			-addext "subjectAltName=DNS:$(hostname -s).local,DNS:$ip_adr"
 		# subj options: "/C=DE/ST=NRW/L=Essen/O=SEPIA OA Framework/OU=DEV/CN=yourdomain.com"
 		openssl x509 -text -in self-signed-ssl/certificate.pem -noout | grep "Subject:"
+		openssl x509 -text -in self-signed-ssl/certificate.pem -noout | grep "DNS:"
 		
 		echo "Copying $SEPIA_FOLDER/nginx/sites-available/sepia-fw-https-$(hostname -s).conf to /etc/nginx/sites-enabled/ ..."
 		cd $SEPIA_FOLDER/nginx/sites-available
