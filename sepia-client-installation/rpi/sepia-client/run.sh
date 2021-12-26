@@ -134,10 +134,10 @@ echo "RPi model: $pi_model - Is Pi4: $is_pi4"
 echo "$NOW - Starting Chromium - Mode: $is_headless - Is RPi4: $is_pi4" >> "$LOG"
 if [ "$is_headless" -eq "0" ]; then
 	echo "Running SEPIA-Client in 'display' mode. Use SEPIA Control-HUB to connect and control via remote terminal, default URL is: $clexi_ws_url"
-	$chromecmd $default_chrome_flags $chrome_extensions --kiosk "$client_url?isApp=true" >"$LOG_CLIENT" 2>&1
+	$chromecmd $default_chrome_flags $chrome_extensions --kiosk "$client_url?isApp=true&hasTouch=true" >"$LOG_CLIENT" 2>&1
 elif [ "$is_headless" -eq "2" ]; then
 	echo "Running SEPIA-Client in 'pseudo-headless' mode. Use SEPIA Control-HUB to connect and control via remote terminal, default URL is: $clexi_ws_url"
-	$chromecmd $default_chrome_flags $chrome_extensions --kiosk "$client_url?isApp=true&isHeadless=true" >"$LOG_CLIENT" 2>&1
+	$chromecmd $default_chrome_flags $chrome_extensions --kiosk "$client_url?isApp=true&isHeadless=true&hasTouch=true" >"$LOG_CLIENT" 2>&1
 elif [ "$is_pi4" = "1" ]; then
 	echo "Running SEPIA-Client in 'headless Pi4' mode. Use SEPIA Control-HUB to connect and control via remote terminal, default URL is: $clexi_ws_url"
 	xvfb-run -n 2072 --server-args="-screen 0 500x800x24" $chromecmd --disable-features=VizDisplayCompositor $default_chrome_flags $chrome_extensions --kiosk "$client_url?isApp=true&isHeadless=true" >"$LOG_CLIENT" 2>&1
