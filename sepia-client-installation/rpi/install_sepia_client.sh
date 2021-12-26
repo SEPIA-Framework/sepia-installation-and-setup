@@ -39,7 +39,7 @@ echo "$NOW - Branch: $CLIENT_BRANCH, skipBLE=$SKIP_BLE" >> "$LOG"
 echo "Preparing installation of SEPIA Client for Raspberry Pi ..."
 echo "$NOW - Updating/installing required Linux packages ..." >> "$LOG"
 sudo apt-get update
-sudo apt-get install -y git
+sudo apt-get install -y git ca-certificates
 mkdir -p tmp
 rm -rf tmp/*
 echo "=========================================="

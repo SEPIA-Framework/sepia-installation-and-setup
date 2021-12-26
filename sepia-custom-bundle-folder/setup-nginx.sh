@@ -127,7 +127,7 @@ while true; do
 		mkdir -p self-signed-ssl
 		openssl req -nodes -new -x509 -days 3650 -newkey rsa:2048 -keyout self-signed-ssl/key.pem -out self-signed-ssl/certificate.pem \
 			-subj "/CN=$(hostname -s).local" \
-			-addext "subjectAltName=DNS:$(hostname -s).local,DNS:$ip_adr"
+			-addext "subjectAltName=DNS:$(hostname -s).local,DNS:$ip_adr,DNS:localhost"
 		# subj options: "/C=DE/ST=NRW/L=Essen/O=SEPIA OA Framework/OU=DEV/CN=yourdomain.com"
 		openssl x509 -text -in self-signed-ssl/certificate.pem -noout | grep "Subject:"
 		openssl x509 -text -in self-signed-ssl/certificate.pem -noout | grep "DNS:"

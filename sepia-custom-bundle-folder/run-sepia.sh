@@ -9,6 +9,9 @@ if [ -f "java/version" ]; then
 	echo
 fi
 #
+echo "Running: $(cat version | grep SEPIA)"
+echo ""
+#
 cd elasticsearch
 ./run.sh
 # echo -e 'Waiting for Elasticsearch...\n'
