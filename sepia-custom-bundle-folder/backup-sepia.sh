@@ -17,6 +17,7 @@ mkdir -p $BCK_FOLDER/sepia-assist-server/Xtensions/Assistant/commands
 mkdir -p $BCK_FOLDER/sepia-assist-server/Xtensions/Assistant/answers
 mkdir -p $BCK_FOLDER/sepia-assist-server/Xtensions/DynamicDNS
 mkdir -p $BCK_FOLDER/sepia-assist-server/Xtensions/WebContent/views
+mkdir -p $BCK_FOLDER/sepia-assist-server/Xtensions/WebContent/widgets
 mkdir -p $BCK_FOLDER/sepia-teach-server/Xtensions
 mkdir -p $BCK_FOLDER/sepia-websocket-server-java/Xtensions
 #mkdir -p $BCK_FOLDER/sepia-reverse-proxy/settings
@@ -24,8 +25,11 @@ cp sepia-assist-server/Xtensions/assist.custom.properties $BCK_FOLDER/sepia-assi
 if [ -d "sepia-assist-server/Xtensions/Plugins" ]; then
 	cp -r sepia-assist-server/Xtensions/Plugins $BCK_FOLDER/sepia-assist-server/Xtensions/
 fi
-if [ -d "sepia-assist-server/Xtensions/WebContent/views" ]; then
-	cp -r sepia-assist-server/Xtensions/WebContent/views $BCK_FOLDER/sepia-assist-server/Xtensions/WebContent/
+if [ -d "sepia-assist-server/Xtensions/WebContent/views/custom" ]; then
+	cp -r sepia-assist-server/Xtensions/WebContent/views/custom $BCK_FOLDER/sepia-assist-server/Xtensions/WebContent/views/
+fi
+if [ -d "sepia-assist-server/Xtensions/WebContent/widgets/custom" ]; then
+	cp -r sepia-assist-server/Xtensions/WebContent/widgets/custom $BCK_FOLDER/sepia-assist-server/Xtensions/WebContent/widgets/
 fi
 find ./sepia-assist-server/Xtensions/Assistant/commands/ -maxdepth 1 -iname "*_custom.txt" -exec cp {} $BCK_FOLDER/sepia-assist-server/Xtensions/Assistant/commands/ \;
 find ./sepia-assist-server/Xtensions/Assistant/answers/ -maxdepth 1 -iname "*_custom.txt" -exec cp {} $BCK_FOLDER/sepia-assist-server/Xtensions/Assistant/answers/ \;
@@ -48,19 +52,23 @@ echo "Created backup for default SEPIA-Home installation at: ~/SEPIA-Backup_$NOW
 echo ""
 echo "The backup includes:"
 echo "- Server configurations (.properties files)"
+echo "- Complete Elasticsearch database (accounts, user data, Teach-UI commands, smart-home settings, etc.)"
 echo "- SDK services (Assist-server plugins)"
-echo "- Custom views for HTML services (Assist-server 'WebContent/views')"
-echo "- Complete Elasticsearch database"
 echo "- Custom files for 'commands' and 'answers' (Assist-server)"
-echo "- Duck-DNS config + Let's Encrypt files + self-signed SSL certs"
+echo "- Custom views for HTML services (Assist-server 'Xtensions/WebContent/views/custom/')"
+echo "- Custom widgets for media-players etc. (Assist-server 'Xtensions/WebContent/widgets/custom/')"
+echo "- Self-signed SSL certs + Duck-DNS config + Let's Encrypt files"
 echo ""
 echo "NOT included (please backup manually as required!):"
-echo "- Custom modifications to 'radio-stations' and 'news-outlets'"
-echo "- Custom modifications to 'common.json' Teach-UI file"
-echo "- Custom web-server data from 'sepia-assist-server/Xtensions/WebContent' (except 'views')"
-echo "- Mary-TTS server data from 'sepia-assist-server/Xtensions/TTS/marytts'"
+echo "- Custom views for HTML services outside of 'custom' folder (see above)"
+echo "- Custom widgets for media-players etc. outside of 'custom' folder (see above)"
+echo "- Custom web-server data from (Assist-server 'Xtensions/WebContent/...')"
+echo "- Custom modifications to 'radio-stations' and 'news-outlets' (Assist-server)"
+echo "- Custom modifications to TTS voices or Mary-TTS data (Assist-server 'Xtensions/TTS')"
+echo "- Custom modifications to 'common.json' Teach-UI file (Teach-server)"
 echo "- Java installation stored in 'java' folder"
-echo "- Log files and cached data (e.g. RSS feeds)"
+echo "- Log files and cached data (e.g. RSS feed cache)"
 echo "- Nginx config files, see: /etc/nginx/sites-enabled/"
+echo "- Other custom modifications (tbd)"
 echo ""
 echo "DONE"

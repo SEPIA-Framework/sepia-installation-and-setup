@@ -30,7 +30,7 @@ else
 fi
 if [ -n "$ISDOCKER" ]; then
 	echo ""
-	echo "NOTE: Due to the Docker environment the backup cannot be stored properly! Be sure to make a copy of your SEPIA folder before you continue."
+	echo "NOTE: Due to the Docker environment the backup cannot be stored properly! Be sure to make a copy of your SEPIA folder BEFORE you continue."
 	echo ""
 fi
 echo "Do you want to continue?"
@@ -45,7 +45,10 @@ else
 fi
 echo ""
 bash shutdown-sepia.sh
+echo "Starting backup ..."
 bash backup-sepia.sh
+echo ""
+read -p "Press any key to continue with update (CTRL+C to exit)" anykey
 echo ""
 cd ..
 if [ -n "$ISDOCKER" ]; then
