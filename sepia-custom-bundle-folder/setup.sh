@@ -240,5 +240,6 @@ while true; do
 		break
 	else
 		read -p "Press any key to continue (CTRL+C to exit)" anykey
+		clear
 	fi
 done
