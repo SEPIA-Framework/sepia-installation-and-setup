@@ -101,7 +101,7 @@ echo "Installing app environment ..."
 echo "$NOW - Installing app environment (X-Server, Xvfb, Openbox, Chromium, etc.) ..." >> "$LOG"
 sudo apt-get install -y --no-install-recommends xserver-xorg x11-xserver-utils xinit openbox xvfb xterm
 # NOTE: 'chromium' can be an alternative if 'chromium-browser' has issues but currently 'chromium' has graphic glitches :-/
-sudo apt-get install -y --no-install-recommends chromium-browser
+sudo apt-get install -y --no-install-recommends chromium-browser chromium-codecs-ffmpeg-extra
 if [ $(sudo apt-cache search unclutter | grep ^unclutter-xfixes | wc -l) -eq 0 ]; then
 	sudo apt-get install -y --no-install-recommends unclutter
 else
