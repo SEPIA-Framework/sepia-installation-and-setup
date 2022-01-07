@@ -6,5 +6,8 @@ xset -dpms
 # Allow quitting the X server with CTRL-ATL-Backspace
 setxkbmap -option terminate:ctrl_alt_bksp
 
+# Scale the screen (idk if this will mess with touch calibration)
+#xrandr --output DSI-1 --scale 1.081x1.0
+
 # Run SEPIA-Client
 bash ~/sepia-client/run.sh xserver

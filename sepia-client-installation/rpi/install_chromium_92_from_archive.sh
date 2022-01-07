@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 echo "This script will try to install Chromium 92 for Raspberry OS from 'archive.raspberrypi.org'."
-echo "Use it if you're having problems with newer versions (95 etc.)."
+echo "Use it if you're having problems with newer versions (e.g. 95 has removed some Google APIs for location and speech)."
+echo "If the script fails to remove the old version try 'sudo apt-get purge chromium-browser' manually."
 echo ""
 read -p "Press any key to continue (or CTRL+C to abort)."
 echo ""

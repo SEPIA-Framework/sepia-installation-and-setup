@@ -16,7 +16,10 @@ while true; do
 	echo ""
 	echo "What would you like to do?"
 	echo "1: Install hardware: WM8960 microphone HAT like ReSpeaker, Waveshare etc."
+	echo "1b: Install hardware: IQ Audio Zero HAT"
 	echo "2: Install hardware: Hyperpixel touchscreen"
+	echo "2b: Install hardware: Waveshare HDMI touchscreen"
+	echo "2c: Install hardware: Official 7inch RPi LCD"
 	echo "3: Run SEPIA Client installation"
 	echo "4: Run SEPIA Client installation but skip CLEXI Bluetooth module"
 	echo "0: Exit and continue manually"
@@ -39,6 +42,17 @@ while true; do
 		clear
 		bash install_respeaker_mic.sh
 		break
+	elif [ $option = "1b" ]
+	then
+		clear
+		echo "Command: bash install_iqaudio_zero_hat.sh"
+		echo ""
+		echo "This script will try to install the IQAudio Zero mic HAT."
+		echo ""
+		read -p "Press any key to continue (or CTRL+C to abort)."
+		clear
+		bash install_iqaudio_zero_hat.sh
+		break
 	elif [ $option = "2" ] 
 	then
 		clear
@@ -51,6 +65,28 @@ while true; do
 		read -p "Press any key to continue (or CTRL+C to abort)."
 		clear
 		curl https://get.pimoroni.com/hyperpixel4 | bash
+		break
+	elif [ $option = "2b" ] 
+	then
+		clear
+		echo "Command: bash install_hdmi_LCD_waveshare_h.sh"
+		echo ""
+		echo "This command will try to install the Waveshare HDMI LCD model H."
+		echo ""
+		read -p "Press any key to continue (or CTRL+C to abort)."
+		clear
+		sudo bash install_hdmi_LCD_waveshare_h.sh
+		break
+	elif [ $option = "2c" ] 
+	then
+		clear
+		echo "Command: bash install_rpi_7_inch_LCD.sh"
+		echo ""
+		echo "This command will show some manual steps to set up the official Raspberry Pi 7inch LCD touchscreen."
+		echo ""
+		read -p "Press any key to continue (or CTRL+C to abort)."
+		clear
+		bash install_rpi_7_inch_LCD.sh
 		break
 	elif [ $option = "3" ] 
 	then
