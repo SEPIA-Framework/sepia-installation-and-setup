@@ -12,12 +12,11 @@ if [ -n "$1" ]; then
 	echo "Welcome!"
 	echo "You've selected a custom file to update SEPIA: $1"
 	echo "NOTE: use ONLY absolute paths please and put the file OUTSIDE of '~/SEPIA'!"
+	echo ""
 else
 	echo "Welcome! Checking version number of latest SEPIA release, just a second ..."
 	SEPIA_VERSION=$(get_latest_release "SEPIA-Framework/sepia-installation-and-setup")
 	echo "Latest SEPIA-Home version is: $SEPIA_VERSION"
-	echo ""
-	echo "-- THIS SCRIPT IS IN PUBLIC BETA, USE AT OWN RISK ^_^ --"
 	echo ""
 	echo "This script will try to update your default SEPIA-Home installation. NOTE: your own custom modifications might not be fully supported."
 	echo "What it does is it..."
@@ -27,9 +26,12 @@ else
 	echo "4) restores the latest backup"
 	echo ""
 	echo "NOTE: Step 4 will restore your old property files (your SEPIA server settings) removing any newly added property entries. This is usually ok since they have default values, but a proper file merge would be better!"
+	echo ""
+	echo "If you experience any problems during the update process please try the most recent version of the updater:"
+	echo "cd .. && wget https://sepia-framework.github.io/install/sepia-home-rpi-update.sh && bash sepia-home-rpi-update.sh"
+	echo ""
 fi
 if [ -n "$ISDOCKER" ]; then
-	echo ""
 	echo "NOTE: Due to the Docker environment the backup cannot be stored properly! Be sure to make a copy of your SEPIA folder BEFORE you continue."
 	echo ""
 fi
