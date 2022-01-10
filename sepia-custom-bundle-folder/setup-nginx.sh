@@ -27,7 +27,7 @@ while true; do
 		break
 	elif [ $option = "1" ]
 	then
-		sudo apt-get update
+		sudo apt update
 		sudo apt-get install -y nginx
 		echo "------------------------"
 		echo "DONE."

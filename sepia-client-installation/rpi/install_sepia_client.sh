@@ -38,7 +38,7 @@ echo "$NOW - Branch: $CLIENT_BRANCH, skipBLE=$SKIP_BLE" >> "$LOG"
 # Prepare
 echo "Preparing installation of SEPIA Client for Raspberry Pi ..."
 echo "$NOW - Updating/installing required Linux packages ..." >> "$LOG"
-sudo apt-get update
+sudo apt update
 sudo apt-get install -y git ca-certificates
 mkdir -p tmp
 rm -rf tmp/*
@@ -135,7 +135,7 @@ echo "=========================================="
 echo "Installing Node.js and CLEXI ..."
 echo "$NOW - Installing Node.js ..." >> "$LOG"
 if [ -n "$(command -v node)" ] && [ -n "$(command -v npm)" ]; then
-	echo "Found Node.js and skipped installation - Recommended Node.js is 10, please double-check!"
+	echo "Found Node.js and skipped installation - Recommended Node.js is 14, please double-check!"
 	echo "$NOW - Skipped: Found Node.js: $(node -v), npm: $(npm -v)" >> "$LOG"
 	echo "$NOW - NOTE: Recommended Node.js is 14 - Please double-check!" >> "$LOG"
 else

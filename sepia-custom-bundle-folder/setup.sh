@@ -164,7 +164,7 @@ while true; do
 		echo "Installing core TTS engines and voices ..."
 		mkdir -p tmp/deb
 		cd tmp/deb
-		sudo apt-get update
+		sudo apt update
 		sudo apt-get install -y espeak-ng espeak-ng-espeak
 		sudo apt-get install -y --no-install-recommends flite-dev flite
 		# picoTTS - common:

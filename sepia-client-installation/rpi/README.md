@@ -78,7 +78,7 @@ Expected to work with RPi3 1GB and might even work with RPi Zero 512GB if wake-w
 
 ## Basic uninstallation steps
 
-There is no uninstall script yet and some things will depend on your specific installation. The easiest way is to simply flash a new image but here is a rough list of the required steps:
+There is an `uninstall.sh` script inside the `install/` folder but some things might depend on your specific installation so the easiest way is to simply flash a new image but here is a rough list of the required steps:
 * Open the folder `~/sepia-client` and run `shutdown.sh`
 * Delete folder `~/sepia-client`
 * Delete folder `~/clexi`
@@ -86,5 +86,6 @@ There is no uninstall script yet and some things will depend on your specific in
 * Remove (any) Chromium via `sudo apt-get remove chromium chromium-browser`
 * Open `~/.bashrc` and remove the SEPIA entry below '# Run SEPIA-Client on login?'
 * Delete, check or adjust your ALSA config `~/.asoundrc`
+* Remove Nginx config at `/etc/nginx/sites-enabled/sepia-client*` and restart Nginx
 
 Whats left are packages like Node.js, Xserver and hardware related stuff (if you've installed a touchscreen or microphone HAT etc.).
