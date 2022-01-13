@@ -1,7 +1,7 @@
 #!/bin/bash
 # check: ~/install/seeed-voicecard/pulseaudio/README.md for Pulseaudio configs
 
-# masters
+# masters - use: 'pactl list short sources' and 'pactl list short sinks' to get names
 source_master=alsa_input.platform-soc_sound.seeed-8ch
 sink_master=alsa_output.platform-soc_sound.seeed-2ch
 
