@@ -1,5 +1,8 @@
 # Pulseaudio Audio Enhancements
 
+This folder contains some experimental scripts to improve audio quality.  
+If you are using the DIY Chromium based client try the `microphoneSettings` sections of the `settings.js` file first. It will basically do the same but may work more reliable.
+
 ## Acoustic Echo Cancellation (AEC)
 
 The Pulseaudio AEC module substracts the output channel from the input channel (in a "smart" way) and does additional noise reduction and filtering.  

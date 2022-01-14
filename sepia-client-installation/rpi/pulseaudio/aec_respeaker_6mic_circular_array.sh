@@ -18,7 +18,6 @@ sink_properties=device.description=$sink_name
 aec_method='webrtc'
 #aec_method='null'
 aec_args='"beamforming=1 mic_geometry=-0.045,0,0,-0.0225,0.039,0,0.0225,0.039,0,0.045,0,0,0.0225,-0.039,0,-0.0225,0.039,0 target_direction=0,0,0 voice_detection=1 noise_suppression=1 analog_gain_control=0"'
-#aec_args='"voice_detection=0 noise_suppression=0 target_direction=0,0,0"'
 
 # load the module
 pactl unload-module module-echo-cancel
@@ -28,10 +27,9 @@ pactl load-module module-echo-cancel \
   source_properties=$source_properties \
   sink_name=$sink_name sink_master=$sink_master \
   sink_properties=$sink_properties \
+  use_master_format=1 \
   aec_method=$aec_method \
   aec_args=$aec_args
-#  use_master_format=1 \
-#  channels=1 \
 
 #pactl set-default-source $source_name
 #pactl set-default-sink $sink_name
