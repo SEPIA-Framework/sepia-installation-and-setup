@@ -21,7 +21,9 @@ cd "$HOME"
 mkdir -p "sepia-client_bck_$NOW/clexi/www/sepia"
 cp clexi/www/sepia/settings.js "sepia-client_bck_$NOW/clexi/www/sepia/"
 cp clexi/settings.json "sepia-client_bck_$NOW/clexi/"
-cp ".asoundrc" "sepia-client_bck_$NOW/"
+if [ -f ".asoundrc" ]; then
+	cp ".asoundrc" "sepia-client_bck_$NOW/"
+fi
 cp -r "sepia-client/chromium" "sepia-client_bck_$NOW/"
 mkdir -p "sepia-client_bck_$NOW/nginx"
 cp /etc/nginx/sites-enabled/sepia* "sepia-client_bck_$NOW/nginx/"
@@ -39,7 +41,9 @@ sudo rm -rf /etc/nginx/sites-enabled/sepia*
 sudo apt-get remove openbox nginx chromium chromium-browser
 sudo service nginx restart
 echo ""
-echo "Removing .asoundrc ..."
-rm -rf ".asoundrc"
+if [ -f ".asoundrc" ]; then
+	echo "Removing .asoundrc ..."
+	rm -rf ".asoundrc"
+fi
 echo ""
 echo "DONE"
