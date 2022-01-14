@@ -76,6 +76,7 @@ Use `bash menu.sh` to choose a specific hardware installation script or run them
 
 * Optional: Open the settings file located at `~/clexi/www/sepia/settings.js` to tweak your client (e.g. activate "Hey SEPIA" or other wake-words). NOTE: please do this AFTER a successful configuration and reboot (previous step)
 * The `settings.js` has many available options. To make life easier you can open the SEPIA client in your browser, configure it there and then go to 'settings -> account' and look for the export button. It will show you a popup with settings that you can copy over to your DIY client.
+* There are a few [examples available](https://github.com/SEPIA-Framework/sepia-html-client-app/blob/master/Settings.md) for microphone, wake-word and LED control configuration.
 * Done. Enjoy! :-)
 
 ## Basic uninstallation steps
