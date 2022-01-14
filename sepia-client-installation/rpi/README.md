@@ -28,6 +28,8 @@ Expected to work with RPi3 1GB and might even work with RPi Zero 512GB if wake-w
 
 ### 2b) Install Hardware (optional)
 
+Use `bash menu.sh` to choose a specific hardware installation script or run them manually. Here you'll find a few more tips:
+
 * **USB microphone** and the audio jack for sound:
   * This script might be useful to set the correct default devices: `bash install_usb_mic.sh`
   * Alternatively try `sudo raspi-config` and check the audio settings
