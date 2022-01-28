@@ -8,6 +8,12 @@ else
     echo "Need to install zip package first:"
 	sudo apt-get install -y zip unzip
 fi
+#
+# make sure we are in the right folder
+SCRIPT_PATH="$(realpath "$BASH_SOURCE")"
+SEPIA_FOLDER="$(dirname "$SCRIPT_PATH")"
+cd "$SEPIA_FOLDER"
+#
 NOW=$(date +"%Y_%m_%d_%H%M%S")
 BCK_FOLDER=SEPIA_backup_$NOW
 mkdir $BCK_FOLDER

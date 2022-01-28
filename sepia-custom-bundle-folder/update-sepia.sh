@@ -1,17 +1,25 @@
 #!/bin/bash
 set -e
+#
+# make sure we are in the right folder
+SCRIPT_PATH="$(realpath "$BASH_SOURCE")"
+SEPIA_PATH="$(dirname "$SCRIPT_PATH")"
+cd "$SEPIA_PATH"
+#
 ORG_FOLDER=$(pwd)
 NOW=$(date +"%Y_%m_%d_%H%M%S")
 OLD_FOLDER=SEPIA_old_$NOW
+BCK_FILE=""
 get_latest_release() {
 	curl --silent "https://api.github.com/repos/$1/releases/latest" | # Get latest release from GitHub api
 		grep '"tag_name":' |                                          # Get tag line
 		sed -E 's/.*"([^"]+)".*/\1/'                                  # Get JSON value
 }
 if [ -n "$1" ]; then
+	BCK_FILE=$(realpath $1)
 	echo "Welcome!"
-	echo "You've selected a custom file to update SEPIA: $1"
-	echo "NOTE: use ONLY absolute paths please and put the file OUTSIDE of '~/SEPIA'!"
+	echo "You've selected a custom file to update SEPIA: $BCK_FILE"
+	echo "NOTE: put the file OUTSIDE of $ORG_FOLDER!"
 	echo ""
 else
 	echo "Welcome! Checking version number of latest SEPIA release, just a second ..."
@@ -58,12 +66,14 @@ if [ -n "$ISDOCKER" ]; then
 	rm -rf $ORG_FOLDER/*
 else
 	mv $ORG_FOLDER $OLD_FOLDER
+	# to prevent runing the wrong version after update we rename it
+	mv "$OLD_FOLDER/run-sepia.sh" "$OLD_FOLDER/run-sepia_old.sh"
 fi
 mkdir -p $ORG_FOLDER/update
 cd $ORG_FOLDER/update
 if [ -n "$1" ]; then
-	echo "Using local file at: $1"
-	cp "$1" "$ORG_FOLDER/update/SEPIA-Home.zip"
+	echo "Using local file at: $BCK_FILE"
+	cp "$BCK_FILE" "$ORG_FOLDER/update/SEPIA-Home.zip"
 else
 	wget https://github.com/SEPIA-Framework/sepia-installation-and-setup/releases/latest/download/SEPIA-Home.zip
 fi
@@ -78,4 +88,6 @@ chmod +x elasticsearch/bin/elasticsearch
 echo ""
 echo "DONE."
 echo "If everything looks good you can delete the folder '$ORG_FOLDER/update', it just contains the new installation files."
-echo "PLEASE leave this folder now (cd ..) and reopen it to refresh the view before you continue !!"
+echo ""
+echo "PLEASE leave this folder now (cd ..) to refresh the view before you continue !!"
+echo ""

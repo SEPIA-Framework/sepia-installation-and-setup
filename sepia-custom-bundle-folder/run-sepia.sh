@@ -1,5 +1,10 @@
 #!/bin/bash
 #
+# make sure we are in the right folder
+SCRIPT_PATH="$(realpath "$BASH_SOURCE")"
+SEPIA_FOLDER="$(dirname "$SCRIPT_PATH")"
+cd "$SEPIA_FOLDER"
+#
 # set local Java path
 if [ -f "java/version" ]; then
     new_java_home=$(cat java/version)
@@ -13,6 +18,14 @@ echo "Running: $(cat version | grep SEPIA)"
 echo ""
 #
 cd elasticsearch
+if [ $(sysctl vm.max_map_count | grep 262144 | wc -l) -eq 0 ]; then
+	echo "WARNING: To run stable Elasticsearch requires 'vm.max_map_count=262144'."
+	echo "To set it once use this (on your host machine):"
+	echo "sudo sysctl -w vm.max_map_count=262144"
+	echo "To set it permanently you can try:"
+	echo "sudo su -c \"echo 'vm.max_map_count=262144' >> /etc/sysctl.d/99-sysctl.conf\""
+	echo ""
+fi
 ./run.sh
 # echo -e 'Waiting for Elasticsearch...\n'
 ./wait.sh

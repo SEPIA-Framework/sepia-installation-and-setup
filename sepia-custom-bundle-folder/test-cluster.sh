@@ -1,5 +1,10 @@
 #!/bin/bash
 #
+# make sure we are in the right folder
+SCRIPT_PATH="$(realpath "$BASH_SOURCE")"
+SEPIA_FOLDER="$(dirname "$SCRIPT_PATH")"
+cd "$SEPIA_FOLDER"
+#
 # set local Java path
 if [ -f "java/version" ]; then
 	new_java_home=$(cat java/version)

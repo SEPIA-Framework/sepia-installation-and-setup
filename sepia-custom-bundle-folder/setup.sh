@@ -14,6 +14,11 @@ if [[ $EUID -eq 0 ]]; then
     fi
 fi
 #
+# make sure we are in the right folder
+SCRIPT_PATH="$(realpath "$BASH_SOURCE")"
+SEPIA_FOLDER="$(dirname "$SCRIPT_PATH")"
+cd "$SEPIA_FOLDER"
+#
 # make scripts executable
 find . -name "*.sh" -exec chmod +x {} \;
 chmod +x elasticsearch/bin/elasticsearch

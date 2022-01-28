@@ -1,9 +1,13 @@
 #!/bin/bash
 set -e
-ORG_FOLDER=$(pwd)
+SCRIPT_PATH="$(realpath "$BASH_SOURCE")"
+ORG_FOLDER="$(dirname "$SCRIPT_PATH")"
+BCK_FILE=""
+cd "$ORG_FOLDER"
 if [ -n "$1" ]; then
+	BCK_FILE=$(realpath $1)
 	echo "Welcome!"
-	echo "You've selected this backup ZIP file to import: $1"
+	echo "You've selected this backup ZIP file to import: $BCK_FILE"
 	echo "NOTE: This will overwrite your current setup. Make a backup first if you are not sure!"
 else
 	echo "Please add the absolute path to the backup file you want to import as first parameter."
@@ -21,7 +25,7 @@ else
 fi
 echo ""
 bash shutdown-sepia.sh
-unzip $1 -d $ORG_FOLDER
+unzip $BCK_FILE -d $ORG_FOLDER
 echo ""
 echo "DONE."
 echo "PLEASE leave this folder now (cd ..) and reopen it to refresh the view before you continue !!"

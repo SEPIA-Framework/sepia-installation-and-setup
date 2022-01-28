@@ -1,5 +1,11 @@
 #!/bin/bash
 set -e
+#
+# make sure we are in the right folder
+SCRIPT_PATH="$(realpath "$BASH_SOURCE")"
+SEPIA_FOLDER="$(dirname "$SCRIPT_PATH")"
+cd "$SEPIA_FOLDER"
+#
 echo ""
 echo "Welcome to NGINX setup for SEPIA."
 echo ""
@@ -18,9 +24,6 @@ while true; do
 	echo ""
 	read -p 'Enter a number plz (0 to exit): ' option
 	echo ""
-
-	# The SEPIA folder
-	SEPIA_FOLDER=~/SEPIA
 
 	if [ -z "$option" ] || [ $option = "0" ]
 	then
