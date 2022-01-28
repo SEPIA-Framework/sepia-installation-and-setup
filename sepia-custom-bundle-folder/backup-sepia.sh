@@ -50,7 +50,7 @@ cp sepia-websocket-server-java/Xtensions/websocket.custom.properties $BCK_FOLDER
 cp -r es-data $BCK_FOLDER/
 cd $BCK_FOLDER
 echo "Zipping backup..."
-zip -r ~/SEPIA-Backup_$NOW.zip *
+zip -r "${HOME}/SEPIA-Backup_$NOW.zip" *
 cd ..
 rm -rf $BCK_FOLDER
 echo ""

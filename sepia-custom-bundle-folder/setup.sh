@@ -161,8 +161,8 @@ while true; do
 		echo "------------------------"
 		echo "Cronjob suggestions:"
 		echo ""
-		echo '@reboot sleep 60 && ~/SEPIA/on-reboot.sh;'
-		echo '30 4 1-31/2 * * ~/SEPIA/cronjob.sh;'
+		echo "@reboot sleep 60 && ${SEPIA_FOLDER}/on-reboot.sh;"
+		echo "30 4 1-31/2 * * ${SEPIA_FOLDER}/cronjob.sh;"
 		echo "------------------------"
 	elif [ $option = "7" ] 
 	then

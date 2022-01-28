@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # SETUP VM FOR ELASTICSEARCH - https://www.elastic.co/guide/en/elasticsearch/reference/5.3/vm-max-map-count.html
 # To make this setting permanent you can try: 'sudo su -c "echo 'vm.max_map_count=262144' >> /etc/sysctl.d/99-sysctl.conf"'

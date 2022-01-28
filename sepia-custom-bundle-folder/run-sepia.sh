@@ -11,7 +11,14 @@ if [ -f "java/version" ]; then
     export JAVA_HOME=$(pwd)/java/$new_java_home
     export PATH=$JAVA_HOME/bin:$PATH
 	echo "Found local Java version: $JAVA_HOME"
-	echo
+	echo ""
+elif [ $(command -v java | wc -l) -gt 0 ]; then
+	java -version
+	echo ""
+else
+	echo "No Java version found! Please install Java JDK 11 (e.g.: openjdk-11-jdk-headless)."
+	echo "Check SEPIA installer or setup scripts for more info."
+	exit 1
 fi
 #
 echo "Running: $(cat version | grep SEPIA)"

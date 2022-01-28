@@ -57,8 +57,9 @@ echo ""
 bash shutdown-sepia.sh
 echo "Starting backup ..."
 bash backup-sepia.sh
+echo "BACKUP finished. Next step: UPDATE."
 echo ""
-read -p "Press any key to continue with update (CTRL+C to exit)" anykey
+read -p "Press any key to continue (CTRL+C to exit)" anykey
 echo ""
 cd ..
 if [ -n "$ISDOCKER" ]; then
@@ -66,8 +67,9 @@ if [ -n "$ISDOCKER" ]; then
 	rm -rf $ORG_FOLDER/*
 else
 	mv $ORG_FOLDER $OLD_FOLDER
-	# to prevent runing the wrong version after update we rename it
-	mv "$OLD_FOLDER/run-sepia.sh" "$OLD_FOLDER/run-sepia_old.sh"
+	# to prevent runing the wrong version after update we put everything in a sub-folder
+	mkdir -p "$OLD_FOLDER/backup"
+	find "$OLD_FOLDER"/* -maxdepth 0 -not -name backup -exec mv '{}' "$OLD_FOLDER/backup/" \;
 fi
 mkdir -p $ORG_FOLDER/update
 cd $ORG_FOLDER/update
@@ -80,7 +82,7 @@ fi
 unzip SEPIA-Home.zip -d $ORG_FOLDER
 cd ~
 LAST_BACKUP=$(ls -Art SEPIA-Backup_* | tail -n 1)
-unzip $LAST_BACKUP -d $ORG_FOLDER
+unzip -o $LAST_BACKUP -d $ORG_FOLDER
 cd $ORG_FOLDER
 # make scripts executable again
 find . -name "*.sh" -exec chmod +x {} \;

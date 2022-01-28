@@ -25,7 +25,6 @@ else
 fi
 echo ""
 bash shutdown-sepia.sh
-unzip $BCK_FILE -d $ORG_FOLDER
+unzip -o $BCK_FILE -d $ORG_FOLDER
 echo ""
 echo "DONE."
-echo "PLEASE leave this folder now (cd ..) and reopen it to refresh the view before you continue !!"
