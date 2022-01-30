@@ -13,5 +13,7 @@ A short demo video can be found on Twitter: [click me](https://twitter.com/sepia
 * Drag and drop the `microbit-BLE-Beacon-remote.hex` file into the editor menu to load the program
 * Connect your microbit to deploy the code  
 
+### SEPIA Client Settings
 
-
+* If you are using the DIY client make sure you have installed the CLEXI Bluetooth interface and activated it (via setup)
+* Check your app settings for "remote controls" or your 'settings.js' for BLE/Bluetooth options

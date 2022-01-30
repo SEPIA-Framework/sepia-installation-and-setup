@@ -13,23 +13,40 @@ fi
 client_settings="$HOME/clexi/www/sepia/settings.js"
 clexi_settings="$HOME/clexi/settings.json"
 client_run_script="$HOME/sepia-client/run.sh"
-	
+
 # stat menu loop
 while true; do
 	headless_mode=$(cat "$client_run_script" | grep is_headless= | grep -o .$)
-	echo "Current mode: $headless_mode (0: display, 1: headless, 2: pseudo-headless)"
+	chromium_remote_debug=$(cat "$client_run_script" | grep chromium_remote_debug= | grep -o .$)
 	echo ""
 	echo "What would you like to do?"
+	echo ""
+	echo "CLEXI connection:"
 	echo "1: Change CLEXI ID (in CLEXI config and SEPIA Client settings.js)"
+	echo ""
+	echo "Client mode - Current mode: $headless_mode (0: display, 1: headless, 2: pseudo-headless)"
 	echo "2: Set SEPIA Client mode to 'headless'"
 	echo "3: Set SEPIA Client mode to 'pseudo-headless' (headless settings + display)"
 	echo "4: Set SEPIA Client mode to 'display'"
+	echo ""
+	echo "SEPIA connection:"
 	echo "5: Enter hostname of your SEPIA Server"
 	echo "6: Set SEPIA Client device ID"
-	echo "7: Activate CLEXI Bluetooth support"
-	echo "8: Set audio input device (ALSA device)"
-	echo "9: Set audio output device (ALSA device)"
-	echo "10: Set and store input/output volume (alsamixer)"
+	echo ""
+	echo "Other client settings:"
+	echo "7: Activate CLEXI Bluetooth support (inactive by default)"
+	echo "8: Show audio devices (use this once BEFORE volume setup)"
+	echo "9: Set and store input/output volume via 'pulsemixer' (new)"
+	echo "10: Set and store input/output volume via 'alsamixer' (old)"
+	echo "11: Set audio input device (ALSA device - skip for Pulseaudio)"
+	echo "12: Set audio output device (ALSA device - skip for Pulseaudio)"
+	echo "13: Edit client settings.js manually"
+	if [ "$chromium_remote_debug" -eq "1" ]; then
+		echo "14: ENABLE remote debugging mode (actually it IS ACTIVE)"
+	else
+		echo "14: ENABLE remote debugging mode"
+	fi
+	echo "15: DISABLE remote debugging mode"
 	echo ""
 	if [ -z "$option" ]; then
 		read -p "Enter a number plz (0 to exit): " option
@@ -87,8 +104,7 @@ while true; do
 	then
 		echo "NOTE: This will only work if you did NOT skip Bluetooth during the client installation (skipBLE flag)!"
 		read -p "Type 'ok' to add CLEXI 'ble-beacon-scanner' module to settings.json: " add_ble_mod
-		if [ -n "$add_ble_mod" ] && [ "$add_ble_mod" = "ok" ]
-		then
+		if [ -n "$add_ble_mod" ] && [ "$add_ble_mod" = "ok" ]; then
 			has_ble="$(cat "$clexi_settings" | grep ble-beacon-scanner | wc -l)"
             if [ "$has_ble" = "0" ]
 			then
@@ -100,10 +116,72 @@ while true; do
 		else
 			echo "Ok, maybe later."
 		fi
+		read -p "To access Bluetooth Node.js requires additional permissions. Type 'ok' if you want to set these permissions permanently: " add_perm
+		if [ -n "$add_perm" ] && [ "$add_perm" = "ok" ]; then
+			sudo setcap cap_net_raw+eip $(eval readlink -f `which node`)
+		else
+			echo "Ok, maybe later. NOTE: You can run CLEXI via 'sudo' to allow access as well."
+		fi
 		echo "------------------------"
 		echo "DONE."
 		echo "------------------------"
 	elif [ $option = "8" ]
+	then
+		sound_card_player_count=$(aplay -l | grep -E "^[[:alpha:]]+ [[:digit:]]" | wc -l)
+		sound_card_recorder_count=$(arecord -l | grep -E "^[[:alpha:]]+ [[:digit:]]" | wc -l)
+		seeed_voicecard_service=$(systemctl list-units --full -all | grep "seeed-voicecard.service" | wc -l)
+		echo "Found $sound_card_player_count devices to PLAY audio:"
+		aplay -l | grep "^card"
+		if [ $sound_card_recorder_count -eq 0 ]; then
+			echo ""
+			echo "No recorder sound-cards found - Check 'sudo raspi-config' audio settings if you can select your card."
+			echo "Another idea: RPi Audio HAT service down or service restart required?"
+			if [ $seeed_voicecard_service -eq 1 ]; then
+				echo "Try:"
+				echo "sudo service seeed-voicecard stop && sudo service seeed-voicecard start && aplay -l"
+			fi
+			echo ""
+		else
+			echo "Found $sound_card_recorder_count devices to RECORD audio:"
+			arecord -l | grep "^card"
+		fi
+		echo "------------------------"
+		echo "DONE."
+		echo "------------------------"
+	elif [ $option = "9" ]
+	then
+		if [ $(command -v pulsemixer | wc -l) -eq 1 ]; then
+			echo "NOTE: Use TAB to switch between input, output and devices!"
+			echo ""
+			read -p "Press any key to continue (or CTRL+C to abort)."
+			pulsemixer
+		else
+			echo "'pulsemixer' not found - Do you use Pulseaudio?"
+		fi
+		echo "------------------------"
+		echo "DONE."
+		echo "------------------------"
+	elif [ $option = "10" ]
+	then
+		echo ""
+		echo "NOTE: If 'alsamixer' settings don't have any effect on your audio input/output volume try 'pulsemixer'."
+		echo ""
+		echo "Inside alsamixer use F5 to show input and output. If your sound-card doesn't show up by default use F6 to switch."
+		echo "You might need to edit ~/.asoundrc in certain cases to set the correct default devices (see asound examples in install folder)."
+		if [ $seeed_voicecard_service -eq 1 ]; then
+			echo "For WM8960 boards (ReSpeaker etc.) check 'Playback' and 'Capture' volumes."
+		fi
+		echo ""
+		read -p "Press any key to continue (or CTRL+C to abort)."
+		alsamixer
+		alsamixerstate=~/sepia-client/my_amixer_volumes.state
+		alsactl --file "$alsamixerstate" store
+		echo ""
+		echo "Stored alsamixer settings at: $alsamixerstate"
+		echo "------------------------"
+		echo "DONE."
+		echo "------------------------"
+	elif [ $option = "11" ]
 	then
 		current_audio_input="$(cat "$client_run_script" | grep ^audio_input_device)"
 		echo "Current audio input device: $current_audio_input"
@@ -114,7 +192,7 @@ while true; do
 		echo "------------------------"
 		echo "DONE."
 		echo "------------------------"
-	elif [ $option = "9" ]
+	elif [ $option = "12" ]
 	then
 		current_audio_output="$(cat "$client_run_script" | grep ^audio_output_device)"
 		echo "Current audio output device: $current_audio_output"
@@ -125,38 +203,35 @@ while true; do
 		echo "------------------------"
 		echo "DONE."
 		echo "------------------------"
-	elif [ $option = "10" ]
+	elif [ $option = "13" ]
 	then
-		sound_card_player_count=$(aplay -l | grep "^card" | wc -l)
-		sound_card_recorder_count=$(arecord -l | grep "^card" | wc -l)
-		seeed_voicecard_service=$(systemctl list-units --full -all | grep "seeed-voicecard.service" | wc -l)
-		if [ $sound_card_player_count -eq 0 ] && [ $sound_card_recorder_count -eq 0 ]; then
-			echo ""
-			echo "No sound-cards found - RPi Audio HAT service down or service restart required?"
-			if [ $seeed_voicecard_service -eq 1 ]; then
-				echo "Try:"
-				echo "sudo service seeed-voicecard stop && sudo service seeed-voicecard start && aplay -l"
-			fi
-			echo ""
-			exit
-		else
-			echo ""
-			echo "Inside alsamixer use F5 to show input and output. If your sound-card doesn't show up by default use F6 to switch."
-			echo "You might need to edit ~/.asoundrc in certain cases to set the correct default devices (see asound examples in install folder)."
-			if [ $seeed_voicecard_service -eq 1 ]; then
-				echo "For WM8960 boards (ReSpeaker etc.) check 'Playback' and 'Capture' volumes."
-			fi
-			echo ""
-			read -p "Press any key to continue (or CTRL+C to abort)."
-			alsamixer
-			alsamixerstate=~/sepia-client/my_amixer_volumes.state
-			alsactl --file "$alsamixerstate" store
-			echo ""
-			echo "Stored alsamixer settings at: $alsamixerstate"
-			echo "------------------------"
-			echo "DONE."
-			echo "------------------------"
-		fi
+		nano $HOME/clexi/www/sepia/settings.js
+		echo "------------------------"
+		echo "DONE."
+		echo "------------------------"
+	elif [ $option = "14" ]
+	then
+		echo "ENABLING remote debugging mode"
+		sed -i 's/chromium_remote_debug=./chromium_remote_debug=1/' $client_run_script
+		echo ""
+		echo "To use remote debugging you need to forward port 9222 to allow external access."
+		echo "Use Nginx or a SSH tunnel: 'ssh -L 0.0.0.0:9223:localhost:9222 localhost -N'"
+		echo "Then open 'chrome://inspect/#devices' in your Chrome desktop browser and and add"
+		echo "'[client-IP]:9223' to your network targets (NOTE: the tunnel port 9223!)."
+		echo "When you see your device appearing under 'Remote Target' press 'inspect' to connect."
+		echo ""
+		echo "Please DISABLE this mode when you're done and stay safe ;-)"
+		echo ""
+		echo "------------------------"
+		echo "DONE."
+		echo "------------------------"
+	elif [ $option = "15" ]
+	then
+		echo "DISABLING remote debugging mode"
+		sed -i 's/chromium_remote_debug=./chromium_remote_debug=0/' $client_run_script
+		echo "------------------------"
+		echo "DONE."
+		echo "------------------------"
 	else
 		echo "------------------------"
 		echo "Not an option, please try again."
@@ -166,6 +241,9 @@ while true; do
 	if [ $breakafterfirst = "true" ]
 	then
 		break
+	else
+		read -p "Press any key to return to menu (or CTRL+C to abort)."
+		clear
 	fi
 done
 echo "Cu :-) ... ah and don't forget to restart your client ;-)"

@@ -1,15 +1,38 @@
 #!/bin/bash
 #
+# make sure we are in the right folder
+SCRIPT_PATH="$(realpath "$BASH_SOURCE")"
+SEPIA_FOLDER="$(dirname "$SCRIPT_PATH")"
+cd "$SEPIA_FOLDER"
+#
 # set local Java path
 if [ -f "java/version" ]; then
     new_java_home=$(cat java/version)
     export JAVA_HOME=$(pwd)/java/$new_java_home
     export PATH=$JAVA_HOME/bin:$PATH
 	echo "Found local Java version: $JAVA_HOME"
-	echo
+	echo ""
+elif [ $(command -v java | wc -l) -gt 0 ]; then
+	java -version
+	echo ""
+else
+	echo "No Java version found! Please install Java JDK 11 (e.g.: openjdk-11-jdk-headless)."
+	echo "Check SEPIA installer or setup scripts for more info."
+	exit 1
 fi
 #
+echo "Running: $(cat version | grep SEPIA)"
+echo ""
+#
 cd elasticsearch
+if [ $(sysctl vm.max_map_count | grep 262144 | wc -l) -eq 0 ]; then
+	echo "WARNING: To run stable Elasticsearch requires 'vm.max_map_count=262144'."
+	echo "To set it once use this (on your host machine):"
+	echo "sudo sysctl -w vm.max_map_count=262144"
+	echo "To set it permanently you can try:"
+	echo "sudo su -c \"echo 'vm.max_map_count=262144' >> /etc/sysctl.d/99-sysctl.conf\""
+	echo ""
+fi
 ./run.sh
 # echo -e 'Waiting for Elasticsearch...\n'
 ./wait.sh
@@ -21,6 +44,7 @@ if [ -z "$es_check" ]; then
 else
 	echo "Elasticsearch looks GOOD."
 fi
+sleep 2
 cd ..
 if [ -f "sepia-assist-server/Xtensions/TTS/marytts/bin/marytts-server" ]; then
 	echo -e '\nChecking extensions ...\n'
@@ -57,8 +81,8 @@ if [ -f "sepia-assist-server/Xtensions/TTS/marytts/bin/marytts-server" ]; then
 		fi
 		cd ../../../../..
 	fi
+	sleep 2
 fi
-sleep 10
 echo -e '\nStarting SEPIA servers ...\n'
 cd sepia-assist-server
 ./run.sh

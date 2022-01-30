@@ -1,10 +1,15 @@
 #!/bin/bash
 #
+# make sure we are in the right folder
+SCRIPT_PATH="$(realpath "$BASH_SOURCE")"
+SEPIA_FOLDER="$(dirname "$SCRIPT_PATH")"
+cd "$SEPIA_FOLDER"
+#
 # set local Java path
 if [ -f "java/version" ]; then
-    new_java_home=$(cat java/version)
-    export JAVA_HOME=$(pwd)/java/$new_java_home
-    export PATH=$JAVA_HOME/bin:$PATH
+	new_java_home=$(cat java/version)
+	export JAVA_HOME=$(pwd)/java/$new_java_home
+	export PATH=$JAVA_HOME/bin:$PATH
 	echo "Found local Java version: $JAVA_HOME"
 	echo
 fi
@@ -54,12 +59,28 @@ else
 	RES_CODE=1
 fi
 echo -e "\n-----Proxy-----\n"
-java -jar $TOOLS_JAR connection-check httpGetJson -url=http://localhost:20726/sepia/assist/ping -maxTries=3 -waitBetween=1500 -expectKey=result -expectValue=success
-if [ $? -eq 0 ]
+PROXY_URL=
+if [ "$(ls -l /etc/nginx/sites-enabled/sepia-fw-https-self-* 2> /dev/null | wc -l)" -gt 0 ]
 then
-	echo "Proxy OK"
+	# check non-ssl localhost version on port 20727 to avoid any cert issues locally
+	PROXY_URL=http://localhost:20727/sepia/assist/ping
+	# PROXY_URL=https://$(hostname -s).local:20726/sepia/assist/ping
+elif [ "$(ls -l /etc/nginx/sites-enabled/sepia-fw-http* 2> /dev/null | wc -l)" -gt 0 ]
+then
+	PROXY_URL=http://localhost:20726/sepia/assist/ping
+fi
+if [ -z "$PROXY_URL" ]
+then
+	echo "No proxy configuration found at: '/etc/nginx/sites-enabled/'"
 else
-	echo "Info: Proxy seems to be OFFLINE! (Checked via 'localhost:20726/sepia/assist/' route)"
+	echo "Proxy URL: $PROXY_URL"
+	java -jar $TOOLS_JAR connection-check httpGetJson -url=$PROXY_URL -maxTries=3 -waitBetween=1500 -expectKey=result -expectValue=success
+	if [ $? -eq 0 ]
+	then
+		echo "Proxy OK"
+	else
+		echo "Info: Proxy seems to be OFFLINE! (Checked via 'localhost:20726/sepia/assist/' route)"
+	fi
 fi
 if [ -f "Xtensions/TTS/marytts/bin/marytts-server" ]; then
 	echo -e '\n-----Extensions-----\n'
@@ -97,15 +118,16 @@ if [ -z "$ip_adr" ]; then
 	ip_adr="[IP]"
 fi
 echo "You should be able to reach your SEPIA server via:"
-echo "$(hostname).local or $ip_adr"
+echo "$(hostname -s).local or $ip_adr"
 echo ''
-echo "Example1: http://$(hostname).local:20721/tools/index.html"
+echo "Example1: http://$(hostname -s).local:20721/tools/index.html"
 echo "Example2: http://$ip_adr:20721/tools/index.html"
 echo "Example3: http://$ip_adr:20721/app/index.html"
 echo ''
 echo "If you've installed NGINX proxy with self-signed SSL try:"
-echo "Example4: https://$(hostname).local:20726/sepia/assist/tools/index.html"
-echo "Example5: https://$(hostname).local:20726/sepia/assist/app/index.html"
+echo "Example4: https://$(hostname -s).local:20726/sepia/assist/tools/index.html"
+echo "Example5: https://$(hostname -s).local:20726/sepia/assist/app/index.html"
+echo "Example6: http://$ip_adr:20727/sepia/assist/app/index.html"
 echo ''
 echo "Please note: if this is a virtual machine the hostname might not work to contact the server!"
 echo ''

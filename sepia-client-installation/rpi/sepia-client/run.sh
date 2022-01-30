@@ -9,10 +9,11 @@ echo "Last run attempt: $NOW - via: run.sh" > "$LOG"
 
 # Client mode
 is_headless=1
+chromium_remote_debug=0
 
 # Check sound devices
-sound_card_player_count=$(aplay -l | grep "^card" | wc -l)
-sound_card_recorder_count=$(arecord -l | grep "^card" | wc -l)
+sound_card_player_count=$(aplay -l | grep -E "^[[:alpha:]]+ [[:digit:]]" | wc -l)
+sound_card_recorder_count=$(arecord -l | grep -E "^[[:alpha:]]+ [[:digit:]]" | wc -l)
 echo "$NOW - Found sound-cards to play audio: $sound_card_player_count" >> "$LOG"
 echo "$NOW - Found sound-cards to record audio: $sound_card_recorder_count" >> "$LOG"
 if [ $sound_card_recorder_count -eq 0 ]; then
@@ -53,13 +54,13 @@ if [ "$is_xserver_running" -eq "0" ]; then
 	fi
 fi
 
-# Restore alsamixer settings (and add alsamixer setup to client-setup menu)
+# Restore alsamixer settings (if you use Pulseaudio maybe skip this)
 alsamixerstate=~/sepia-client/my_amixer_volumes.state
 if [ -f "$alsamixerstate" ]; then
 	echo "Restoring alsamixer settings from: $alsamixerstate"
 	echo "$NOW - Restoring alsamixer settings from: $alsamixerstate" >> "$LOG"
 	alsactl --file "$alsamixerstate" restore
-	echo "$NOW - alsamixer settings restored." >> "$LOG"
+	echo "$NOW - alsamixer settings restored. NOTE: If you use Pulseaudio you might need to delete the state file." >> "$LOG"
 fi
 # Set volume for specific amixer controls
 # headphone_count=$(amixer scontrols | grep "Headphone" | wc -l)
@@ -118,6 +119,11 @@ fi
 audio_input_device='default'
 audio_output_device='default'
 default_chrome_flags="--user-data-dir=$chromedatadir --alsa-output-device=$audio_output_device --alsa-input-device=$audio_input_device --allow-insecure-localhost --autoplay-policy=no-user-gesture-required --disable-infobars --enable-features=OverlayScrollbar --hide-scrollbars --no-default-browser-check --check-for-update-interval=31536000"
+if [ "$chromium_remote_debug" -eq "1" ]; then
+	default_chrome_flags="--remote-debugging-port=9222 ""$default_chrome_flags"
+	echo "Remote debugging on port 9222 ACTIVE! To access externally use SSH tunnel or proxy port."
+	echo "$NOW - REMOTE DEBUGGING for Chromium on port 9222 ACTIVE" >> "$LOG"
+fi
 # comma separated list of extensions:
 chrome_extensions="--load-extension=~/sepia-client/chromium-extensions/sepia-fw"
 # headless or with display:
@@ -128,10 +134,10 @@ echo "RPi model: $pi_model - Is Pi4: $is_pi4"
 echo "$NOW - Starting Chromium - Mode: $is_headless - Is RPi4: $is_pi4" >> "$LOG"
 if [ "$is_headless" -eq "0" ]; then
 	echo "Running SEPIA-Client in 'display' mode. Use SEPIA Control-HUB to connect and control via remote terminal, default URL is: $clexi_ws_url"
-	$chromecmd $default_chrome_flags $chrome_extensions --kiosk "$client_url?isApp=true" >"$LOG_CLIENT" 2>&1
+	$chromecmd $default_chrome_flags $chrome_extensions --kiosk "$client_url?isApp=true&hasTouch=true" >"$LOG_CLIENT" 2>&1
 elif [ "$is_headless" -eq "2" ]; then
 	echo "Running SEPIA-Client in 'pseudo-headless' mode. Use SEPIA Control-HUB to connect and control via remote terminal, default URL is: $clexi_ws_url"
-	$chromecmd $default_chrome_flags $chrome_extensions --kiosk "$client_url?isApp=true&isHeadless=true" >"$LOG_CLIENT" 2>&1
+	$chromecmd $default_chrome_flags $chrome_extensions --kiosk "$client_url?isApp=true&isHeadless=true&hasTouch=true" >"$LOG_CLIENT" 2>&1
 elif [ "$is_pi4" = "1" ]; then
 	echo "Running SEPIA-Client in 'headless Pi4' mode. Use SEPIA Control-HUB to connect and control via remote terminal, default URL is: $clexi_ws_url"
 	xvfb-run -n 2072 --server-args="-screen 0 500x800x24" $chromecmd --disable-features=VizDisplayCompositor $default_chrome_flags $chrome_extensions --kiosk "$client_url?isApp=true&isHeadless=true" >"$LOG_CLIENT" 2>&1

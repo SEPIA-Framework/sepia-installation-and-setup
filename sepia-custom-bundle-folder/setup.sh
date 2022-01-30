@@ -14,6 +14,11 @@ if [[ $EUID -eq 0 ]]; then
     fi
 fi
 #
+# make sure we are in the right folder
+SCRIPT_PATH="$(realpath "$BASH_SOURCE")"
+SEPIA_FOLDER="$(dirname "$SCRIPT_PATH")"
+cd "$SEPIA_FOLDER"
+#
 # make scripts executable
 find . -name "*.sh" -exec chmod +x {} \;
 chmod +x elasticsearch/bin/elasticsearch
@@ -51,7 +56,7 @@ argument1=""
 argument2=""
 breakafterfirst="false"
 if [ -n "$1" ]; then
-    option=$1
+	option=$1
 	breakafterfirst="true"
 	if [ -n "$2" ]; then
 		argument1=$2
@@ -64,17 +69,19 @@ fi
 while true; do
 	echo ""
 	echo "What would you like to do next?"
-	echo "1: Setup all components (except dynamic DNS). Note: requires step 4."
+	echo "1: Set up core components. Note: requires Elasticsearch (4) and will CLEAR old data!"
 	echo "2: Define new admin and assistant passwords"
-	echo "3: Setup dynamic DNS with DuckDNS"
+	echo "3: Set up dynamic DNS with DuckDNS domain (for public server)"
+	echo "3b: Set up NGINX (e.g. with self-signed SSL for local server)"
 	echo "4: Start Elasticsearch"
 	echo "5: Set hostname of this machine to 'sepia-home' (works e.g. for Debian/Raspian Linux)"
 	echo "6: Suggest cronjobs for server (open cronjobs manually with 'crontab -e' and copy/paste lines)"
-	echo "7: Install TTS engine and voices"
+	echo "7: Install core TTS engine and voices"
+	echo "7b: Install MBROLA voices extension (check license)"
 	echo "8: Install Java locally into SEPIA folder"
 	echo ""
 	if [ -z "$option" ]; then
-		read -p "Enter a number plz (0 to exit): " option
+		read -p "Select an option plz (0 to exit): " option
 	else
 		echo "Selected by cmd argument: $option"
     fi
@@ -116,6 +123,15 @@ while true; do
 		echo "------------------------"
 		echo "DONE. Please restart 'SEPIA assist server' to activate DuckDNS worker!"
 		echo "------------------------"
+	elif [ $option = "3b" ] 
+	then
+		cd ..
+		bash setup-nginx.sh
+		cd sepia-assist-server
+		echo ""
+		echo "------------------------"
+		echo "DONE."
+		echo "------------------------"
 	elif [ $option = "4" ] 
 	then	
 		cd ..
@@ -135,8 +151,8 @@ while true; do
 		fi
 	elif [ $option = "5" ] 
 	then
-		sudo sh -c "echo 'sepia-home' > /etc/hostname"
-		sudo sed -i -e 's|127\.0\.1\.1.*|127.0.1.1	sepia-home|g' /etc/hosts
+		sudo sh -c "echo 'sepia-home.local' > /etc/hostname"
+		sudo sed -i -e 's|127\.0\.1\.1.*|127.0.1.1	sepia-home.local|g' /etc/hosts
 		echo "------------------------"
 		echo "Please reboot the system to use new hostname."
 		echo "------------------------"
@@ -145,45 +161,51 @@ while true; do
 		echo "------------------------"
 		echo "Cronjob suggestions:"
 		echo ""
-		echo '@reboot sleep 60 && ~/SEPIA/on-reboot.sh;'
-		echo '30 4 1-31/2 * * ~/SEPIA/cronjob.sh;'
+		echo "@reboot sleep 60 && ${SEPIA_FOLDER}/on-reboot.sh;"
+		echo "30 4 1-31/2 * * ${SEPIA_FOLDER}/cronjob.sh;"
 		echo "------------------------"
 	elif [ $option = "7" ] 
 	then
-		echo "Installing TTS engine and voices:"
+		echo "Installing core TTS engines and voices ..."
 		mkdir -p tmp/deb
 		cd tmp/deb
-		sudo apt-get update
+		sudo apt update
 		sudo apt-get install -y espeak-ng espeak-ng-espeak
 		sudo apt-get install -y --no-install-recommends flite-dev flite
-		# common:
-		#sudo apt-get install -y --no-install-recommends libttspico-data
-		wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-data_1.0+git20130326-9_all.deb
-		sudo dpkg -i libttspico-data_1.0+git20130326-9_all.deb
-		if [ -n "$(uname -m | grep aarch64)" ]; then
-			echo "Platform: aarch64"
-			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_arm64.deb
-			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_arm64.deb
-			sudo dpkg -i libttspico0_1.0+git20130326-9_arm64.deb
-			sudo dpkg -i libttspico-utils_1.0+git20130326-9_arm64.deb
-		elif [ -n "$(uname -m | grep armv7l)" ]; then
-			echo "Platform: armv7l"
-			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_armhf.deb
-			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_armhf.deb
-			sudo dpkg -i libttspico0_1.0+git20130326-9_armhf.deb
-			sudo dpkg -i libttspico-utils_1.0+git20130326-9_armhf.deb
-		elif [ -n "$(uname -m | grep x86_64)" ]; then
-			echo "Platform: x86_64"
-			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_amd64.deb
-			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_amd64.deb
-			sudo dpkg -i libttspico0_1.0+git20130326-9_amd64.deb
-			sudo dpkg -i libttspico-utils_1.0+git20130326-9_amd64.deb
+		# picoTTS - common:
+		if [ $(command -v pico2wave | wc -l) -eq 0 ]; then
+			cd tmp
+			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-data_1.0+git20130326-9_all.deb
+			sudo dpkg -i libttspico-data_1.0+git20130326-9_all.deb
+			if [ -n "$(uname -m | grep aarch64)" ]; then
+				echo "Platform: aarch64"
+				wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_arm64.deb
+				wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_arm64.deb
+				sudo dpkg -i libttspico0_1.0+git20130326-9_arm64.deb
+				sudo dpkg -i libttspico-utils_1.0+git20130326-9_arm64.deb
+			elif [ -n "$(uname -m | grep armv7l)" ]; then
+				echo "Platform: armv7l"
+				wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_armhf.deb
+				wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_armhf.deb
+				sudo dpkg -i libttspico0_1.0+git20130326-9_armhf.deb
+				sudo dpkg -i libttspico-utils_1.0+git20130326-9_armhf.deb
+			elif [ -n "$(uname -m | grep x86_64)" ]; then
+				echo "Platform: x86_64"
+				wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_amd64.deb
+				wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_amd64.deb
+				sudo dpkg -i libttspico0_1.0+git20130326-9_amd64.deb
+				sudo dpkg -i libttspico-utils_1.0+git20130326-9_amd64.deb
+			elif [ -n "$(uname -m | grep armv6l)" ]; then
+				echo "Platform: armv6l - Process skipped"
+			else
+				echo "Platform: x86_32"
+				wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_i386.deb
+				wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_i386.deb
+				sudo dpkg -i libttspico0_1.0+git20130326-9_i386.deb
+				sudo dpkg -i libttspico-utils_1.0+git20130326-9_i386.deb
+			fi
 		else
-			echo "Platform: x86_32"
-			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico0_1.0+git20130326-9_i386.deb
-			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-utils_1.0+git20130326-9_i386.deb
-			sudo dpkg -i libttspico0_1.0+git20130326-9_i386.deb
-			sudo dpkg -i libttspico-utils_1.0+git20130326-9_i386.deb
+			echo "Already installed: pico2wave"
 		fi
 		cd ../..
 		rm -rf tmp
@@ -191,6 +213,19 @@ while true; do
 		echo "DONE."
 		echo "NOTE: MaryTTS server is available as extension, see folder: "
 		echo "sepia-assist-server/Xtensions/TTS/marytts/INSTALL.md"
+		echo "------------------------"
+	elif [ $option = "7b" ] 
+	then
+		if [ -d "Xtensions/TTS/espeak-ng-mbrola/" ]; then
+			cd "Xtensions/TTS/espeak-ng-mbrola"
+			bash install.sh
+			cd ../../..
+			echo ""
+		else
+			echo "'sepia-assist-server/Xtensions/TTS/espeak-ng-mbrola' folder not found. Check installation."
+		fi
+		echo "------------------------"
+		echo "DONE."
 		echo "------------------------"
 	elif [ $option = "8" ] 
 	then
@@ -208,5 +243,8 @@ while true; do
 	if [ $breakafterfirst = "true" ]
 	then
 		break
+	else
+		read -p "Press any key to continue (CTRL+C to exit)" anykey
+		clear
 	fi
 done

@@ -36,6 +36,10 @@ path.data: ../../es-data
 #
 path.logs: ../../es-logs
 #
+# Path to snapshots:
+#
+#path.repo: ["/home/pi/SEPIA/es-snapshots"]
+#
 # ----------------------------------- Memory -----------------------------------
 #
 # Lock the memory on startup:

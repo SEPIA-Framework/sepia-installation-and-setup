@@ -7,15 +7,30 @@ echo ""
 echo "You can use 'bash update_respeaker_boot.sh' to deactivate RPi's default audio jack and HDMI (audio)."
 echo "Depending on your setup you might need to edit ~/.asoundrc as well to set the correct defaults."
 echo ""
-read -p "Press Enter to continue."
+read -p "Press any key to continue (or CTRL+C to abort)."
 echo ""
 sudo apt-get update
 sudo apt-get install -y git
 git clone https://github.com/respeaker/seeed-voicecard
-# If you have issues try: https://github.com/HinTak/seeed-voicecard
+#or: https://github.com/HinTak/seeed-voicecard
 cd seeed-voicecard
 DRIVER_FOLDER=$(pwd)
 #sed -i 's/^FORCE_KERNEL=.*/FORCE_KERNEL="1.20190925-1"/' install.sh
 sudo ./install.sh
 echo ""
-echo "To repeat this setup run 'sudo ./install.sh' from $DRIVER_FOLDER"
+echo "Some notes:"
+echo ""
+echo "If you don't see any cards after first reboot (arecord -l) try:"
+echo "sudo service seeed-voicecard stop && sudo service seeed-voicecard start && arecord -l"
+echo ""
+echo "Then check: raspi-config -> system options -> audio (look for seeed or WM8960 etc.)"
+echo ""
+echo "You might need to run 'pulsemixer' afterwards and change source setup (F3) to:"
+echo "Multichannel Duplex"
+echo ""
+echo "If that doesn't work try to run the setup once more and repeat the steps:"
+echo "cd $DRIVER_FOLDER && sudo ./install.sh"
+echo ""
+echo "If you keep getting errors try this repository instead (remove the old one):"
+echo "git clone https://github.com/HinTak/seeed-voicecard"
+echo ""

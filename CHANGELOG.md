@@ -1,5 +1,69 @@
 ## Release history and changelog
 
+### v2.6.1 - 2022.01.30
+
+Updated client to v0.24.1:
+* Added support for new 'shared-access' permissions and new settings page to allow other users limited access to specific devices and remote-actions
+* Added new 'remote media player' buttons to quickly control media on other clients (start, stop, skip)
+* Added support for Porcupine 2.0 and custom wake-words. Create wake-words via Porcupine console and use with free-tier access key + updated wake-word settings page
+* Updated web-audio lib and speech module to respond a bit more snappy and better handle timeouts, connection issues and no-speech events
+* Updated CLEXI client to v0.9.0 and introduced GPIO interface to control for example LED arrays or read hardware buttons + added "clexiGpioInterface" section to settings.js
+* Added remote terminal functions (CLEXI) to set/get/test microphone (gain, mictest) + added new debug page to STT settings
+* Implemented 'Config.appRegionCode' to enable region specific service actions for same languages
+* Improved avatar and app styles for example to better indicate wake-word activate state
+* Updated input-controls view and improved Bluetooth BLE beacon security with "known addresses" check 
+* New skins: 'Funky Sunrise' and 'The Vectors'
+* Improved landscape, big-screen and tiny mode + better handling of screen-size changes
+* Send optional 'info.data' to frame functions 'onOpen' and 'onFinishSetup'
+* Android: Updated app to meet the new Play Store requirements and adapt to Android 11 intent restrictions. NOTE: Some custom intents might not be allowed anymore :-/.
+* Fixed a bug that made expired timers disappear and return in UI unwantedly
+* Added new 'hasTouch' URL parameter to force touch-UI tweaks
+* Smaller bug fixes and tweaks
+
+Updated Control-HUB (admin-tools) to v1.4.2:
+* Improved look, added skin support + new "light" skin and choose dark/light skin according to browser settings
+* Added support for new 'raw' field to custom 'set-cmds' in smart-home page (device cards)
+* Updated CLEXI client to v0.9.0 and added support for GPIO interface (read hardware buttons, control LEDs)
+* Updated CLEXI help pop-up (remote terminal commands) to include new microphone settings and test functions
+
+Updated Assist-server to v2.6.0:
+* Introduced new 'shared-access' permission settings for accounts
+* Allow 'receiver' field for remote-actions + check shared permissions when sending action to other user
+* Created 'GeneralValue' parameter ("set AB to value XY") and implemented it to improve smart-home service (this will allow more general support for device-specific input)
+* Introduced new 'Xtensions/TTS/settings.json' to configure TTS voices, improved setup and added MBROLA voices support
+* Improved TTS pre-processing (e.g. better output for times)
+* Reorganized and optimized geo-coder code and implemented Graphhopper API for geo-coding, location and directions search in addition to Google Maps
+* Improved location parameter and points-of-interest (POI) search
+* Make Youtube API url configurable (e.g. to use custom search)
+* Updated smart-home Test-HUB to include more devices
+* Added new 'setCustomTriggerExcludeRegX' method for services to better handle sentences that should NOT match your service
+* Added Porcupine 2.0 files (WASM and keywords)
+* Updated core tools to v2.2.10
+* Bug fixes and smaller tweaks
+
+Updated WebSocket Chat-Server to v1.3.3:
+* Added support for new 'sharedAccess' feature to manage and allow remote-actions between users
+* Added endpoint 'refreshClientConnections' to trigger automatic client connection refresh (disconnect -> reconnect)
+* Updated core tools to v2.2.10
+* Smaller improvements
+
+Updated Teach-Server to v2.2.3:
+* Improved 'common.json' Teach-UI texts and configuration and added 'general_value' to smart-home command
+* Updated core tools to v2.2.10
+* Smaller fixes
+
+Updated Core-tools to v2.2.10:
+* Added support for 'sharedAccess' field in user account
+* Improved 'Connectors.apacheHttpGET' to be a bit more strict with timeouts and reconnects and to allow more custom settings
+* Updated 'PARAMETERS' class to include new 'GENERAL_VALUE' parameter
+
+Other servers, tools and common changes:
+* Improved most of the SEPIA-Home install, setup and run scripts (including self-signed SSL certificate generation and handling)
+* Improved DIY client (installation, logging, features like LED controls etc.)
+* Added SEPIA offline STT-Server install scripts (Linux) to SEPIA-Home and DIY client folders to get started more easily
+* Adjusted server and DIY client for better compatability with Debian 11/Raspberry Pi OS Bullseye
+* In preparation: Updated SDK and Docker demo containers
+
 ### v2.6.0 - 2021.10.10
 
 Updated client to v0.24.0:

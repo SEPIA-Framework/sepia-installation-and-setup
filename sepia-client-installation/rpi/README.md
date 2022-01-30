@@ -2,29 +2,18 @@
 
 ## Common Instructions
 
-Last tested with Raspberry Pi OS 2021-05 (aka Raspian Buster) and RPi4 B 2GB-4GB.  
+Tested with Raspberry Pi OS Buster and Bullseye on RPi4 B 2GB and 4GB.  
 Expected to work with RPi3 1GB and might even work with RPi Zero 512GB if wake-word is disabled.
 
 ### 1) Install Raspberry Pi OS Lite
 
-* Download Raspberry Pi OS Lite (the version without desktop)
-* Flash MicroSD with Etcher
-* Remove MicroSD and replug (to reload filesystem)
-* Add an empty file called 'ssh' to the boot folder ([microSD]/boot) to enable SSH
-* Add a file called 'wpa_supplicant.conf' with the following content to the boot folder to enable WiFi login (replace 'country' [US, DE, ..], 'ssid' and 'psk'):
-```
-country=US
-ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
-update_config=1
-network={
-    ssid="NETWORK-NAME"
-    psk="NETWORK-PASSWORD"
-	id_str="Home"
-}
-```
-* Eject the MicroSD and plug it into your RPi
-* Connect to your RPi via SSH (in Windows you can use [putty](https://www.putty.org/))
-* Finish your RPi setup with `sudo raspi-config` (expand SD card, set timezone, etc.)
+* Download the official [Raspberry Pi Imager](https://www.raspberrypi.com/software/) and start it
+* Choose Raspberry Pi OS Lite (from 'other' menu) - Currently recommended: **32Bit Buster ('Legacy')**
+* Press 'Ctrl + Shift + X' to open Imager expert settings
+* Activate SSH (required), set your time zone (important for timers) and optionally configure Wifi, hostname, etc.
+* Flash the SD card
+* Eject the Micro-SD and plug it into your RPi
+* Connect to your RPi via SSH (in Windows you can use [putty](https://www.putty.org/)) with the username and password previously set
 
 ### 2a) SEPIA Client Installation
 
@@ -39,12 +28,15 @@ network={
 
 ### 2b) Install Hardware (optional)
 
+Use `bash menu.sh` to choose a specific hardware installation script or run them manually. Here you'll find a few more tips:
+
 * **USB microphone** and the audio jack for sound:
   * This script might be useful to set the correct default devices: `bash install_usb_mic.sh`
+  * Alternatively try `sudo raspi-config` and check the audio settings
   * **Reboot** the system
 * For **WM8960 microphone boards** like ReSpeaker (2 and 4 mic HAT), Waveshare Audio-HAT, Adafruit Voice Bonnet:
   * Install drivers: `bash install_respeaker_mic.sh`
-  * Run `bash update_respeaker_boot.sh` to deactivate the default RPi audio jack and HDMI (audio) if you don't use it
+  * Optionally run `bash update_respeaker_boot.sh` to deactivate the default RPi audio jack and HDMI (audio) if you don't use it
   * **Reboot** the system
 * For **Hyperpixel** touchscreen:
   * Install drivers: `curl https://get.pimoroni.com/hyperpixel4 | bash`
@@ -60,7 +52,7 @@ network={
 * Set SEPIA server host address (as you would inside your SEPIA app login box)
 * Optional: Define a unique device ID (default is 'o1', Android apps have 'a1' and browsers 'b1' by default)
 * Optional: Define a new CLEXI-ID (this can be used as password for the remote terminal later, default is: clexi-123)
-* Optional: Set input/output volume (via alsamixer)
+* Optional: Set input/output volume (via `pulsemixer` if Pulseaudio is active or `alsamixer` if not)
 * Finish your setup by setting automatic login via `sudo raspi-config` (Boot options - Desktop/CLI - Console Autologin)
 * **Reboot** your system 
 * Your headless client should automatically start and notify you via a short audio message that he'll be "right there"
@@ -77,16 +69,19 @@ network={
 * Use the remote terminal command `call login user [user-ID] password [user-pwd]` (message type: 'SEPIA Client') to login your user
 * You should see a "login successful" message in the terminal. If not you can use the command `call ping` to see if the client can reach the SEPIA server. Check your "hostname" settings from the previous step (Client Setup) if ping fails
 * Use the command `call test` (message type: 'SEPIA Client') or corresponding shortcut button 'test client' to ... test your client. You should hear an acoustic confirmation
-* **Reboot** your system one last time to finish the configuration (NOTE: your microphone will only have access permission AFTER the reboot)
+* **Reboot** your system one last time to finish the configuration (NOTE: your **microphone** will only have access permission **AFTER the reboot**)
+* AFTER the reboot you can connect via CLEXI again to test your microphone. See the "?" help button for examples.
 
 ### 5) Fine Tuning
 
-* Optional: Open the CLEXI settings.json file located at `~/clexi/www/sepia/settings.js` to tweak your client (e.g. activate "Hey SEPIA" or other wake-words). NOTE: please do this AFTER a successful configuration and reboot (previous step)
+* Optional: Open the settings file located at `~/clexi/www/sepia/settings.js` to tweak your client (e.g. activate "Hey SEPIA" or other wake-words). NOTE: please do this AFTER a successful configuration and reboot (previous step)
+* The `settings.js` has many available options. To make life easier you can open the SEPIA client in your browser, configure it there and then go to 'settings -> account' and look for the export button. It will show you a popup with settings that you can copy over to your DIY client.
+* There are a few [examples available](https://github.com/SEPIA-Framework/sepia-html-client-app/blob/master/Settings.md) for microphone, wake-word and LED control configuration.
 * Done. Enjoy! :-)
 
 ## Basic uninstallation steps
 
-There is no uninstall script yet and some things will depend on your specific installation. The easiest way is to simply flash a new image but here is a rough list of the required steps:
+There is an `uninstall.sh` script inside the `install/` folder but some things might depend on your specific installation so the easiest way is to simply flash a new image but here is a rough list of the required steps:
 * Open the folder `~/sepia-client` and run `shutdown.sh`
 * Delete folder `~/sepia-client`
 * Delete folder `~/clexi`
@@ -94,5 +89,6 @@ There is no uninstall script yet and some things will depend on your specific in
 * Remove (any) Chromium via `sudo apt-get remove chromium chromium-browser`
 * Open `~/.bashrc` and remove the SEPIA entry below '# Run SEPIA-Client on login?'
 * Delete, check or adjust your ALSA config `~/.asoundrc`
+* Remove Nginx config at `/etc/nginx/sites-enabled/sepia-client*` and restart Nginx
 
 Whats left are packages like Node.js, Xserver and hardware related stuff (if you've installed a touchscreen or microphone HAT etc.).
