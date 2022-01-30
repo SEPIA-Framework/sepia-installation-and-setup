@@ -60,7 +60,7 @@ Updated Core-tools to v2.2.10:
 Other servers, tools and common changes:
 * Improved most of the SEPIA-Home install, setup and run scripts (including self-signed SSL certificate generation and handling)
 * Improved DIY client (installation, logging, features like LED controls etc.)
-* Added SEPIA offline STT-Server install scripts to SEPIA-Home and DIY client folders to get started more easily
+* Added SEPIA offline STT-Server install scripts (Linux) to SEPIA-Home and DIY client folders to get started more easily
 * Adjusted server and DIY client for better compatability with Debian 11/Raspberry Pi OS Bullseye
 * In preparation: Updated SDK and Docker demo containers
 
