@@ -104,8 +104,7 @@ while true; do
 	then
 		echo "NOTE: This will only work if you did NOT skip Bluetooth during the client installation (skipBLE flag)!"
 		read -p "Type 'ok' to add CLEXI 'ble-beacon-scanner' module to settings.json: " add_ble_mod
-		if [ -n "$add_ble_mod" ] && [ "$add_ble_mod" = "ok" ]
-		then
+		if [ -n "$add_ble_mod" ] && [ "$add_ble_mod" = "ok" ]; then
 			has_ble="$(cat "$clexi_settings" | grep ble-beacon-scanner | wc -l)"
             if [ "$has_ble" = "0" ]
 			then
@@ -116,6 +115,12 @@ while true; do
 			fi
 		else
 			echo "Ok, maybe later."
+		fi
+		read -p "To access Bluetooth Node.js requires additional permissions. Type 'ok' if you want to set these permissions permanently: " add_perm
+		if [ -n "$add_perm" ] && [ "$add_perm" = "ok" ]; then
+			sudo setcap cap_net_raw+eip $(eval readlink -f `which node`)
+		else
+			echo "Ok, maybe later. NOTE: You can run CLEXI via 'sudo' to allow access as well."
 		fi
 		echo "------------------------"
 		echo "DONE."
