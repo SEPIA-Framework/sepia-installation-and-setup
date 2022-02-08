@@ -173,7 +173,7 @@ else
 	# Skip Bluetooth
 	echo "$NOW - Installing required packages skipping Bluetooth ..." >> "$LOG"
 	sed -ri "s|\"node-beacon-scanner\".*||" package.json
-	sudo apt-get install -y libnss3-tools libcap2-bin openssl
+	sudo apt-get install -y libudev-dev libnss3-tools libcap2-bin openssl
 fi
 npm install --loglevel error
 sudo setcap cap_net_raw+eip $(eval readlink -f `which node`)
