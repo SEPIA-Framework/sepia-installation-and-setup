@@ -225,6 +225,7 @@ while true; do
 		echo "------------------------"
 		echo "DONE."
 		echo "------------------------"
+		break
 	elif [ $option = "15" ]
 	then
 		echo "DISABLING remote debugging mode"
@@ -232,6 +233,7 @@ while true; do
 		echo "------------------------"
 		echo "DONE."
 		echo "------------------------"
+		break
 	else
 		echo "------------------------"
 		echo "Not an option, please try again."
