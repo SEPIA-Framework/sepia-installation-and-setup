@@ -43,6 +43,7 @@ if [ -n "$ISDOCKER" ]; then
 	echo "NOTE: Due to the Docker environment the backup cannot be stored properly! Be sure to make a copy of your SEPIA folder BEFORE you continue."
 	echo ""
 fi
+echo "The server will be shut down now for the update process. If you have any health checks or auto-start services runnig please disable them in advance!"
 echo "Do you want to continue?"
 echo ""
 read -p "Enter 'yes' to continue: " yesno

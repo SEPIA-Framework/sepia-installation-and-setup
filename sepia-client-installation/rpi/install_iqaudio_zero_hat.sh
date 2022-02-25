@@ -9,12 +9,14 @@ sudo apt-get install -y git
 git clone https://github.com/iqaudio/Pi-Codec.git
 cd Pi-Codec
 sudo alsactl restore -f IQaudIO_Codec_OnboardMIC_record_and_SPK_playback.state
-DRIVER_FOLDER=$(pwd)
+#DRIVER_FOLDER=$(pwd)
 echo ""
 echo "Some notes:"
 echo ""
 echo "After setup (and reboot) check: raspi-config -> system options -> audio"
 echo ""
+#echo "If no soundcard is found try adding 'dtoverlay=iqaudio-codec' to your /boot/config"
+#echo ""
 echo "You might need to run 'pulsemixer' afterwards and change source setup (F3) to:"
 echo "Multichannel Duplex"
 echo ""
