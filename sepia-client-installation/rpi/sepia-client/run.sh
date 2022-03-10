@@ -70,6 +70,10 @@ fi
 #    echo "Note: Automatically set headphone input volume to 80%"
 # fi
 
+# Restore Pulseaudio settings
+#echo "$NOW - Loading Pulseaudio modules"
+#bash $HOME/install/pulseaudio/aec_only.sh
+
 # Notify user
 echo "$NOW - Notifying user (audio message) ..." >> "$LOG"
 espeak-ng "Hello friend! I'll be right there, just a second."
