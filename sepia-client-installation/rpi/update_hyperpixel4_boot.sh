@@ -2,6 +2,7 @@
 set -e
 if [[ $EUID -eq 0 ]]; then
     echo "This script will try to fix your Hyperpixel 4.0 touchscreen calibration and orientation."
+	echo "Tested on: Raspberry Pi OS Buster."
 else
 	echo "This script needs to be run as root via 'sudo'"
 	exit
