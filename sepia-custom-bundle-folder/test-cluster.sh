@@ -3,7 +3,9 @@
 # make sure we are in the right folder
 SCRIPT_PATH="$(realpath "$BASH_SOURCE")"
 SEPIA_FOLDER="$(dirname "$SCRIPT_PATH")"
+LOG="${SEPIA_FOLDER}/startup-log.out"
 cd "$SEPIA_FOLDER"
+echo "$(date +'%Y_%m_%d_%H:%M:%S') - Running cluster test ..." >> "$LOG"
 #
 # set local Java path
 if [ -f "java/version" ]; then
@@ -30,8 +32,10 @@ java -jar $TOOLS_JAR connection-check httpGetJson -url=http://localhost:20721/pi
 if [ $? -eq 0 ]
 then
 	echo "OK"
+	echo "$(date +'%Y_%m_%d_%H:%M:%S') - Assist API: OK" >> "$LOG"
 else
 	echo "Error: Assist API NOT working or NOT reachable (localhost:20721)"
+	echo "$(date +'%Y_%m_%d_%H:%M:%S') - Assist API: ERROR" >> "$LOG"
 	curl --silent -X GET http://localhost:20721/ping
 	RES_CODE=1
 	if [ $do_all_tests -eq 0 ]; then
@@ -43,8 +47,10 @@ java -jar $TOOLS_JAR connection-check httpGetJson -url=http://localhost:20722/pi
 if [ $? -eq 0 ]
 then
 	echo "OK"
+	echo "$(date +'%Y_%m_%d_%H:%M:%S') - Teach API: OK" >> "$LOG"
 else
 	echo "Error: Teach API NOT working or NOT reachable (localhost:20722)"
+	echo "$(date +'%Y_%m_%d_%H:%M:%S') - Teach API: ERROR" >> "$LOG"
 	curl --silent -X GET http://localhost:20722/ping
 	RES_CODE=1
 fi
@@ -53,8 +59,10 @@ java -jar $TOOLS_JAR connection-check httpGetJson -url=http://localhost:20723/pi
 if [ $? -eq 0 ]
 then
 	echo "OK"
+	echo "$(date +'%Y_%m_%d_%H:%M:%S') - Chat API: OK" >> "$LOG"
 else
 	echo "Error: Chat API NOT working or NOT reachable (localhost:20723)"
+	echo "$(date +'%Y_%m_%d_%H:%M:%S') - Chat API: ERROR" >> "$LOG"
 	curl --silent -X GET http://localhost:20723/ping
 	RES_CODE=1
 fi
@@ -72,14 +80,17 @@ fi
 if [ -z "$PROXY_URL" ]
 then
 	echo "No proxy configuration found at: '/etc/nginx/sites-enabled/'"
+	echo "$(date +'%Y_%m_%d_%H:%M:%S') - Skipped - No proxy configuration found at: '/etc/nginx/sites-enabled/'" >> "$LOG"
 else
 	echo "Proxy URL: $PROXY_URL"
 	java -jar $TOOLS_JAR connection-check httpGetJson -url=$PROXY_URL -maxTries=3 -waitBetween=1500 -expectKey=result -expectValue=success
 	if [ $? -eq 0 ]
 	then
 		echo "Proxy OK"
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Proxy OK - URL: $PROXY_URL" >> "$LOG"
 	else
-		echo "Info: Proxy seems to be OFFLINE! (Checked via 'localhost:20726/sepia/assist/' route)"
+		echo "Info: Proxy seems to be OFFLINE!"
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Proxy OFFLINE - URL: $PROXY_URL" >> "$LOG"
 	fi
 fi
 if [ -f "Xtensions/TTS/marytts/bin/marytts-server" ]; then
@@ -87,14 +98,17 @@ if [ -f "Xtensions/TTS/marytts/bin/marytts-server" ]; then
 	STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:59125/voices)
 	if [ $STATUS -eq 200 ]; then
 		echo "MaryTTS server is running."
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - MaryTTS server: OK" >> "$LOG"
 	else
 		echo "MaryTTS server is NOT running."
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - MaryTTS server is NOT running" >> "$LOG"
 	fi
 fi
 echo -e '\n-----Database: Elasticsearch-----\n'
 ES_RES=$(curl --silent -X GET http://localhost:20724/_cluster/health?pretty | grep 'yellow\|green')
 if [ -z "$ES_RES" ]; then
 	echo "Error: Elasticsearch NOT working or NOT reachable (localhost:20724)"
+	echo "$(date +'%Y_%m_%d_%H:%M:%S') - Elasticsearch NOT working or NOT reachable (localhost:20724)" >> "$LOG"
 	curl --silent -X GET http://localhost:20724/_cluster/health?pretty
 	RES_CODE=1
 	if [ $do_all_tests -eq 0 ]; then
@@ -102,9 +116,11 @@ if [ -z "$ES_RES" ]; then
 	fi
 else
 	echo "OK"
+	echo "$(date +'%Y_%m_%d_%H:%M:%S') - Elasticsearch: OK" >> "$LOG"
 fi
 if [ $RES_CODE -eq 1 ]; then
-	echo -e '\nDONE - It seems there were one ore more critical ERRORS, please check the output!'
+	echo -e '\nDONE - It seems there were one or more critical ERRORS, please check the output!'
+	echo "$(date +'%Y_%m_%d_%H:%M:%S') - Cluster test FAILED - It seems there were one or more critical ERRORS" >> "$LOG"
 	echo -e 'Before you continue consider running the shutdown script once.\n'
 	exit 1
 fi
@@ -119,6 +135,7 @@ if [ -z "$ip_adr" ]; then
 fi
 echo "You should be able to reach your SEPIA server via:"
 echo "$(hostname -s).local or $ip_adr"
+echo "$(date +'%Y_%m_%d_%H:%M:%S') - You should be able to reach your SEPIA server via: $(hostname -s).local or $ip_adr" >> "$LOG"
 echo ''
 echo "Example1: http://$(hostname -s).local:20721/tools/index.html"
 echo "Example2: http://$ip_adr:20721/tools/index.html"
