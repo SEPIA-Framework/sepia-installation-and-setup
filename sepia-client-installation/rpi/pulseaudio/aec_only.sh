@@ -17,6 +17,7 @@ sink_properties=device.description=$sink_name
 aec_method='speex'
 aec_args='"filter_size_ms=200 agc=0 denoise=0 dereverb=0 echo_suppress=1 echo_suppress_attenuation=0 echo_suppress_attenuation_active=0"'
 #note for speex: attenuation is negative db, filtering needs channels=1
+#note 2: on recording speex usually takes around 5s to calibrate ... each time!
 #aec_method='webrtc'
 #aec_args='"voice_detection=0 noise_suppression=1 analog_gain_control=0 digital_gain_control=0 high_pass_filter=1 drift_compensation=1 intelligibility_enhancer=1 extended_filter=0"'
 #aec_args='"mobile=1 routing_mode=loud-speakerphone comfort_noise=0"'
@@ -24,8 +25,16 @@ aec_args='"filter_size_ms=200 agc=0 denoise=0 dereverb=0 echo_suppress=1 echo_su
 #aec_method='null'
 #aec_args=
 
+# more stuff to potentially improve performance:
+#if [ $(pactl list modules short | grep module-suspend-on-idle | wc -l) -gt 0 ]; then
+#	pactl unload-module module-suspend-on-idle
+#fi
+
 # load the module
-pactl unload-module module-echo-cancel
+if [ $(pactl list modules short | grep module-echo-cancel | wc -l) -gt 0 ]; then
+	pactl unload-module module-echo-cancel
+	echo "Pulseaudio: unloaded old instance of 'module-echo-cancel'"
+fi
 pactl load-module module-echo-cancel \
   source_name=$source_name \
   source_master=$source_master \

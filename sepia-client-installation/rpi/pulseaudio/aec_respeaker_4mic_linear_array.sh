@@ -30,7 +30,10 @@ aec_args='"filter_size_ms=200 frame_size_ms=20 agc=0 denoise=1 dereverb=1 echo_s
 #aec_args=
 
 # load the module
-pactl unload-module module-echo-cancel
+if [ $(pactl list modules short | grep module-echo-cancel | wc -l) -gt 0 ]; then
+	pactl unload-module module-echo-cancel
+	echo "Pulseaudio: unloaded old instance of 'module-echo-cancel'"
+fi
 pactl load-module module-echo-cancel \
   source_name=$source_name \
   source_master=$source_master \

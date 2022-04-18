@@ -26,7 +26,10 @@ aec_args='"beamforming=1 mic_geometry=-0.045,0,0,-0.0225,0.039,0,0.0225,0.039,0,
 #aec_args=
 
 # load the module
-pactl unload-module module-echo-cancel
+if [ $(pactl list modules short | grep module-echo-cancel | wc -l) -gt 0 ]; then
+	pactl unload-module module-echo-cancel
+	echo "Pulseaudio: unloaded old instance of 'module-echo-cancel'"
+fi
 pactl load-module module-echo-cancel \
   source_name=$source_name \
   source_master=$source_master \

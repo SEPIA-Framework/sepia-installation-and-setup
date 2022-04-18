@@ -1,8 +1,12 @@
 #!/bin/bash
 
 # masters - use: 'pactl list short sources' and 'pactl list short sinks' to get names
-source_master=alsa_input.platform-soc_sound.seeed-8ch
-sink_master=alsa_output.platform-soc_sound.seeed-2ch
+source_master=alsa_input.platform-soc_sound.multichannel-input
+sink_master=alsa_output.platform-soc_sound.multichannel-output
+#source_master=alsa_input.platform-soc_sound.seeed-8ch
+#sink_master=alsa_output.platform-soc_sound.seeed-2ch
+#source_name=input.aec_source
+#sink_name=output.aec_sink
 
 # names and properties
 null_sink="rnnoise_out"
