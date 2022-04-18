@@ -30,7 +30,7 @@ Installation without script (any platform):
 * The run-script will ping the servers to see if everything started as planned. You can repeat this test with test-cluster.bat/test-cluster.sh to make sure. If you see errors check sepia-*/log.out.
 * You should be able to reach the web-app of SEPIA via one of the URLs suggested at the end of the run-script, e.g.: http://localhost:20721/app/index.html (replace 'localhost' with the server IP if you are on a different machine).
 * Extend the now visible login-box to verify the hostname field. The hostname should point to your SEPIA server (e.g. localhost or an IP like 192.168.0.10).
-* For testing purposes (only!) you can use the admin-acount to log-in, by default the ID is "admin@sepia.localhost" or "uid1003" (don't use the "assistant" account). The password has been set during setup.
+* For testing purposes (only!) you can use the admin-acount to log-in, by default the ID is `admin@sepia.localhost` or `uid1003` (don't use the "assistant" account!). The password has been set during setup. Check out the 'next steps' section to learn how to create new users.
   
 NOTE: Using the web-app via local network IPs (except 127.0.0.1 aka localhost) will limit the functionality of some features like the speech-recognition, geo-location and notifications due to security reasons (browser restriction, requires HTTPS to work).
 See the "Secure server" section below for further instructions on how to set up your own HTTPS web-server, BUT if you are just using your own local servers there is another solution that will work fine. You can add exceptions 
@@ -41,7 +41,7 @@ to your browser as well :-) see [this guide](https://github.com/SEPIA-Framework/
 If your local tests worked well it is time to **create your own (non-admin) account**:
 
 * To create new users ([detailed tutorial](https://github.com/SEPIA-Framework/sepia-docs/wiki/Create-and-Edit-Users)) use the SEPIA Control-HUB (aka tools page or admin-tools): http://localhost:20721/tools/index.html (registration via 'real' e-mail is possible in theory but not fully implemented in the clients right now).
-* Login to the Control-HUB using your admin account. By extending the login-box you can check if the right server for authentication is selected (very similar to the hostname above) it should look like this 'http://localhost:20721' or this 'http://192.168.0.10:20721' for example.
+* Login to the Control-HUB using your admin account (default username and email are `uid1003` and `admin@sepia.localhost`). By extending the login-box you can check if the right server for authentication is selected (very similar to the hostname above) it should look like this 'http://localhost:20721' or this 'http://192.168.0.10:20721' for example.
 * Open the menu (top-left) and go to the "User Management" page. Choose an email (can be fake, but a real address could come in handy later for password reset etc.) then press "put on whitelist", add a password and finally press "create". Note the message in the result-box indicating your new ID.
 * You should now be able to log-in with your new account (use the ID received during "create" or the email you chose).
 
