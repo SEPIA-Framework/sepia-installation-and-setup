@@ -47,7 +47,7 @@ echo ""
 echo "If you don't know what to do next read the guide at:"
 echo "https://github.com/SEPIA-Framework/sepia-installation-and-setup#quick-start"
 echo ""
-echo "Typically for a new installation what you should do is start ES (4) then setup the database and create the admin and assistant accounts (1)."
+echo "For a new installation of SEPIA start with step (1) to setup the database and create the admin and assistant accounts."
 echo "Installation of the TTS engine (7) is required if you're planning to use a DIY SEPIA Client (and recommended for fun)."
 echo "After that type the IP address or hostname of this machine into your SEPIA-Client login-screen and you are good to go :-)"
 # check commandline arguments
@@ -69,11 +69,13 @@ fi
 while true; do
 	echo ""
 	echo "What would you like to do next?"
-	echo "1: Set up core components. Note: requires Elasticsearch (4) and will CLEAR old data!"
+	echo "1: Set up core components. Note: This will CLEAR ALL old data!"
+	echo "1b: Run automatic setup using 'SEPIA/auto-setup/config.yaml'"
 	echo "2: Define new admin and assistant passwords"
 	echo "3: Set up dynamic DNS with DuckDNS domain (for public server)"
 	echo "3b: Set up NGINX (e.g. with self-signed SSL for local server)"
-	echo "4: Start Elasticsearch"
+	echo "4: Start Elasticsearch (done automatically in steps 1 and 1b)"
+	echo "4b: Stop Elasticsearch"
 	echo "5: Set hostname of this machine to 'sepia-home' (works e.g. for Debian/Raspian Linux)"
 	echo "6: Suggest cronjobs for server (open cronjobs manually with 'crontab -e' and copy/paste lines)"
 	echo "7: Install core TTS engine and voices"
@@ -91,6 +93,17 @@ while true; do
 		break
 	elif [ $option = "1" ]
 	then
+		cd "${SEPIA_FOLDER}/elasticsearch"
+		./run.sh
+		if [ $? -eq 0 ]; then
+			./wait.sh
+		else
+			echo "------------------------"
+			echo "FAILED to start Elasticsearch"
+			echo "------------------------"
+			exit 1
+		fi
+		cd "${SEPIA_FOLDER}/sepia-assist-server"
 		if [ -n "$argument1" ]; then
 			java -jar $JAR_NAME setup $argument1
 		else
@@ -106,8 +119,31 @@ while true; do
 		echo "When you're done and everything works as expected check out the suggested cronjobs (step 6) to run SEPIA automatically."
 		echo "If you want to use your own auto-start procedure please include the commands from either 'on-reboot.sh' or 'on-docker.sh'."
 		echo "------------------------"
+	elif [ $option = "1b" ]
+	then
+		cd "${SEPIA_FOLDER}/elasticsearch"
+		./run.sh
+		if [ $? -eq 0 ]; then
+			./wait.sh
+		else
+			echo "------------------------"
+			echo "FAILED to start Elasticsearch"
+			echo "------------------------"
+			exit 1
+		fi
+		cd "${SEPIA_FOLDER}/sepia-assist-server"
+		if [ -n "$argument1" ]; then
+			java -jar $JAR_NAME setup $argument1 --automatic
+		else
+			java -jar $JAR_NAME setup --my --automatic
+		fi
+		echo "------------------------"
+		echo "DONE. Check the logs for more info via:"
+		echo "cat ${SEPIA_FOLDER}/automatic-setup/*.log"
+		echo "------------------------"
 	elif [ $option = "2" ] 
 	then
+		cd "${SEPIA_FOLDER}/sepia-assist-server"
 		if [ -n "$argument1" ]; then
 			java -jar $JAR_NAME setup accounts $argument1
 		else
@@ -115,6 +151,7 @@ while true; do
 		fi
 	elif [ $option = "3" ] 
 	then
+		cd "${SEPIA_FOLDER}/sepia-assist-server"
 		if [ -n "$argument1" ]; then
 			java -jar $JAR_NAME setup duckdns $argument1
 		else
@@ -125,22 +162,19 @@ while true; do
 		echo "------------------------"
 	elif [ $option = "3b" ] 
 	then
-		cd ..
+		cd "$SEPIA_FOLDER"
 		bash setup-nginx.sh
-		cd sepia-assist-server
+		cd "${SEPIA_FOLDER}/sepia-assist-server"
 		echo ""
 		echo "------------------------"
 		echo "DONE."
 		echo "------------------------"
 	elif [ $option = "4" ] 
 	then	
-		cd ..
-		cd elasticsearch
+		cd "${SEPIA_FOLDER}/elasticsearch"
 		./run.sh
 		if [ $? -eq 0 ]; then
 			./wait.sh
-			cd ..
-			cd sepia-assist-server
 			echo "------------------------"
 			echo "DONE."
 			echo "------------------------"
@@ -149,6 +183,15 @@ while true; do
 			echo "FAILED to start Elasticsearch"
 			echo "------------------------"
 		fi
+		cd "${SEPIA_FOLDER}/sepia-assist-server"
+	elif [ $option = "4b" ] 
+	then	
+		cd "${SEPIA_FOLDER}/elasticsearch"
+		./shutdown.sh
+		cd "${SEPIA_FOLDER}/sepia-assist-server"
+		echo "------------------------"
+		echo "DONE."
+		echo "------------------------"
 	elif [ $option = "5" ] 
 	then
 		sudo sh -c "echo 'sepia-home.local' > /etc/hostname"
@@ -166,6 +209,7 @@ while true; do
 		echo "------------------------"
 	elif [ $option = "7" ] 
 	then
+		cd "${SEPIA_FOLDER}/sepia-assist-server"
 		echo "Installing core TTS engines and voices ..."
 		mkdir -p tmp/deb
 		cd tmp/deb
@@ -174,7 +218,6 @@ while true; do
 		sudo apt-get install -y --no-install-recommends flite-dev flite
 		# picoTTS - common:
 		if [ $(command -v pico2wave | wc -l) -eq 0 ]; then
-			cd tmp
 			wget http://ftp.de.debian.org/debian/pool/non-free/s/svox/libttspico-data_1.0+git20130326-9_all.deb
 			sudo dpkg -i libttspico-data_1.0+git20130326-9_all.deb
 			if [ -n "$(uname -m | grep aarch64)" ]; then
@@ -207,7 +250,7 @@ while true; do
 		else
 			echo "Already installed: pico2wave"
 		fi
-		cd ../..
+		cd "${SEPIA_FOLDER}/sepia-assist-server"
 		rm -rf tmp
 		echo "------------------------"
 		echo "DONE."
