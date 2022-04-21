@@ -130,6 +130,9 @@ audio_input_device='default'
 audio_output_device='default'
 default_chrome_flags="--user-data-dir=$chromedatadir --alsa-output-device=$audio_output_device --alsa-input-device=$audio_input_device --allow-insecure-localhost --autoplay-policy=no-user-gesture-required --disable-infobars --enable-features=OverlayScrollbar --hide-scrollbars --no-default-browser-check --check-for-update-interval=31536000"
 #NOTE: It seems there is a new fix for Chromium 98 required: '--use-gl=egl' (https://github.com/RPi-Distro/chromium-browser/issues/28)
+#default_chrome_flags="$default_chrome_flags --use-gl=egl"
+#If you can't resolve your self-signed SSL issues (and you know what you're doing ^^):
+#default_chrome_flags="$default_chrome_flags --ignore-certificate-errors --unsafely-treat-insecure-origin-as-secure=http://sepia-home.local"
 if [ "$chromium_remote_debug" -eq "1" ]; then
 	default_chrome_flags="--remote-debugging-port=9222 ""$default_chrome_flags"
 	echo "Remote debugging on port 9222 ACTIVE! To access externally use SSH tunnel or proxy port."
