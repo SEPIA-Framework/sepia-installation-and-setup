@@ -1,5 +1,79 @@
 ## Release history and changelog
 
+### v2.6.2 - 2022.0X.YY
+
+Updated client to v0.24.2:
+* Added virtual keyboard for DIY clients with touchscreen + 'virtualKeyboard' URL parameter
+* Remember media player volume and added option 'playerVolume' to settings file
+* Added support for remote media volume control with new slider component
+* Added volume control for Youtube player widget
+* Added Teach-UI basic command import/export + support for file drag & drop
+* Added new settings option for 'defaultNewsRegion' + append 'defaultNewsRegion' and 'appRegionCode' to assistant requests
+* New avatar 'Proto' + improved avatar code
+* New skins 'Blue Canary', 'Odyssey AI' and 'Vectors Reloaded' + style tweaks
+* New URL parameter 'skinId'
+* Improved 'awaitDialog' timer to reset properly and increased awaitDialog time from 15s to 20s
+* Added CLEXI GPIO events for audio 'eventEffectsOn' and 'eventEffectsOff' + fixed a bug in LED control
+* Fixed a shared remote-actions bug for 'play-on' music-cards
+* Fixed a bug in 'stt-socket-worker' to properly handle 'no-speech' events
+* Fixed a bug in microphone test function for invalid rms values
+* Updated Porcupine to v2.1 (replaced v2.0)
+* Added pages for Porcupine wake-word format conversion and activation restore ('xtensions' folder)
+* Improved settings import/export with new 'UI.showFileImportAndViewPopup' component
+* Improved storing and loading of app-settings from server (account-data)
+* Added 'environment' to settings file and read at start (if no URL parameter is given)
+* Improved login-retry timer
+* Updated web-audio lib to v0.9.11 with better pre-load cache and error handling
+* Updated CLEXI lib to v0.9.1 and implemented basic 'clexi.requestStateRefresh'
+* Improved iOS build script (still beta)
+* Smaller fixes and code tweaks (credits, dual-screen, onchange listeners, input events, etc.)
+
+Updated Control-HUB (admin-tools) to v1.4.3:
+* Improved smart-home page with better UX for authentication data and tweaked some styles
+* Fixed some smaller bugs in new light skin
+* Improved code uploader to make use of new JSON response format and info
+* Improved login error handling
+* Updated CLEXI lib to v0.9.1 to support 'hasSubscription' feature
+
+Updated Assist-server to v2.6.2:
+* New automatic-setup feature using YAML config file to define setup tasks, users and DNS + improved setup code (create random passwords, write log etc.)
+* Added a new TTS endpoint to support byte-range streaming audio-files (required by Apple devices and potantially faster for large files)
+* Added new settings option to switch between new streaming and old static TTS audio ('/tts/' and '/tts-stream/')
+* Added installer for 'txt2pho' TTS engine (German MBROLA only) + tweaked some voice speeds
+* Better checks for correct smart-home HUB authentication types + smaller smart-home interface tweaks
+* Added 'appRegionCode' and new 'defaultNewsRegion' to NluInput class (to be used in services)
+* Improved News service to support 'language' parameter (e.g.: "show me news in German") + 'defaultNewsRegion' and 'appRegionCode' to make news independant of user language
+* Added a 'region' parameter to news-outlets.json
+* Improved settings loader and 'getConfig' endpoint with new 'PropertiesReader' that will return ALL settings (properties file + defaults)
+* Streamlined SDK endpoint responses to return JSON format and added more useful info
+* Updated media-player widgets to support volume memory + volume control for Youtube (see client as well)
+* Replaced Porcupine v2.0 files with v2.1 but added a download script for old version (in case you need v2.0)
+* Fixed a bug in TTS settings.json that broke German Mary-TTS
+* Smaller fixes and code tweaks
+
+Updated Core-tools to v2.2.11:
+* Added new 'appendLineToFile' and 'readYamlFile' to 'FilesAndStreams' class
+* Updated Jackson lib and added 'jackson-dataformat-yaml' dependency
+* Improved HTTP GET method 'Connectors.apacheHttpGETjson'
+* Added new property-file reader with caching
+* Added new 'Spark.streamFile' feature for byte-range requests (see new TTS features above)
+* Added new 'createRandomString' and 'shuffleString' methods to 'Security' class
+* Changed 'smart_speaker' string in 'ENVIRONMENTS' (we have both now 'smart_speaker' and just 'speaker')
+
+Updated WebSocket Chat-Server to v1.3.4:
+* Updated eclipse.paho MQTT client to v1.2.5
+* Updated core-tools to v2.2.11
+
+Updated Teach-Server to v2.2.4:
+* Updated core-tools to v2.2.11
+
+Other servers, tools and common changes:
+* Improved SEPIA-Home package scripts, added an automatic-setup template and added a 'create-external-data-folder' script (beta) to create one single folder for user data (using symlinks)
+* Improved DIY client package with more Pulseaudio scripts for AEC etc., more hardware scripts, better installation and run scripts, etc.
+* Improved CLEXI to support WS281x and APA102 RGB LEDs via SPI bus (new GPIO item)
+* Updated SDK to support new SEPIA-Home v2.6.2
+* In preparation: Improved Docker containers with auto-setup
+
 ### v2.6.1 - 2022.01.30
 
 Updated client to v0.24.1:
