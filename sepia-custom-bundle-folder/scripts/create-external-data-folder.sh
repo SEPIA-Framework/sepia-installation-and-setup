@@ -1,12 +1,36 @@
 #!/bin/bash
 set -e
-echo "Creating external data folder and symlinks for SEPIA-Home..."
-#
-# make sure we are in the right folder
+# make sure we have the right folders
 SCRIPT_PATH="$(realpath "$BASH_SOURCE")"
 SEPIA_FOLDER="$(dirname $(dirname "$SCRIPT_PATH"))"
 SEPIA_DATA="$HOME/sepia-home-data"
-#
+# skip confirm question?
+autoconfirm=""
+while getopts yh opt; do
+	case $opt in
+		y) autoconfirm=1;;
+		?|h) printf "Usage: %s [-y]\n" $0; exit 2;;
+	esac
+done
+if [ -z "$autoconfirm" ]; then
+	echo "This script will reorganize your SEPIA folder moving most of the user data"
+	echo "to $SEPIA_DATA and create symlinks for the original files and folders."
+	echo "If symlinks already exist you will be asked to confirm or skip restoration."
+	echo "Use the '-y' flag to automatically confirm all questions."
+	echo ""
+	echo "NOTE: Your backup and update scripts might be affected by this (until fixed)!"
+	echo ""
+	read -p "Enter 'ok' to continue: " okabort
+	echo ""
+	if [ -n "$okabort" ] && [ $okabort = "ok" ]; then
+		echo "Ok. Good luck ;-)"
+	else
+		echo "Ok. Maybe later :-)"
+		exit
+	fi
+	echo ""
+fi
+echo "Creating external data folder and symlinks for SEPIA-Home..."
 mkdir -p "$SEPIA_DATA"
 echo "Data folder location: $SEPIA_DATA"
 #
@@ -38,9 +62,28 @@ mkdir -p "$SEPIA_DATA_AUTO_SET"
 create_link () {
 	if [ -L "$1" ]; then
 		echo "Already a symlink: $1"
+	elif [ -e "$2" ]; then
+		if [ -z "$autoconfirm" ]; then
+			echo "External file or folder already exists: $2"
+			# ask to restore symlink
+			read -p "Restore symlink (delete internal)? (y/n): " yesno
+			if [ -n "$yesno" ] && [ $yesno = "y" ]; then
+				rm -rf "$1"
+				ln -s "$2" "$1"
+				echo "restored symlink"
+			else
+				echo "skipped"
+			fi
+		else
+			# restore symlink
+			echo "External file or folder already exists, restoring symlink to: $1"
+			rm -rf "$1"
+			ln -s "$2" "$1"
+		fi
 	else
 		echo "Moving data and creating symlink: $1 --> $2"
-		mv "$1" "$2" && ln -s "$2" "$1"
+		mv "$1" "$2"
+		ln -s "$2" "$1"
 	fi
 }
 create_file () {

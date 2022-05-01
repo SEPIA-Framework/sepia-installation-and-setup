@@ -6,7 +6,7 @@ if [ $STATUS -eq 200 ]; then
 	exit
 fi
 v=$(<VERSION)
-echo "Running Elasticsearch $v"
+echo "Starting Elasticsearch $v"
 cd bin
 PIDFile="elasticPID.pid"
 touch $PIDFile

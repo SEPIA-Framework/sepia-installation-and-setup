@@ -3,8 +3,8 @@ set -e
 #
 # make sure we are in the right folder
 SCRIPT_PATH="$(realpath "$BASH_SOURCE")"
-SEPIA_PATH="$(dirname "$SCRIPT_PATH")"
-cd "$SEPIA_PATH"
+SEPIA_FOLDER="$(dirname "$SCRIPT_PATH")"
+cd "$SEPIA_FOLDER"
 #
 ORG_FOLDER=$(pwd)
 NOW=$(date +"%Y_%m_%d_%H%M%S")
@@ -15,6 +15,11 @@ get_latest_release() {
 		grep '"tag_name":' |                                          # Get tag line
 		sed -E 's/.*"([^"]+)".*/\1/'                                  # Get JSON value
 }
+if [ -L "${SEPIA_FOLDER}/es-data" ]; then
+	echo "It looks like you are using the external data folder for SEPIA."
+	echo "The update process for this setting is still UNDER CONSTRUCTION, sorry!"
+	exit 1
+fi
 if [ -n "$1" ]; then
 	BCK_FILE=$(realpath $1)
 	echo "Welcome!"
