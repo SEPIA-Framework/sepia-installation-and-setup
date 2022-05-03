@@ -6,31 +6,44 @@ SEPIA_FOLDER="$(dirname $(dirname "$SCRIPT_PATH"))"
 SEPIA_DATA="$HOME/sepia-home-data"
 # skip confirm question?
 autoconfirm=""
-while getopts yh opt; do
+silent=""
+skip_shutdown=""
+while getopts yhsup: opt; do
 	case $opt in
 		y) autoconfirm=1;;
-		?|h) printf "Usage: %s [-y]\n" $0; exit 2;;
+		p) SEPIA_DATA="$(realpath $OPTARG)";;
+		s) silent=1;;
+		u) skip_shutdown=1;;
+		?|h) printf "Usage: %s [-y] [-s] [-u] [-p target-path]\n" $0; exit 2;;
 	esac
 done
 if [ -z "$autoconfirm" ]; then
 	echo "This script will reorganize your SEPIA folder moving most of the user data"
-	echo "to $SEPIA_DATA and create symlinks for the original files and folders."
+	echo "to '$SEPIA_DATA' and create symlinks for the original files and folders."
 	echo "If symlinks already exist you will be asked to confirm or skip restoration."
 	echo "Use the '-y' flag to automatically confirm all questions."
 	echo ""
-	echo "NOTE: Your backup and update scripts might be affected by this (until fixed)!"
+	echo "NOTE: Your backup and update scripts might be affected by this!"
 	echo ""
 	read -p "Enter 'ok' to continue: " okabort
 	echo ""
 	if [ -n "$okabort" ] && [ $okabort = "ok" ]; then
 		echo "Ok. Good luck ;-)"
 	else
-		echo "Ok. Maybe later :-)"
+		echo "Np. Maybe later :-)"
 		exit
 	fi
 	echo ""
 fi
-echo "Creating external data folder and symlinks for SEPIA-Home..."
+cd "$SEPIA_FOLDER"
+if [ -z "$skip_shutdown" ]; then
+	# make sure SEPIA server if OFF
+	echo "Making sure SEPIA is OFF..."
+	bash shutdown-sepia.sh
+	echo ""
+fi
+# start
+echo "Creating external data folder and/or symlinks for SEPIA-Home..."
 mkdir -p "$SEPIA_DATA"
 echo "Data folder location: $SEPIA_DATA"
 #
@@ -61,42 +74,59 @@ mkdir -p "$SEPIA_DATA_AUTO_SET"
 #
 create_link () {
 	if [ -L "$1" ]; then
-		echo "Already a symlink: $1"
+		if [ -e "$2" ]; then
+			if [ -z "$silent" ]; then
+				echo "Already a valid symlink: $1"
+			fi
+		else
+			echo "Target does not exist: $2"
+			exit 1
+		fi
 	elif [ -e "$2" ]; then
 		if [ -z "$autoconfirm" ]; then
 			echo "External file or folder already exists: $2"
 			# ask to restore symlink
-			read -p "Restore symlink (delete internal)? (y/n): " yesno
+			read -p "Restore symlink (delete internal)? (y/N): " yesno
 			if [ -n "$yesno" ] && [ $yesno = "y" ]; then
 				rm -rf "$1"
-				ln -s "$2" "$1"
+				ln -sn "$2" "$1"
 				echo "restored symlink"
 			else
 				echo "skipped"
 			fi
 		else
 			# restore symlink
-			echo "External file or folder already exists, restoring symlink to: $1"
+			if [ -z "$silent" ]; then
+				echo "External file or folder already exists, restoring symlink to: $1"
+			fi
 			rm -rf "$1"
-			ln -s "$2" "$1"
+			ln -sn "$2" "$1"
 		fi
 	else
-		echo "Moving data and creating symlink: $1 --> $2"
+		if [ -z "$silent" ]; then
+			echo "Moving data and creating symlink: $1 --> $2"
+		fi
 		mv "$1" "$2"
-		ln -s "$2" "$1"
+		ln -sn "$2" "$1"
 	fi
 }
 create_file () {
 	if [ -L "$1" ]; then
-		echo "File already exists as symlink: $1"
+		if [ -z "$silent" ]; then
+			echo "File already exists as symlink: $1"
+		fi
 	elif [ -f "$1" ]; then
-		echo "File already exists: $1"
+		if [ -z "$silent" ]; then
+			echo "File already exists: $1"
+		fi
 	else
-		echo "Creating file: $1"
+		if [ -z "$silent" ]; then
+			echo "Creating file: $1"
+		fi
 		touch $1
 	fi
 }
-create_link "${SEPIA_FOLDER}/automatic-setup" "${SEPIA_DATA_DB}/automatic-setup"
+create_link "${SEPIA_FOLDER}/automatic-setup" "${SEPIA_DATA_AUTO_SET}"
 create_link "${SEPIA_FOLDER}/es-data" "${SEPIA_DATA_DB}/es-data"
 create_link "${SEPIA_FOLDER}/sepia-assist-server/Xtensions/Plugins/net/b07z/sepia/sdk" "${SEPIA_DATA_FS_SERVICES}/sdk"
 create_link "${SEPIA_FOLDER}/sepia-assist-server/Xtensions/WebContent/views/custom" "${SEPIA_DATA_FS_VIEWS}/custom"
@@ -123,14 +153,16 @@ find "${SEPIA_FOLDER}/sepia-assist-server/Xtensions/Assistant/answers/" -maxdept
 echo ""
 echo "DONE"
 echo ""
-echo "NOTE: The following data is NOT yet included:"
-echo "- Custom views for HTML services outside of 'custom' folder"
-echo "- Custom widgets for media-players etc. outside of 'custom' folder"
-echo "- Custom web-server data from (Assist-server 'Xtensions/WebContent/...')"
-echo "- Custom modifications to 'radio-stations' and 'news-outlets' (Assist-server)"
-echo "- Custom modifications to TTS voices or Mary-TTS data (Assist-server 'Xtensions/TTS')"
-echo "- Custom modifications to 'common.json' Teach-UI file (Teach-server)"
-echo "- Log files and cached data (e.g. RSS feed cache)"
-echo "- Nginx config files, see: /etc/nginx/sites-enabled/"
-echo "- Other custom modifications (tbd)"
-echo ""
+if [ -z "$silent" ]; then
+	echo "NOTE: The following data is NOT yet included:"
+	echo "- Custom views for HTML services outside of 'custom' folder"
+	echo "- Custom widgets for media-players etc. outside of 'custom' folder"
+	echo "- Custom web-server data from (Assist-server 'Xtensions/WebContent/...')"
+	echo "- Custom modifications to 'radio-stations' and 'news-outlets' (Assist-server)"
+	echo "- Custom modifications to TTS voices or Mary-TTS data (Assist-server 'Xtensions/TTS')"
+	echo "- Custom modifications to 'common.json' Teach-UI file (Teach-server)"
+	echo "- Log files and cached data (e.g. RSS feed cache)"
+	echo "- Nginx config files, see: /etc/nginx/sites-enabled/"
+	echo "- Other custom modifications (tbd)"
+	echo ""
+fi

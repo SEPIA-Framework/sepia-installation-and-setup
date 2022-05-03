@@ -13,7 +13,7 @@ fi
 SCRIPT_PATH="$(realpath "$BASH_SOURCE")"
 SEPIA_FOLDER="$(dirname "$SCRIPT_PATH")"
 cd "$SEPIA_FOLDER"
-if [ -L "${SEPIA_FOLDER}/es-data" ]; then
+if [ -L "${SEPIA_FOLDER}/es-data" ] && [ -L "${SEPIA_FOLDER}/sepia-assist-server/Xtensions/assist.custom.properties" ]; then
 	echo "It looks like you are using the external data folder for SEPIA."
 	echo "The backup process for this setting is still UNDER CONSTRUCTION, sorry!"
 	echo "But: You can simply make a copy the external folder :-)."
