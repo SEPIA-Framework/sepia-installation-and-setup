@@ -4,7 +4,7 @@ This folder contains the YAML config file to run SEPIA's setup process unattende
   
 How to:
 - Copy or rename the `template.yaml` to `config.yaml` and modify the content as required
-- Run the setup process with the flag `--unattended` or `--automatic` (see setup menu)
+- Run the setup script with the flag `--automatic` (setup menu option 1b)
 - Check `results.log` after the setup finished to obtain random passwords etc.
 
 ## YAML File

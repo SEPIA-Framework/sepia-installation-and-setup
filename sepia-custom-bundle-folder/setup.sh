@@ -10,13 +10,15 @@ if [[ $EUID -eq 0 ]]; then
 	else
         echo "Aborted. Please start the setup without 'sudo' or with a user other than root."
         echo "cu later :-)"
-        exit
+        exit 1
     fi
 fi
 #
 # make sure we are in the right folder
 SCRIPT_PATH="$(realpath "$BASH_SOURCE")"
 SEPIA_FOLDER="$(dirname "$SCRIPT_PATH")"
+LOG="${SEPIA_FOLDER}/setup-log.out"
+echo "$(date +'%Y_%m_%d_%H:%M:%S') - SETUP START" > "$LOG"
 cd "$SEPIA_FOLDER"
 #
 # make scripts executable
@@ -74,7 +76,7 @@ while true; do
 	echo "2: Define new admin and assistant passwords"
 	echo "3: Set up dynamic DNS with DuckDNS domain (for public server)"
 	echo "3b: Set up NGINX (e.g. with self-signed SSL for local server)"
-	echo "4: Start Elasticsearch (done automatically in steps 1 and 1b)"
+	echo "4: Start Elasticsearch (options 1 and 1b will do this automatically)"
 	echo "4b: Stop Elasticsearch"
 	echo "5: Set hostname of this machine to 'sepia-home' (works e.g. for Debian/Raspian Linux)"
 	echo "6: Suggest cronjobs for server (open cronjobs manually with 'crontab -e' and copy/paste lines)"
@@ -93,22 +95,31 @@ while true; do
 		break
 	elif [ $option = "1" ]
 	then
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Selected option: 1 - Manual setup" >> "$LOG"
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Starting Elasticsearch..." >> "$LOG"
 		cd "${SEPIA_FOLDER}/elasticsearch"
 		./run.sh
 		if [ $? -eq 0 ]; then
 			./wait.sh
 		else
+			echo "$(date +'%Y_%m_%d_%H:%M:%S') - FAILED to start Elasticsearch" >> "$LOG"
 			echo "------------------------"
 			echo "FAILED to start Elasticsearch"
 			echo "------------------------"
 			exit 1
 		fi
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Starting setup ..." >> "$LOG"
 		cd "${SEPIA_FOLDER}/sepia-assist-server"
 		if [ -n "$argument1" ]; then
 			java -jar $JAR_NAME setup $argument1
 		else
 			java -jar $JAR_NAME setup --my
 		fi
+		if [ $? -gt 0 ]; then
+			echo "$(date +'%Y_%m_%d_%H:%M:%S') - FAILED to finish setup" >> "$LOG"
+			exit 1
+		fi
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Option 1 - DONE" >> "$LOG"
 		echo "------------------------"
 		echo "Please check the screen for errors. If you saw nothing suspicious you can continue with:"
 		echo ""
@@ -119,88 +130,114 @@ while true; do
 		echo "When you're done and everything works as expected check out the suggested cronjobs (step 6) to run SEPIA automatically."
 		echo "If you want to use your own auto-start procedure please include the commands from either 'on-reboot.sh' or 'on-docker.sh'."
 		echo "------------------------"
-	elif [ $option = "1b" ]
+	elif [ $option = "1b" ] || [ $option = "--unattended" ] || [ $option = "--automatic" ]
 	then
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Selected option: 1b - Automatic setup" >> "$LOG"
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Starting Elasticsearch..." >> "$LOG"
 		cd "${SEPIA_FOLDER}/elasticsearch"
 		./run.sh
 		if [ $? -eq 0 ]; then
 			./wait.sh
 		else
+			echo "$(date +'%Y_%m_%d_%H:%M:%S') - FAILED to start Elasticsearch" >> "$LOG"
 			echo "------------------------"
 			echo "FAILED to start Elasticsearch"
 			echo "------------------------"
 			exit 1
 		fi
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Starting setup with flag '--automatic' ..." >> "$LOG"
 		cd "${SEPIA_FOLDER}/sepia-assist-server"
 		if [ -n "$argument1" ]; then
 			java -jar $JAR_NAME setup $argument1 --automatic
 		else
 			java -jar $JAR_NAME setup --my --automatic
 		fi
+		if [ $? -gt 0 ]; then
+			echo "$(date +'%Y_%m_%d_%H:%M:%S') - FAILED to finish setup" >> "$LOG"
+			exit 1
+		fi
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Option 1b - DONE" >> "$LOG"
 		echo "------------------------"
 		echo "DONE. Check the logs for more info via:"
 		echo "cat ${SEPIA_FOLDER}/automatic-setup/*.log"
 		echo "------------------------"
 	elif [ $option = "2" ] 
 	then
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Selected option: 2" >> "$LOG"
 		cd "${SEPIA_FOLDER}/sepia-assist-server"
 		if [ -n "$argument1" ]; then
 			java -jar $JAR_NAME setup accounts $argument1
 		else
 			java -jar $JAR_NAME setup accounts --my
 		fi
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Option 2 - DONE" >> "$LOG"
 	elif [ $option = "3" ] 
 	then
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Selected option: 3" >> "$LOG"
 		cd "${SEPIA_FOLDER}/sepia-assist-server"
 		if [ -n "$argument1" ]; then
 			java -jar $JAR_NAME setup duckdns $argument1
 		else
 			java -jar $JAR_NAME setup duckdns --my
 		fi
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Option 3 - DONE" >> "$LOG"
 		echo "------------------------"
 		echo "DONE. Please restart 'SEPIA assist server' to activate DuckDNS worker!"
 		echo "------------------------"
 	elif [ $option = "3b" ] 
 	then
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Selected option: 3b" >> "$LOG"
 		cd "$SEPIA_FOLDER"
 		bash setup-nginx.sh
 		cd "${SEPIA_FOLDER}/sepia-assist-server"
 		echo ""
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Option 3b - DONE" >> "$LOG"
 		echo "------------------------"
 		echo "DONE."
 		echo "------------------------"
 	elif [ $option = "4" ] 
-	then	
+	then
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Selected option: 4" >> "$LOG"
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Starting Elasticsearch..." >> "$LOG"
 		cd "${SEPIA_FOLDER}/elasticsearch"
 		./run.sh
 		if [ $? -eq 0 ]; then
 			./wait.sh
+			echo "$(date +'%Y_%m_%d_%H:%M:%S') - Option 4 - DONE" >> "$LOG"
 			echo "------------------------"
 			echo "DONE."
 			echo "------------------------"
 		else
+			echo "$(date +'%Y_%m_%d_%H:%M:%S') - FAILED to start Elasticsearch" >> "$LOG"
 			echo "------------------------"
 			echo "FAILED to start Elasticsearch"
 			echo "------------------------"
 		fi
 		cd "${SEPIA_FOLDER}/sepia-assist-server"
 	elif [ $option = "4b" ] 
-	then	
+	then
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Selected option: 4b" >> "$LOG"
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Shutting down Elasticsearch..." >> "$LOG"
 		cd "${SEPIA_FOLDER}/elasticsearch"
 		./shutdown.sh
 		cd "${SEPIA_FOLDER}/sepia-assist-server"
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Option 4b - DONE" >> "$LOG"
 		echo "------------------------"
 		echo "DONE."
 		echo "------------------------"
 	elif [ $option = "5" ] 
 	then
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Selected option: 5" >> "$LOG"
 		sudo sh -c "echo 'sepia-home.local' > /etc/hostname"
 		sudo sed -i -e 's|127\.0\.1\.1.*|127.0.1.1	sepia-home.local|g' /etc/hosts
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Option 5 - DONE" >> "$LOG"
 		echo "------------------------"
 		echo "Please reboot the system to use new hostname."
 		echo "------------------------"
 	elif [ $option = "6" ] 
 	then
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Selected option: 6" >> "$LOG"
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Option 6 - DONE" >> "$LOG"
 		echo "------------------------"
 		echo "Cronjob suggestions:"
 		echo ""
@@ -209,6 +246,7 @@ while true; do
 		echo "------------------------"
 	elif [ $option = "7" ] 
 	then
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Selected option: 7" >> "$LOG"
 		cd "${SEPIA_FOLDER}/sepia-assist-server"
 		echo "Installing core TTS engines and voices ..."
 		mkdir -p tmp/deb
@@ -252,6 +290,7 @@ while true; do
 		fi
 		cd "${SEPIA_FOLDER}/sepia-assist-server"
 		rm -rf tmp
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Option 7 - DONE" >> "$LOG"
 		echo "------------------------"
 		echo "DONE."
 		echo "NOTE: MaryTTS server is available as extension, see folder: "
@@ -259,6 +298,7 @@ while true; do
 		echo "------------------------"
 	elif [ $option = "7b" ] 
 	then
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Selected option: 7b" >> "$LOG"
 		if [ -d "Xtensions/TTS/espeak-ng-mbrola/" ]; then
 			cd "Xtensions/TTS/espeak-ng-mbrola"
 			bash install.sh
@@ -267,11 +307,14 @@ while true; do
 		else
 			echo "'sepia-assist-server/Xtensions/TTS/espeak-ng-mbrola' folder not found. Check installation."
 		fi
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Option 7b - DONE" >> "$LOG"
 		echo "------------------------"
 		echo "DONE."
 		echo "------------------------"
 	elif [ $option = "8" ] 
 	then
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Selected option: 8" >> "$LOG"
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Option 8 - DONE" >> "$LOG"
 		echo "------------------------"
 		echo "Please go to the folder 'java' and run the script for your specific platform. Afterwards restart this setup and check if local Java is indicated at start."
 		echo "------------------------"

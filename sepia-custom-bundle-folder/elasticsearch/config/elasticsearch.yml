@@ -52,6 +52,13 @@ path.logs: ../../es-logs
 #
 # Elasticsearch performs poorly when the system is swapping the memory.
 #
+# -------------------------------- File System ---------------------------------
+#
+# https://www.elastic.co/guide/en/elasticsearch/reference/5.3/index-modules-store.html#mmapfs
+# Values: mmapfs (requires 'vm.max_map_count=262144'), niofs, simplefs, fs
+#
+#index.store.type: niofs
+#
 # ---------------------------------- Network -----------------------------------
 #
 # Set the bind address to a specific IP (IPv4 or IPv6):
