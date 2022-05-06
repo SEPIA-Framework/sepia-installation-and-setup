@@ -75,29 +75,31 @@ mkdir -p "$SEPIA_DATA_AUTO_SET"
 create_link () {
 	if [ -L "$1" ]; then
 		if [ -e "$2" ]; then
+			# make sure existing symlink is up-to-date
+			ln -snf "$2" "$1"
 			if [ -z "$silent" ]; then
-				echo "Already a valid symlink: $1"
+				echo "Refreshed symlink for: $1"
 			fi
 		else
 			echo "Target does not exist: $2"
 			exit 1
 		fi
 	elif [ -e "$2" ]; then
-		if [ -z "$autoconfirm" ]; then
+		if [ -e "$1" ] && [ -z "$autoconfirm" ]; then
 			echo "External file or folder already exists: $2"
 			# ask to restore symlink
-			read -p "Restore symlink (delete internal)? (y/N): " yesno
-			if [ -n "$yesno" ] && [ $yesno = "y" ]; then
+			read -p "Restore symlink (delete internal)? (Y/n): " yesno
+			if [ -z "$yesno" ] || [ $yesno = "y" ]; then
 				rm -rf "$1"
 				ln -sn "$2" "$1"
-				echo "restored symlink"
+				echo "Restored symlink"
 			else
-				echo "skipped"
+				echo "Skipped"
 			fi
 		else
 			# restore symlink
 			if [ -z "$silent" ]; then
-				echo "External file or folder already exists, restoring symlink to: $1"
+				echo "Restoring symlink for: $1"
 			fi
 			rm -rf "$1"
 			ln -sn "$2" "$1"
@@ -110,20 +112,20 @@ create_link () {
 		ln -sn "$2" "$1"
 	fi
 }
-create_file () {
-	if [ -L "$1" ]; then
-		if [ -z "$silent" ]; then
-			echo "File already exists as symlink: $1"
-		fi
-	elif [ -f "$1" ]; then
-		if [ -z "$silent" ]; then
-			echo "File already exists: $1"
-		fi
+create_file_and_link () {
+	if [ -L "$1" ] || [ -f "$1" ]; then
+		# internal file exists or is symlink so hand over
+		create_link "$1" "$2/$(basename $1)"
+	elif [ -f "$2/$(basename $1)" ]; then
+		# nothing internal but external file exists - create symlink (overwrite)
+		ln -snf "$2/$(basename $1)" "$1"
 	else
+		# create file then hand over
 		if [ -z "$silent" ]; then
 			echo "Creating file: $1"
 		fi
 		touch $1
+		create_link "$1" "$2/$(basename $1)"
 	fi
 }
 create_link "${SEPIA_FOLDER}/automatic-setup" "${SEPIA_DATA_AUTO_SET}"
@@ -139,22 +141,17 @@ create_link "${SEPIA_FOLDER}/letsencrypt/duck-dns-settings.sh" "${SEPIA_DATA_NW_
 create_link "${SEPIA_FOLDER}/letsencrypt/work" "${SEPIA_DATA_NW_LETSENCRYPT}/work"
 create_link "${SEPIA_FOLDER}/letsencrypt/config" "${SEPIA_DATA_NW_LETSENCRYPT}/config"
 create_link "${SEPIA_FOLDER}/nginx/self-signed-ssl" "${SEPIA_DATA_NW_NGINX}/self-signed-ssl"
-# create all custom files if they don't exist yet to link them right away
+# create all custom files if they don't exist yet and link them right away (or restore link if already exists)
 find "${SEPIA_FOLDER}/sepia-assist-server/Xtensions/Assistant/commands/" -maxdepth 1 -regex '.*_\w\w\.txt'\
- | while read file; do create_file "${SEPIA_FOLDER}/sepia-assist-server/Xtensions/Assistant/commands/$(basename $file .txt)_custom.txt"; done
+ | while read file; do create_file_and_link "${SEPIA_FOLDER}/sepia-assist-server/Xtensions/Assistant/commands/$(basename $file .txt)_custom.txt" "$SEPIA_DATA_AS_COMMANDS"; done
 find "${SEPIA_FOLDER}/sepia-assist-server/Xtensions/Assistant/answers/" -maxdepth 1 -regex '.*_\w\w\.txt'\
- | while read file; do create_file "${SEPIA_FOLDER}/sepia-assist-server/Xtensions/Assistant/answers/$(basename $file .txt)_custom.txt"; done
-# now create the links
-find "${SEPIA_FOLDER}/sepia-assist-server/Xtensions/Assistant/commands/" -maxdepth 1 -iname "*_custom.txt"\
- | while read file; do create_link "$file" "${SEPIA_DATA_AS_COMMANDS}/$(basename $file)"; done
-find "${SEPIA_FOLDER}/sepia-assist-server/Xtensions/Assistant/answers/" -maxdepth 1 -iname "*_custom.txt"\
- | while read file; do create_link "$file" "${SEPIA_DATA_AS_ANSWERS}/$(basename $file)"; done
+ | while read file; do create_file_and_link "${SEPIA_FOLDER}/sepia-assist-server/Xtensions/Assistant/answers/$(basename $file .txt)_custom.txt" "$SEPIA_DATA_AS_ANSWERS"; done
 #
 echo ""
 echo "DONE"
 echo ""
 if [ -z "$silent" ]; then
-	echo "NOTE: The following data is NOT yet included:"
+	echo "NOTE: The following data is NOT yet included in external data folder:"
 	echo "- Custom views for HTML services outside of 'custom' folder"
 	echo "- Custom widgets for media-players etc. outside of 'custom' folder"
 	echo "- Custom web-server data from (Assist-server 'Xtensions/WebContent/...')"
