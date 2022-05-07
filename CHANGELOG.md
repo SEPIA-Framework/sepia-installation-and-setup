@@ -1,6 +1,6 @@
 ## Release history and changelog
 
-### v2.6.2 - 2022.0X.YY
+### v2.6.2 - 2022.05.08
 
 Updated client to v0.24.2:
 * Added virtual keyboard for DIY clients with touchscreen + 'virtualKeyboard' URL parameter
@@ -68,11 +68,11 @@ Updated Teach-Server to v2.2.4:
 * Updated core-tools to v2.2.11
 
 Other servers, tools and common changes:
-* Improved SEPIA-Home package scripts, added an automatic-setup template and added a 'create-external-data-folder' script (beta) to create one single folder for user data (using symlinks)
-* Improved DIY client package with more Pulseaudio scripts for AEC etc., more hardware scripts, better installation and run scripts, etc.
+* Improved SEPIA-Home install and run scripts, added an automatic-setup template and an option to create one single, external folder for user data (using symlinks)
+* Improved DIY client package with more Pulseaudio scripts e.g. for AEC (beta), more hardware scripts, better installation and run scripts etc.
 * Improved CLEXI to support WS281x and APA102 RGB LEDs via SPI bus (new GPIO item)
 * Updated SDK to support new SEPIA-Home v2.6.2
-* In preparation: Improved Docker containers with auto-setup
+* Improved Docker container with automatic-setup, extra user folder and simplified update (just pull new container)
 
 ### v2.6.1 - 2022.01.30
 
