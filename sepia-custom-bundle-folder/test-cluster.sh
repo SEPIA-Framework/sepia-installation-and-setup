@@ -68,18 +68,24 @@ else
 fi
 echo -e "\n-----Proxy-----\n"
 PROXY_URL=
+PROXY_MODE=
+PROXY_HAS_SS_SSL="false"
+PROXY_STATUS=
 if [ "$(ls -l /etc/nginx/sites-enabled/sepia-fw-https-self-* 2> /dev/null | wc -l)" -gt 0 ]
 then
 	# check non-ssl localhost version on port 20727 to avoid any cert issues locally
 	PROXY_URL=http://localhost:20727/sepia/assist/ping
+	PROXY_MODE="self-signed SSL + fallback"
+	PROXY_HAS_SS_SSL="true"
 	# PROXY_URL=https://$(hostname -s).local:20726/sepia/assist/ping
 elif [ "$(ls -l /etc/nginx/sites-enabled/sepia-fw-http* 2> /dev/null | wc -l)" -gt 0 ]
 then
 	PROXY_URL=http://localhost:20726/sepia/assist/ping
+	PROXY_MODE="Default/no SSL"
 fi
 if [ -z "$PROXY_URL" ]
 then
-	echo "No proxy configuration found at: '/etc/nginx/sites-enabled/'"
+	echo "No NGINX proxy configuration found at: '/etc/nginx/sites-enabled/'"
 	echo "$(date +'%Y_%m_%d_%H:%M:%S') - Skipped - No proxy configuration found at: '/etc/nginx/sites-enabled/'" >> "$LOG"
 else
 	echo "Proxy URL: $PROXY_URL"
@@ -88,9 +94,11 @@ else
 	then
 		echo "Proxy OK"
 		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Proxy OK - URL: $PROXY_URL" >> "$LOG"
+		PROXY_STATUS="OK"
 	else
 		echo "Info: Proxy seems to be OFFLINE!"
 		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Proxy OFFLINE - URL: $PROXY_URL" >> "$LOG"
+		PROXY_STATUS="OFFLINE"
 	fi
 fi
 if [ -f "Xtensions/TTS/marytts/bin/marytts-server" ]; then
@@ -125,6 +133,7 @@ if [ $RES_CODE -eq 1 ]; then
 	exit 1
 fi
 echo -e '\nDONE - If you made it this far the basic setup looks GOOD, but please double-check the output.\n'
+hostname_dot_local="$(hostname -s).local"
 ip_adr=""
 if [ -x "$(command -v ip)" ]; then
 	# old: ifconfig
@@ -134,19 +143,51 @@ if [ -z "$ip_adr" ]; then
 	ip_adr="[IP]"
 fi
 echo "You should be able to reach your SEPIA server via:"
-echo "$(hostname -s).local or $ip_adr"
-echo "$(date +'%Y_%m_%d_%H:%M:%S') - You should be able to reach your SEPIA server via: $(hostname -s).local or $ip_adr" >> "$LOG"
-echo ''
-echo "Example1: http://$(hostname -s).local:20721/tools/index.html"
-echo "Example2: http://$ip_adr:20721/tools/index.html"
-echo "Example3: http://$ip_adr:20721/app/index.html"
-echo ''
-echo "If you've installed NGINX proxy with self-signed SSL try:"
-echo "Example4: https://$(hostname -s).local:20726/sepia/assist/tools/index.html"
-echo "Example5: https://$(hostname -s).local:20726/sepia/assist/app/index.html"
-echo "Example6: http://$ip_adr:20727/sepia/assist/app/index.html"
-echo ''
-echo "Please note: if this is a virtual machine the hostname might not work to contact the server!"
+if [ -n "$ISDOCKER" ]; then
+	echo "[docker-machine].local (or IP)"
+	echo "$(date +'%Y_%m_%d_%H:%M:%S') - You should be able to reach your SEPIA server via: [docker-machine].local or IP" >> "$LOG"
+	echo ''
+	echo "Example1: http://[docker-machine].local:20726/sepia/assist/tools/index.html"
+	echo "Example2: http://[docker-machine].local:20726/sepia/assist/app/index.html"
+	echo ''
+	echo "If your Docker host machine uses SSL, a proxy or you've changed the PORT (run command), adjust the URLs accordingly."
+else
+	echo "'$hostname_dot_local' or '$ip_adr'"
+	echo "$(date +'%Y_%m_%d_%H:%M:%S') - You should be able to reach your SEPIA server via: $hostname_dot_local or $ip_adr" >> "$LOG"
+	if [ -n "$PROXY_URL" ]; then
+		echo "Proxy setting: $PROXY_MODE - Status: $PROXY_STATUS"
+		echo "Proxy test URL: ${PROXY_URL/localhost/$hostname_dot_local}"
+	else
+		echo "Proxy: not configured" 
+	fi
+	echo ''
+	echo "Example1: http://$hostname_dot_local:20721/tools/index.html"
+	echo "Example2: http://$ip_adr:20721/tools/index.html"
+	echo "Example3: http://$ip_adr:20721/app/index.html"
+	echo ''
+	if [ -n "$PROXY_URL" ]; then
+		if [ "$PROXY_HAS_SS_SSL" = "true" ]; then
+			echo "Via proxy with self-signed SSL (port 20726) and non-SSL fallback (port 20727):"
+			echo ''
+			echo "Example4: https://$hostname_dot_local:20726/sepia/assist/tools/index.html"
+			echo "Example5: https://$hostname_dot_local:20726/sepia/assist/app/index.html"
+			echo "Example6: http://$ip_adr:20727/sepia/assist/tools/index.html"
+			echo "Example7: http://$ip_adr:20727/sepia/assist/app/index.html"
+		else
+			echo "Via proxy:"
+			echo ''
+			echo "Example4: http://$hostname_dot_local:20726/sepia/assist/tools/index.html"
+			echo "Example5: http://$hostname_dot_local:20726/sepia/assist/app/index.html"
+			echo ''
+			echo "If you use \"real\" SSL certificates (Let's Encrypt etc.) use HTTPS and your domain instead."
+		fi
+	else
+		echo "After you've set up the proxy (check setup menu) try the following URLs:"
+		echo ''
+		echo "Example4: https://$hostname_dot_local:20726/sepia/assist/tools/index.html"
+		echo "Example5: https://$hostname_dot_local:20726/sepia/assist/app/index.html"
+	fi
+fi
 echo ''
 echo "For more info about secure context and microphone access in the SEPIA client see: "
 echo "https://github.com/SEPIA-Framework/sepia-docs/wiki/SSL-for-your-Server"

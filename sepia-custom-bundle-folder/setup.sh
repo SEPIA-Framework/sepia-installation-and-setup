@@ -49,7 +49,7 @@ echo ""
 echo "If you don't know what to do next read the guide at:"
 echo "https://github.com/SEPIA-Framework/sepia-installation-and-setup#quick-start"
 echo ""
-echo "For a new installation of SEPIA start with step (1) to setup the database and create the admin and assistant accounts."
+echo "For a new installation of SEPIA start with step (1) to set up the database and create the admin and assistant accounts."
 echo "Installation of the TTS engine (7) is required if you're planning to use a DIY SEPIA Client (and recommended for fun)."
 echo "After that type the IP address or hostname of this machine into your SEPIA-Client login-screen and you are good to go :-)"
 # check commandline arguments
