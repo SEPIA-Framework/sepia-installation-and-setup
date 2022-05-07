@@ -22,14 +22,15 @@ echo.
 echo If you don't know what to do next read the guide at:
 echo https://github.com/SEPIA-Framework/sepia-installation-and-setup#quick-start
 echo.
-echo Typically for a new installation what you should do is (4) then (1) to setup the database and create the admin and assistant accounts.
+echo Typically for a new installation what you should do is (4) then (1) to set up the database and create the admin and assistant accounts.
 :enteroption
 echo. 
 echo What would you like to do next?
-echo 1: Setup all components (except dynamic DNS). Note: requires step 4.
+echo 1: Set up core components. Note: This will CLEAR ALL old data!
+echo 1b: Run automatic setup using 'SEPIA/auto-setup/config.yaml'
 echo 2: Define new admin and assistant passwords
-echo 3: Setup dynamic DNS with DuckDNS
-echo 4: Start Elasticsearch
+echo 3: Set up dynamic DNS with DuckDNS
+echo 4: Start Elasticsearch (required for setup and accounts)
 echo 5: Install TTS engine and voices
 echo 6: Install Java locally into SEPIA folder
 echo. 
@@ -44,6 +45,17 @@ if "%option%" == "1" (
 	set exitcode=!errorlevel!
 	if "!exitcode!" == "0" (
 		java -Dfile.encoding=utf-8 -jar %JAR_NAME% setup --my
+		goto bottom
+	) else (
+		goto noelastic
+	)
+)
+if "%option%" == "1b" (
+	echo Checking Elasticsearch access...
+	java -Dfile.encoding=utf-8 -jar %TOOLS_JAR% connection-check httpGetJson -url=http://localhost:20724 -maxTries=3 -waitBetween=1000
+	set exitcode=!errorlevel!
+	if "!exitcode!" == "0" (
+		java -Dfile.encoding=utf-8 -jar %JAR_NAME% setup --my --automatic
 		goto bottom
 	) else (
 		goto noelastic
@@ -85,7 +97,7 @@ if "%option%" == "6" (
 echo Not an option, please try again.
 goto enteroption
 :noelastic
-echo Please start Elasticsearch first (or check if access is possible).
+echo Please start Elasticsearch first (option 4).
 goto enteroption
 :bottom
 echo Setup done.

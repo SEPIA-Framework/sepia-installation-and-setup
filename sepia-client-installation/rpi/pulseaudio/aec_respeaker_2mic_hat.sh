@@ -21,7 +21,10 @@ aec_method='webrtc'
 aec_args='"voice_detection=0 noise_suppression=0 analog_gain_control=0 digital_gain_control=0 high_pass_filter=0"'
 
 # load the module
-pactl unload-module module-echo-cancel
+if [ $(pactl list modules short | grep module-echo-cancel | wc -l) -gt 0 ]; then
+	pactl unload-module module-echo-cancel
+	echo "Pulseaudio: unloaded old instance of 'module-echo-cancel'"
+fi
 pactl load-module module-echo-cancel \
   source_name=$source_name \
   source_master=$source_master \

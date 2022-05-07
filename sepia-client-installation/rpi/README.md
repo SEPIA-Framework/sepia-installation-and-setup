@@ -2,8 +2,8 @@
 
 ## Common Instructions
 
-Tested with Raspberry Pi OS Buster and Bullseye on RPi4 B 2GB and 4GB.  
-Expected to work with RPi3 1GB and might even work with RPi Zero 512GB if wake-word is disabled.
+Tested with Raspberry Pi OS Buster (recommended) and Bullseye on RPi4 B 2GB and 4GB.  
+Works on RPi3 1GB and maybe even on RPi Zero 512GB if wake-word and display are disabled.
 
 ### 1) Install Raspberry Pi OS Lite
 
@@ -31,17 +31,16 @@ Expected to work with RPi3 1GB and might even work with RPi Zero 512GB if wake-w
 Use `bash menu.sh` to choose a specific hardware installation script or run them manually. Here you'll find a few more tips:
 
 * **USB microphone** and the audio jack for sound:
-  * This script might be useful to set the correct default devices: `bash install_usb_mic.sh`
-  * Alternatively try `sudo raspi-config` and check the audio settings
-  * **Reboot** the system
+  * `pulsemixer` should be enough to set up your devices.
+  * Alternatively try `bash install_usb_mic.sh` and check the audio settings via `sudo raspi-config`
 * For **WM8960 microphone boards** like ReSpeaker (2 and 4 mic HAT), Waveshare Audio-HAT, Adafruit Voice Bonnet:
   * Install drivers: `bash install_respeaker_mic.sh`
-  * Optionally run `bash update_respeaker_boot.sh` to deactivate the default RPi audio jack and HDMI (audio) if you don't use it
-  * **Reboot** the system
+  * **Reboot** the system and check settings via `pulsemixer`
 * For **Hyperpixel** touchscreen:
   * Install drivers: `curl https://get.pimoroni.com/hyperpixel4 | bash`
   * **Reboot** the system
   * If you have problems with the touchscreen (swapped axis etc.) run `bash update_hyperpixel4_boot.sh`
+* There are more hardware scripts available in the 'install' folder
 * Tweak for small displays to fix Chromium "bug" (use AFTER step "2a SEPIA Client Installation" is finished):
   * If your screen width is smaller than 500px, e.g. 480px (typical Hyperpixel width) you can use `bash adapt_to_small_screen.sh 20` to shift the screen by 20px
 

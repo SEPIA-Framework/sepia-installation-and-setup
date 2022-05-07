@@ -10,7 +10,8 @@ mkdir -p chromium-deb-files
 cd chromium-deb-files
 PLATFORM=""
 VERSION=""
-if [ $(cat /etc/debian_version) -lt 11 ]; then
+IS_BUSTER=$(echo "$(cat /etc/debian_version)" | awk '{if ($1 < 11 && $1 >= 10) print "true"; else print "false"}')
+if [ "$IS_BUSTER" = "true" ]; then
 	VERSION="92.0.4515.98~buster-rpt2"
 else
 	VERSION="92.0.4515.98-rpt2"

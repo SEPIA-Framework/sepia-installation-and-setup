@@ -1,0 +1,36 @@
+# Setup 'tasks'
+# Choose one or more of: database, accounts, cluster, answers, commands, duckdns
+# empty = default = all (except duckdns)
+#
+tasks:
+  - database
+  - accounts
+  - cluster
+  - answers
+  - commands
+#
+# Setup users
+# requires task: accounts
+# 'admin' and 'assistant' are mandatory (add only password, email is read from server properties file)
+# 'user1, user2, ...' are optional
+#
+users:
+  admin:
+    password: <random>
+  assistant:
+    password: <random>
+  user1:
+    nickname: Testy
+    email: test@sepia.localhost
+    password: test12345
+    roles:
+      - user
+      - developer
+      - smarthomeguest
+#
+# Setup DuckDNS worker to auto-update dynamic IP
+# requires a DNS task, e.g.: duckdns
+#
+dns:
+  domain: example.com
+  token: token123

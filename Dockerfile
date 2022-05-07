@@ -20,8 +20,8 @@ RUN echo 'Installing SEPIA-Home...' && \
 		ntpdate nginx \
 		espeak-ng espeak-ng-espeak libpopt0 && \
 #
-# 	Update time-sync - NOTE: not possible in Docker; will use host clock
-#	sudo ntpdate -u ntp.ubuntu.com
+#	Update time-sync - NOTE: not possible in Docker? will use host clock?
+#	sudo timedatectl set-ntp true
 #
 #   Clean up
     apt-get clean && apt-get autoclean && apt-get autoremove -y && \
@@ -45,7 +45,7 @@ USER admin
 
 RUN echo "Downloading SEPIA-Home (custom bundle) ..." && \
 #
-#	Make target and temporary folder (SEPIA should be in ~/SEPIA !!)
+#	Make target and temporary folder (SEPIA should be in ~/SEPIA)
 	mkdir -p ~/SEPIA/tmp && \
 	cd ~/SEPIA/tmp && \
 #
@@ -63,7 +63,18 @@ RUN echo "Downloading SEPIA-Home (custom bundle) ..." && \
 	bash setup.sh 7 && \
 #
 #	Set up Nginx (HTTP)
-	sudo cp nginx/sites-available/sepia-fw-http.conf /etc/nginx/sites-enabled/sepia-fw-http.conf
+	sudo cp nginx/sites-available/sepia-fw-http.conf /etc/nginx/sites-enabled/sepia-fw-http.conf && \
+#
+#	Prepare automatic-setup and user1
+	cd automatic-setup && \
+	cp template.yaml config.yaml && \
+	sed -i 's/nickname: Testy/nickname: Boss/' config.yaml && \
+	sed -i 's/email: test@sepia.localhost/email: user1@sepia.localhost/' config.yaml && \
+	sed -i 's/password: test12345/password: <random>/' config.yaml && \
+	touch docker-setup && cd .. && \
+#
+#	Set up external data folder
+	bash scripts/create-external-data-folder.sh -yu
 #
 # Optional, final modifications imported from build folder:
 # ADD *.sh /home/admin/SEPIA/
@@ -77,13 +88,10 @@ RUN echo "Downloading SEPIA-Home (custom bundle) ..." && \
 #	Comment: https://www.elastic.co/guide/en/elasticsearch/reference/5.3/vm-max-map-count.html (the container will inherit this from the host)
 #
 #	Set up SEPIA
-#	NOTE: This has to be done (e.g. by sharing external config folder) before server can run without error
-#	e.g.:
+#	NOTE: If the file '$SEPIA_SHARE/setup/automatic-setup/docker-setup' exists the automatic setup will run
 #	0 - Create an EMPTY shared folder:	SEPIA_SHARE=/home/[my-user]/sepia-home-share && mkdir -p $SEPIA_SHARE
 #	1 - Make a Docker volume out of it:	docker volume create --opt type=none --opt device=$SEPIA_SHARE --opt o=bind sepia-home-share
-#	1 - Run container with terminal:	docker run --rm --name=sepia_home -it -v sepia-home-share:/home/admin/SEPIA sepia/home:vX.X.X /bin/bash
-#	2 - Inside container finish setup:	bash setup.sh (run at least setup steps 4 and 1)
-#	3 - Exit container and run as server:	docker run --rm --name=sepia_home -p 20726:20726 -d -v sepia-home-share:/home/admin/SEPIA sepia/home:vX.X.X
+#	3 - Run the server:	docker run --rm --name=sepia_home -p 20726:20726 -d -v sepia-home-share:/home/admin/sepia-home-data sepia/home:vX.X.X
 #	---------------------
 
 # Start

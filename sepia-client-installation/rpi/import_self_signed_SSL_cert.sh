@@ -16,4 +16,8 @@ read -p "Press any key to import to '/usr/local/share/ca-certificates/' (CTRL+C 
 sudo cp "downloads/$2.crt" "/usr/local/share/ca-certificates/$2.crt"
 echo "Updating ca-certificates ..."
 sudo update-ca-certificates
+#For Chromium import cert to NSSDB:
+#certutil -d "sql:$HOME/.pki/nssdb" -A -t "C,," -n "$1" -i "/usr/local/share/ca-certificates/$2.crt"
+echo "For Chromium import you might need to run:"
+echo "bash import_self_signed_SSL_to_Chromium.sh \"$1\" \"$2\""
 echo "DONE"
