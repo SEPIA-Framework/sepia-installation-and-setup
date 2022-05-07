@@ -58,7 +58,7 @@ SEPIA_DATA_FS_SERVICES=$SEPIA_DATA/files/services
 SEPIA_DATA_CFG=$SEPIA_DATA/settings
 #SEPIA_DATA_LOGS=$SEPIA_DATA/logs
 SEPIA_DATA_DB=$SEPIA_DATA/database
-SEPIA_DATA_AUTO_SET=$SEPIA_DATA/automatic-setup
+SEPIA_DATA_SETUP=$SEPIA_DATA/setup
 mkdir -p "$SEPIA_DATA_NW_NGINX"
 mkdir -p "$SEPIA_DATA_NW_LETSENCRYPT"
 mkdir -p "$SEPIA_DATA_NW_DYNDNS"
@@ -70,7 +70,7 @@ mkdir -p "$SEPIA_DATA_FS_SERVICES"
 mkdir -p "$SEPIA_DATA_CFG"
 #mkdir -p "$SEPIA_DATA_LOGS"
 mkdir -p "$SEPIA_DATA_DB"
-mkdir -p "$SEPIA_DATA_AUTO_SET"
+mkdir -p "$SEPIA_DATA_SETUP"
 #
 create_link () {
 	if [ -L "$1" ]; then
@@ -128,7 +128,7 @@ create_file_and_link () {
 		create_link "$1" "$2/$(basename $1)"
 	fi
 }
-create_link "${SEPIA_FOLDER}/automatic-setup" "${SEPIA_DATA_AUTO_SET}"
+create_link "${SEPIA_FOLDER}/automatic-setup" "${SEPIA_DATA_SETUP}/automatic-setup"
 create_link "${SEPIA_FOLDER}/es-data" "${SEPIA_DATA_DB}/es-data"
 create_link "${SEPIA_FOLDER}/sepia-assist-server/Xtensions/Plugins/net/b07z/sepia/sdk" "${SEPIA_DATA_FS_SERVICES}/sdk"
 create_link "${SEPIA_FOLDER}/sepia-assist-server/Xtensions/WebContent/views/custom" "${SEPIA_DATA_FS_VIEWS}/custom"
