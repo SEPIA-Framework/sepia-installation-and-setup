@@ -64,6 +64,7 @@ RUN echo "Downloading SEPIA-Home (custom bundle) ..." && \
 #
 #	Set up Nginx (HTTP)
 	sudo cp nginx/sites-available/sepia-fw-http.conf /etc/nginx/sites-enabled/sepia-fw-http.conf && \
+	sudo unlink /etc/nginx/sites-enabled/default && \
 #
 #	Prepare automatic-setup and user1
 	cd automatic-setup && \
