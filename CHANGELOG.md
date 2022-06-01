@@ -42,7 +42,7 @@ Updated Assist-server to v2.6.2:
 * Added installer for 'txt2pho' TTS engine (German MBROLA only) + tweaked some voice speeds
 * Better checks for correct smart-home HUB authentication types + smaller smart-home interface tweaks
 * Added 'appRegionCode' and new 'defaultNewsRegion' to NluInput class (to be used in services)
-* Improved News service to support 'language' parameter (e.g.: "show me news in German") + 'defaultNewsRegion' and 'appRegionCode' to make news independant of user language
+* Improved news service to support 'language' parameter (e.g.: "show me news in German") + 'defaultNewsRegion' and 'appRegionCode' to make news independent of user language
 * Added a 'region' parameter to news-outlets.json
 * Improved settings loader and 'getConfig' endpoint with new 'PropertiesReader' that will return ALL settings (properties file + defaults)
 * Streamlined SDK endpoint responses to return JSON format and added more useful info

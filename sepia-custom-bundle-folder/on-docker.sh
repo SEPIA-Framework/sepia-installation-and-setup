@@ -56,7 +56,7 @@ fi
 # Check if external data folder is setup properly
 echo "$(date +'%Y_%m_%d_%H:%M:%S') - Checking data folder '$SEPIA_DATA' ..." >> "$LOG"
 if [ ! -f "${SEPIA_DATA}/settings/assist.custom.properties" ]; then
-	echo "$(date +'%Y_%m_%d_%H:%M:%S') - Data is MISSING - Is your shared volume setup properly?" >> "$LOG"
+	echo "$(date +'%Y_%m_%d_%H:%M:%S') - Data is MISSING - Is your shared volume set up properly?" >> "$LOG"
 	echo "$(date +'%Y_%m_%d_%H:%M:%S') - Please make sure your folder is EMPTY when you create the volume!" >> "$LOG"
 	echo "$(date +'%Y_%m_%d_%H:%M:%S') - 'docker run' argument: '-v sepia-home-share:${SEPIA_DATA}'" >> "$LOG"
 	echo "$(date +'%Y_%m_%d_%H:%M:%S') - EXIT" >> "$LOG"
