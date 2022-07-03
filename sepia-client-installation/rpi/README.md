@@ -38,6 +38,7 @@ Use `bash menu.sh` to choose a specific hardware installation script or run them
   * **Reboot** the system and check settings via `pulsemixer`
 * For touchscreens:
   * Some DSI and HDMI displays work out-of-the-box, if not try one of the install scripts
+  * If the display works but is not reacting to touch input try switching the driver to `dtoverlay=vc4-fkms-v3d` (/boot/config.txt). Note that this may have other side effects.
   * Check your `~/.config/openbox/autostart` file AFTER step 2a has finished if you need to **rotate** the screen
 * There are more hardware scripts available in the 'install' folder
 * Tweak for small displays to fix Chromium "bug" (use AFTER step 2a has finished):
