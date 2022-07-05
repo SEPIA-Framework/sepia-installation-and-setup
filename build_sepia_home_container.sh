@@ -1,8 +1,10 @@
 #!/bin/bash
-# TODO: keep '--no-cache' ?
 version=latest
 if [ -n "$1" ]; then
 	version=$1
+else
+	echo "Please specify the version to use for this release, e.g. 'v2.6.3'"
+	exit
 fi
 if [ -n "$(uname -m | grep aarch64)" ]; then
 	echo "Building SEPIA-Home Docker container: sepia/home:${version}_aarch64_auto"
