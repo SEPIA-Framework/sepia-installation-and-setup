@@ -1,8 +1,8 @@
-SEPIA Home v2.6.2
-- Client App: v0.24.2
-- Control-HUB App: v1.4.3
-- Assist-Server: v2.6.2
-- Teach-Server: v2.2.4
-- Chat-Server (WebSocket): v1.3.4
-- Core-Tools: v2.2.11
-- Mesh-Node: v0.9.19
+SEPIA Home v2.7.0
+- Client App: v0.25.0
+- Control-HUB App: v1.5.0
+- Assist-Server: v2.7.0
+- Teach-Server: v2.3.0
+- Chat-Server (WebSocket): v1.4.0
+- Core-Tools: v2.3.0
+- Mesh-Node: v0.10.0

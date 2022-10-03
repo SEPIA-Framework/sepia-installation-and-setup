@@ -72,7 +72,7 @@ while true; do
 	echo ""
 	echo "What would you like to do next?"
 	echo "1: Set up core components. Note: This will CLEAR ALL old data!"
-	echo "1b: Run automatic setup using 'SEPIA/auto-setup/config.yaml'"
+	echo "1b: Run automatic setup using 'SEPIA/automatic-setup/config.yaml'"
 	echo "2: Define new admin and assistant passwords"
 	echo "3: Set up dynamic DNS with DuckDNS domain (for public server)"
 	echo "3b: Set up NGINX (e.g. with self-signed SSL for local server)"
