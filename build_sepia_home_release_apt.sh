@@ -62,7 +62,8 @@ mkdir -p sepia-assist-server/Xtensions/WebContent/tools
 cp -r sepia-admin-tools/admin-web-tools/. ~/SEPIA/sepia-assist-server/Xtensions/WebContent/tools/
 
 #download and unzip elasticsearch (keeping the existing config folder)
-wget -O elasticsearch.zip https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.3.3.zip
+wget -O elasticsearch.zip https://github.com/SEPIA-Framework/SEPIA-Framework.github.io/raw/master/files/db-installer/elasticsearch-5.3.3.zip
+#wget -O elasticsearch.zip https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.3.3.zip
 unzip -n elasticsearch.zip
 cp -rn elasticsearch-*/. ~/SEPIA/elasticsearch/
 
