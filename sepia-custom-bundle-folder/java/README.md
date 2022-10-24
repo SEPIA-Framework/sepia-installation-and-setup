@@ -1,7 +1,7 @@
 # Local Java Installation
 
 Use the scripts in this folder to download a local version of Java JDK for your system that will be used together with SEPIA.
-If a script for your system is missing or the script doesn't work you can download Java manually from https://adoptopenjdk.net/archive.html?variant=openjdk11  
+If a script for your system is missing or the script doesn't work you can download Java JDK manually from [adoptium.net](https://adoptium.net/de/temurin/archive/?version=11)  
 You can download an installer as well but for our local version choose a ZIP or TAR file and extract the compressed file to 
 `[SEPIA]/java/` so you get for example `[SEPIA]/java/jdk-11.0.5+10`.
   
