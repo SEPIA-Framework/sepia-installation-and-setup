@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-echo "This script has been tested with: Raspbian Stretch/Buster (slim, RPi3), Debian 10 (slim)"
+echo "This script has been tested with: Raspbian Stretch/Buster (slim, RPi3), Debian 10/11 (slim)"
 echo ""
 
 #check packages (except Java)
