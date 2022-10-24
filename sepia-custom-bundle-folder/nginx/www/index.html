@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+    <head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>SEPIA Server</title>
+		<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+		<style>
+			* {
+				box-sizing: border-box;
+				font-family: sans-serif;
+			}
+			body { 
+				padding: 16px;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+			h3 {
+				width: 100%;
+			}
+			.page {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				text-align: center;
+				width: 100%;
+				max-width: 1280px;
+			}
+			.sepia-logo {
+				background: url('icon.png');
+				background-color: #000;
+				background-size: 85%;
+				background-position: center;
+				background-repeat: no-repeat;
+				height: 110px;
+				width: 110px;
+				border: 2px solid #000;
+				border-radius: 50%;
+				box-shadow: 0px 1px 0px 1px #ccc;
+				margin: 8px;
+				cursor: pointer;
+			}
+			.help-links {
+				display: flex;
+				flex-direction: column;
+				align-items: stretch;
+				max-width: 480px;
+			}
+			.help-links a { 
+				padding: 8px 16px;
+				margin: 8px;
+				background: #000;
+				text-decoration: none;
+				color: #ceff1a;
+				text-align: center;
+				border-radius: 8px;
+				box-shadow: 0px 1px 0px 1px #ccc;
+				min-width: 300px;
+			}
+			.sections-group {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: center;
+				align-items: flex-start;
+			}
+			.card-section {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: center;
+				align-items: center;
+			}
+			.link-card {
+				width: 144px;
+				height: 144px;
+				background: #fff;
+				color: #000;
+				border: 2px solid #000;
+				border-radius: 5px;
+				box-shadow: 0px 2px 0px 1px #ccc;
+				margin: 12px;
+				padding: 10px;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				cursor: pointer;
+			}
+			.link-card .icon {
+				background-size: contain;
+				background-position: center;
+				background-repeat: no-repeat;
+				width: 100%;
+				height: 80px;
+				flex: 1 1 80px;
+			}
+			.link-card .text {
+				flex: 0 0 auto;
+				width: 100%;
+				min-height: 42px;
+				font-size: 16px;
+				font-weight: bold;
+				padding: 6px;
+			}
+			.footer {
+				margin: 32px;
+			}
+			.footer a {
+				/*text-decoration: none;*/
+				color: #000;
+			}
+			.info-overlay {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: rgba(255, 255, 255, 0.5);
+				backdrop-filter: blur(10px);
+				z-index: 2;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				opacity: 0.0;
+				transition: opacity .5s;
+			}
+			.info-overlay.open {
+				opacity: 1.0;
+			}
+			.info-popup {
+				position: relative;
+				width: 90%;
+				height: auto;
+				max-width: 480px;
+				max-height: 90%;
+				border-radius: 8px;
+				background: #000;
+				color: #ceff1a;
+				padding: 32px;
+			}
+			.info-popup-close-btn {
+				position: absolute;
+				top: 8px;
+				right: 8px;
+				width: 25px;
+				height: 25px;
+				border-radius: 12px;
+				border: 0;
+				background: #eee;
+				color: #000;
+				cursor: pointer;
+				font-weight: bold;
+				font-size: 15px;
+			}
+			.info-box {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+			.info-box h3 {
+				color: #eee;
+				text-align: center;
+				margin-bottom: 32px;
+			}
+			.info-box img {
+				width: 100px;
+				margin: 8px;
+			}
+			.info-box a {
+				color: #4ec48f;
+			}
+			.info-box .link-button {
+				background: #ceff1a;
+				color: #000;
+				text-decoration: none;
+				border-radius: 8px;
+				box-shadow: 0px 1px 0px 1px #333;
+				padding: 6px 12px;
+				margin: 32px 16px 8px 16px;
+				font-size: 14px;
+			}
+		</style>
+    </head>
+    <body>
+		<h2>Welcome to your SEPIA Server</h2>
+		<div class="page">
+			<div class="sepia-logo" onclick="openPopup('sepia');"></div>
+			<h3>Places to visit:</h3>
+			<div class="sections-group">
+				<section id="sepia-client-section" class="card-section" onclick="openPopup('app');"></section>
+				<section id="sepia-control-hub-section" class="card-section" onclick="openPopup('cHub');"></section>
+				<section id="sepia-stt-server-section" class="card-section" onclick="openPopup('sttServer');"></section>
+			</div>
+			<h3>Info and help:</h3>
+			<div class="help-links">
+				<a href='https://github.com/SEPIA-Framework/sepia-docs/wiki' target=_blank>SEPIA Wiki (Docs)</a>
+				<a href='https://github.com/SEPIA-Framework/sepia-docs/issues' target=_blank>Ask a question</a>
+				<a href='https://github.com/SEPIA-Framework/sepia-docs/discussions' target=_blank>Discussions about SEPIA</a>
+				<a href='https://github.com/SEPIA-Framework' target=_blank>SEPIA GitHub Repositories</a>
+				<a href='https://sepia-framework.github.io/' target=_blank>SEPIA Framework Homepage</a>
+			</div>
+			<div class="footer">
+				<a href="https://sepia-framework.github.io/#attributions" target=_blank>Credits & icon attributions</a>
+			</div>
+		</div>
+		<div id="info-popup-overlay" class="info-overlay" style="display: none;">
+			<div class="info-popup">
+				<button class="info-popup-close-btn" onclick="closePopup();">&#215;</button>
+				<div id="info-popup-content"></div>
+			</div>
+		</div>
+		<script>
+			console.log("Welcome to the SEPIA Framework :-)");
+			
+			function makeCard(targetSection, icon, name){
+				var card = document.createElement("div");
+				card.className = "link-card";
+				var iconEle = document.createElement("div");
+				iconEle.className = "icon";
+				iconEle.style.backgroundImage = "url('" + icon + "')";
+				var textEle = document.createElement("div");
+				textEle.className = "text";
+				textEle.textContent = name;
+				card.appendChild(iconEle);
+				card.appendChild(textEle);
+				targetSection.appendChild(card);
+			}
+			
+			var infoPopupOverlay = document.getElementById("info-popup-overlay");
+			var infoPopupContent = document.getElementById("info-popup-content");
+			var popupBlendTimer;
+			
+			function closePopup(){
+				infoPopupOverlay.classList.remove("open");
+				clearTimeout(popupBlendTimer);
+				popupBlendTimer = setTimeout(function(){
+					infoPopupOverlay.style.display = "none";
+				}, 510);
+			}
+			function openPopup(contentId){
+				clearTimeout(popupBlendTimer);
+				infoPopupContent.innerHTML = "";
+				infoPopupContent.appendChild(infoContent[contentId]);
+				infoPopupOverlay.style.display = "";
+				popupBlendTimer = setTimeout(function(){
+					infoPopupOverlay.classList.add("open");
+				}, 0);
+			}
+			
+			var clientSec = document.getElementById("sepia-client-section");
+			makeCard(clientSec, "app.png", "SEPIA Client App");
+			
+			var controlHubSec = document.getElementById("sepia-control-hub-section");
+			makeCard(controlHubSec, "cHub.png", "SEPIA Control HUB");
+			
+			var sttServerSec = document.getElementById("sepia-stt-server-section");
+			makeCard(sttServerSec, "sttServer.png", "SEPIA STT-Server");
+			
+			function buildContent(headline, id, text){
+				var content = document.createElement("div");
+				content.className = "info-box";
+				var headlineEle = document.createElement("h3");
+				headlineEle.textContent = headline;
+				var iconEle = document.createElement("img");
+				iconEle.src = id + ".png";
+				if (id != "icon"){
+					iconEle.style.filter = "invert(1)";
+				}
+				var textEle = document.createElement("div");
+				textEle.style.cssText = "width: 100%;";
+				textEle.innerHTML = text;
+				var linkBtn = document.createElement("a");
+				linkBtn.className = "link-button";
+				linkBtn.target = "_blank";
+				linkBtn.href = infoLinks[id];
+				linkBtn.textContent = "OPEN";
+				content.appendChild(iconEle);
+				content.appendChild(headlineEle);
+				content.appendChild(textEle);
+				content.appendChild(linkBtn);
+				return content;
+			}
+			var infoLinks = {
+				app: location.origin + "/sepia/assist/app/index.html",
+				cHub: location.origin + "/sepia/assist/tools/index.html",
+				sttServer: location.origin + "/sepia/stt/",
+				icon: "https://sepia-framework.github.io"
+			}
+			var infoContent = {
+				sepia: buildContent("S.E.P.I.A. Framework", "icon",
+					"S.E.P.I.A. is an acronym for: <u>s</u>elf-hosted, <u>e</u>xtendable, <u>p</u>ersonal, <u>i</u>ntelligent <u>a</u>ssistant. It is a modular, open-source framework equipped with all the required tools to build your own, full-fledged digital voice-assistant, including speech recognition (STT), wake-word detection, text-to-speech (TTS), natural-language-understanding, dialog-management, SDK(s), a cross-platform client app and much more."
+				),
+				app: buildContent("SEPIA Client App", "app",
+					"<a href='https://github.com/SEPIA-Framework/sepia-html-client-app' target=_blank>The SEPIA Client App</a> is the primary interface used to communicate with SEPIA assistant. It is written in Javascript/HTML and runs cross-platform on any modern browser (desktop PC, Android, iOS), as web and mobile app or even as <a href='https://github.com/SEPIA-Framework/sepia-installation-and-setup/tree/master/sepia-client-installation' target=_blank>smart-speaker (headless) and smart-display</a> on SBCs like the Raspberry Pi."
+				),
+				cHub: buildContent("SEPIA Control-HUB", "cHub",
+					"<a href='https://github.com/SEPIA-Framework/sepia-admin-tools/tree/master/admin-web-tools' target=_blank>The SEPIA Control-HUB</a> is a web-application that contains a collection of tools to help you set up your SEPIA servers remotely, create users, <a href='https://github.com/SEPIA-Framework/sepia-docs/wiki/Smart-Home-Controls' target=_blank>configure your smart home</a>, edit settings and test things. The Code-UI to create, download and register custom smart-services and plugins is part of it as well."
+				),
+				sttServer: buildContent("SEPIA STT-Server", "sttServer",
+					"<a href='https://github.com/SEPIA-Framework/sepia-html-client-app' target=_blank>The SEPIA Speech-To-Text (STT) Server</a> is a cloud-free, full-duplex Python server for realtime automatic speech recognition (ASR) supporting multiple open-source ASR engines. It can receive a stream of audio chunks via the secure WebSocket connection and return transcribed text almost immediately as partial and final results.<br><br>"
+					+ "NOTE: The STT-Server needs to be <a href='https://github.com/SEPIA-Framework/sepia-stt-server#quick-start-with-python' target=_blank>installed</a> separately! If you can't open it from here please <a href='https://github.com/SEPIA-Framework/sepia-docs/wiki/Reverse-Proxy-Setup' target=_blank>check your proxy config</a> (created during setup) and make sure the server is actually running.",
+				)
+			}
+		</script>
+    </body>
+</html>
