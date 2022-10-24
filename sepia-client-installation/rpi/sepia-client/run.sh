@@ -4,7 +4,6 @@ SCRIPT_PATH="$(realpath "$BASH_SOURCE")"
 LOG="$(dirname "$SCRIPT_PATH")""/log-run.out"
 LOG_CLIENT="/dev/null"
 #LOG_CLIENT="$(dirname "$SCRIPT_PATH")""/log-client.out"
-NOW=$(date +'%Y_%m_%d_%H:%M:%S')
 echo "Last run attempt: $(date +'%Y_%m_%d_%H:%M:%S') - via: run.sh" > "$LOG"
 
 # Client mode
