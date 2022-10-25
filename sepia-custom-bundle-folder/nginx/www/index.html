@@ -11,7 +11,8 @@
 				font-family: sans-serif;
 			}
 			body { 
-				padding: 16px;
+				padding: 0;
+				margin: 0;
 				display: flex;
 				flex-direction: column;
 				align-items: center;
@@ -26,15 +27,20 @@
 				text-align: center;
 				width: 100%;
 				max-width: 1280px;
+				max-height: 100vh;
+				padding: 16px;
+				overflow: auto;
+				overscroll-behavior: contain;
 			}
 			.sepia-logo {
-				background: url('icon.png');
+				background: url('sepia.png');
 				background-color: #000;
 				background-size: 85%;
 				background-position: center;
 				background-repeat: no-repeat;
-				height: 110px;
-				width: 110px;
+				height: 106px;
+				width: 106px;
+				flex: 0 0 106px;
 				border: 2px solid #000;
 				border-radius: 50%;
 				box-shadow: 0px 1px 0px 1px #ccc;
@@ -71,8 +77,8 @@
 				align-items: center;
 			}
 			.link-card {
-				width: 144px;
-				height: 144px;
+				width: 140px;
+				height: 140px;
 				background: #fff;
 				color: #000;
 				border: 2px solid #000;
@@ -115,13 +121,16 @@
 				width: 100%;
 				height: 100%;
 				background: rgba(255, 255, 255, 0.5);
-				backdrop-filter: blur(10px);
+				-webkit-backdrop-filter: blur(16px);
+				backdrop-filter: blur(16px);
 				z-index: 2;
 				display: flex;
 				justify-content: center;
 				align-items: center;
 				opacity: 0.0;
 				transition: opacity .5s;
+				overscroll-behavior: none;
+				overflow: hidden;
 			}
 			.info-overlay.open {
 				opacity: 1.0;
@@ -131,11 +140,50 @@
 				width: 90%;
 				height: auto;
 				max-width: 480px;
-				max-height: 90%;
+				max-height: 85%;
+				margin-bottom: 7%;
 				border-radius: 8px;
 				background: #000;
 				color: #ceff1a;
-				padding: 32px;
+				display: flex;
+				flex-direction: column;
+				overflow: hidden;
+			}
+			#info-popup-content {
+				padding: 28px 0 0 0;
+				display: flex;
+				flex-direction: column;
+				overflow: hidden;
+			}
+			#info-popup-actions {
+				position: absolute;
+				right: 0;
+				bottom: -50px;
+				width: 100%;
+				min-height: 50px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				background: rgba(50, 50, 50, 0.98);
+				transition: all .5s;
+				z-index: 2;
+			}
+			#info-popup-actions.chromium {
+				background: rgba(255, 255, 255, 0.2);
+				-webkit-backdrop-filter: blur(16px);
+				backdrop-filter: blur(16px);
+			}
+			#info-popup-actions.active {
+				bottom: 0px;
+			}
+			#info-popup-actions .link-button {
+				background: transparent;
+				color: #eee;
+				text-decoration: none;
+				border-radius: 4px;
+				border: 1px solid currentColor;
+				padding: 6px 12px;
+				font-size: 14px;
 			}
 			.info-popup-close-btn {
 				position: absolute;
@@ -143,6 +191,8 @@
 				right: 8px;
 				width: 25px;
 				height: 25px;
+				flex: 0 0 25px;
+				padding: 0;
 				border-radius: 12px;
 				border: 0;
 				background: #eee;
@@ -155,34 +205,35 @@
 				display: flex;
 				flex-direction: column;
 				align-items: center;
+				overscroll-behavior: none;
+				overflow: auto;
 			}
 			.info-box h3 {
 				color: #eee;
 				text-align: center;
-				margin-bottom: 32px;
+				max-width: calc(100% - 64px);
+				margin: 8px 32px 16px 32px;
 			}
 			.info-box img {
 				width: 100px;
 				margin: 8px;
 			}
+			.info-box .info-text {
+				background: #000;
+				color: #ceff1a;
+				width: 100%;
+				padding: 8px 32px 68px 32px;
+				overscroll-behavior: contain;
+				overflow: auto;
+			}
 			.info-box a {
 				color: #4ec48f;
-			}
-			.info-box .link-button {
-				background: #ceff1a;
-				color: #000;
-				text-decoration: none;
-				border-radius: 8px;
-				box-shadow: 0px 1px 0px 1px #333;
-				padding: 6px 12px;
-				margin: 32px 16px 8px 16px;
-				font-size: 14px;
 			}
 		</style>
     </head>
     <body>
-		<h2>Welcome to your SEPIA Server</h2>
 		<div class="page">
+			<h2>Welcome to your SEPIA Server</h2>
 			<div class="sepia-logo" onclick="openPopup('sepia');"></div>
 			<h3>Places to visit:</h3>
 			<div class="sections-group">
@@ -206,6 +257,9 @@
 			<div class="info-popup">
 				<button class="info-popup-close-btn" onclick="closePopup();">&#215;</button>
 				<div id="info-popup-content"></div>
+				<div id="info-popup-actions">
+					<a id="info-popup-open-btn" class="link-button" target=_blank>OPEN</a>
+				</div>
 			</div>
 		</div>
 		<script>
@@ -227,10 +281,16 @@
 			
 			var infoPopupOverlay = document.getElementById("info-popup-overlay");
 			var infoPopupContent = document.getElementById("info-popup-content");
+			var infoPopupActions = document.getElementById("info-popup-actions");
+			if (!!window.chrome){
+				infoPopupActions.classList.add("chromium");		//hack to prevent flicker in FF
+			}
+			var infoPopupOpenBtn = document.getElementById("info-popup-open-btn");
 			var popupBlendTimer;
 			
 			function closePopup(){
 				infoPopupOverlay.classList.remove("open");
+				infoPopupActions.classList.remove("active");
 				clearTimeout(popupBlendTimer);
 				popupBlendTimer = setTimeout(function(){
 					infoPopupOverlay.style.display = "none";
@@ -241,7 +301,16 @@
 				infoPopupContent.innerHTML = "";
 				infoPopupContent.appendChild(infoContent[contentId]);
 				infoPopupOverlay.style.display = "";
+				var openLink = infoLinks[contentId];
+				if (openLink){
+					infoPopupActions.style.display = "";
+					infoPopupOpenBtn.href = openLink;
+				}else{
+					infoPopupActions.style.display = "none";
+					infoPopupOpenBtn.href = "";
+				}
 				popupBlendTimer = setTimeout(function(){
+					infoPopupActions.classList.add("active");
 					infoPopupOverlay.classList.add("open");
 				}, 0);
 			}
@@ -262,31 +331,25 @@
 				headlineEle.textContent = headline;
 				var iconEle = document.createElement("img");
 				iconEle.src = id + ".png";
-				if (id != "icon"){
+				if (id != "sepia"){
 					iconEle.style.filter = "invert(1)";
 				}
 				var textEle = document.createElement("div");
-				textEle.style.cssText = "width: 100%;";
+				textEle.className = "info-text";
 				textEle.innerHTML = text;
-				var linkBtn = document.createElement("a");
-				linkBtn.className = "link-button";
-				linkBtn.target = "_blank";
-				linkBtn.href = infoLinks[id];
-				linkBtn.textContent = "OPEN";
 				content.appendChild(iconEle);
 				content.appendChild(headlineEle);
 				content.appendChild(textEle);
-				content.appendChild(linkBtn);
 				return content;
 			}
 			var infoLinks = {
 				app: location.origin + "/sepia/assist/app/index.html",
 				cHub: location.origin + "/sepia/assist/tools/index.html",
 				sttServer: location.origin + "/sepia/stt/",
-				icon: "https://sepia-framework.github.io"
+				sepia: "https://sepia-framework.github.io"
 			}
 			var infoContent = {
-				sepia: buildContent("S.E.P.I.A. Framework", "icon",
+				sepia: buildContent("S.E.P.I.A. Framework", "sepia",
 					"S.E.P.I.A. is an acronym for: <u>s</u>elf-hosted, <u>e</u>xtendable, <u>p</u>ersonal, <u>i</u>ntelligent <u>a</u>ssistant. It is a modular, open-source framework equipped with all the required tools to build your own, full-fledged digital voice-assistant, including speech recognition (STT), wake-word detection, text-to-speech (TTS), natural-language-understanding, dialog-management, SDK(s), a cross-platform client app and much more."
 				),
 				app: buildContent("SEPIA Client App", "app",
