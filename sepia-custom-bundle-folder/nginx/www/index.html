@@ -4,17 +4,26 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>SEPIA Server</title>
+		<meta name="description" content="S.E.P.I.A. Server start page to launch apps, get info and link to help pages.">
+		<meta name="theme-color" content="#000">
 		<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 		<style>
 			* {
 				box-sizing: border-box;
 				font-family: sans-serif;
 			}
+			html, body {
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+				overscroll-behavior: none;
+			}
 			body { 
 				padding: 0;
 				margin: 0;
 				display: flex;
 				flex-direction: column;
+				justify-content: flex-start;
 				align-items: center;
 			}
 			h3 {
@@ -23,6 +32,7 @@
 			.page {
 				display: flex;
 				flex-direction: column;
+				justify-content: flex-start;
 				align-items: center;
 				text-align: center;
 				width: 100%;
@@ -200,6 +210,9 @@
 				cursor: pointer;
 				font-weight: bold;
 				font-size: 15px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
 			}
 			.info-box {
 				display: flex;
@@ -356,7 +369,7 @@
 					"<a href='https://github.com/SEPIA-Framework/sepia-html-client-app' target=_blank>The SEPIA Client App</a> is the primary interface used to communicate with SEPIA assistant. It is written in Javascript/HTML and runs cross-platform on any modern browser (desktop PC, Android, iOS), as web and mobile app or even as <a href='https://github.com/SEPIA-Framework/sepia-installation-and-setup/tree/master/sepia-client-installation' target=_blank>smart-speaker (headless) and smart-display</a> on SBCs like the Raspberry Pi."
 				),
 				cHub: buildContent("SEPIA Control-HUB", "cHub",
-					"<a href='https://github.com/SEPIA-Framework/sepia-admin-tools/tree/master/admin-web-tools' target=_blank>The SEPIA Control-HUB</a> is a web-application that contains a collection of tools to help you set up your SEPIA servers remotely, create users, <a href='https://github.com/SEPIA-Framework/sepia-docs/wiki/Smart-Home-Controls' target=_blank>configure your smart home</a>, edit settings and test things. The Code-UI to create, download and register custom smart-services and plugins is part of it as well."
+					"<a href='https://github.com/SEPIA-Framework/sepia-admin-tools/tree/master/admin-web-tools' target=_blank>The SEPIA Control-HUB</a> is a web-application that contains a collection of tools to help you set up your SEPIA servers remotely, create users, <a href='https://github.com/SEPIA-Framework/sepia-docs/wiki/Smart-Home-Controls' target=_blank>configure your smart home</a>, connect to your <a href='https://github.com/SEPIA-Framework/sepia-installation-and-setup/tree/master/sepia-client-installation' target=_blank>headless DIY clients</a>, edit settings and test things. The Code-UI to create, download and register custom smart-services and plugins is part of it as well."
 				),
 				sttServer: buildContent("SEPIA STT-Server", "sttServer",
 					"<a href='https://github.com/SEPIA-Framework/sepia-html-client-app' target=_blank>The SEPIA Speech-To-Text (STT) Server</a> is a cloud-free, full-duplex Python server for realtime automatic speech recognition (ASR) supporting multiple open-source ASR engines. It can receive a stream of audio chunks via the secure WebSocket connection and return transcribed text almost immediately as partial and final results.<br><br>"
