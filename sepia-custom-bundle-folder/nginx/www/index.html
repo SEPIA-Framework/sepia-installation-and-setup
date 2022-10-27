@@ -48,9 +48,9 @@
 				background-size: 85%;
 				background-position: center;
 				background-repeat: no-repeat;
-				height: 106px;
-				width: 106px;
-				flex: 0 0 106px;
+				height: 100px;
+				width: 100px;
+				flex: 0 0 100px;
 				border: 2px solid #000;
 				border-radius: 50%;
 				box-shadow: 0px 1px 0px 1px #ccc;
@@ -72,7 +72,7 @@
 				text-align: center;
 				border-radius: 8px;
 				box-shadow: 0px 1px 0px 1px #ccc;
-				min-width: 300px;
+				/*min-width: 300px;*/
 			}
 			.sections-group {
 				display: flex;
@@ -174,11 +174,12 @@
 				display: flex;
 				justify-content: center;
 				align-items: center;
-				background: rgba(50, 50, 50, 0.98);
+				background: rgba(50, 50, 50, 0.97);
+				border-radius: 0 0 8px 8px;
 				transition: all .5s;
 				z-index: 2;
 			}
-			#info-popup-actions.chromium {
+			#info-popup-actions.support-blur {
 				background: rgba(255, 255, 255, 0.2);
 				-webkit-backdrop-filter: blur(16px);
 				backdrop-filter: blur(16px);
@@ -203,13 +204,13 @@
 				height: 25px;
 				flex: 0 0 25px;
 				padding: 0;
-				border-radius: 12px;
+				border-radius: 13px;
 				border: 0;
 				background: #eee;
 				color: #000;
 				cursor: pointer;
 				font-weight: bold;
-				font-size: 15px;
+				font-size: 9px;
 				display: flex;
 				justify-content: center;
 				align-items: center;
@@ -268,7 +269,7 @@
 		</div>
 		<div id="info-popup-overlay" class="info-overlay" style="display: none;">
 			<div class="info-popup">
-				<button class="info-popup-close-btn" onclick="closePopup();">&#215;</button>
+				<button class="info-popup-close-btn" onclick="closePopup();">&#x2715;</button>
 				<div id="info-popup-content"></div>
 				<div id="info-popup-actions">
 					<a id="info-popup-open-btn" class="link-button" target=_blank>OPEN</a>
@@ -295,8 +296,8 @@
 			var infoPopupOverlay = document.getElementById("info-popup-overlay");
 			var infoPopupContent = document.getElementById("info-popup-content");
 			var infoPopupActions = document.getElementById("info-popup-actions");
-			if (!!window.chrome){
-				infoPopupActions.classList.add("chromium");		//hack to prevent flicker in FF
+			if (!!window.chrome || navigator.userAgent.search("Safari") >= 0 || location.search.indexOf('ffo=true') > 0){
+				infoPopupActions.classList.add("support-blur");		//hack to prevent flicker in FF
 			}
 			var infoPopupOpenBtn = document.getElementById("info-popup-open-btn");
 			var popupBlendTimer;
