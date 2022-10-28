@@ -6,6 +6,27 @@ SCRIPT_PATH="$(realpath "$BASH_SOURCE")"
 SEPIA_FOLDER="$(dirname "$SCRIPT_PATH")"
 cd "$SEPIA_FOLDER"
 #
+# get IP
+net_interface=""
+get_ip() {
+	local ip_adr=""
+	if [ -x "$(command -v route)" ]; then
+		net_interface="$(route | grep '^default' | grep -o '[^ ]*$')"
+	fi
+	if [ -z "$net_interface" ]; then
+		net_interface="eth0|wlan0"
+	fi
+	if [ -x "$(command -v ip)" ]; then
+		ip_adr=$(ip a | grep -E "$net_interface" | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' | head -1)
+	elif [ -x "$(command -v ifconfig)" ]; then
+		ip_adr=$(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' | head -1)
+	fi
+	if [ -z "$ip_adr" ]; then
+		ip_adr="[IP]"
+	fi
+	echo "$ip_adr"
+}
+#
 echo ""
 echo "Welcome to NGINX setup for SEPIA."
 echo ""
@@ -39,21 +60,17 @@ while true; do
 	then
 		echo "Copying $SEPIA_FOLDER/nginx/sites-available/sepia-fw-http.conf to /etc/nginx/sites-enabled/ ..."
 		cd $SEPIA_FOLDER/nginx/sites-available
-		sudo cp sepia-fw-http.conf /etc/nginx/sites-enabled/
+		cp sepia-fw-http.conf sepia-fw-http-latest.conf
+		#sed -i -e 's|\[my-hostname-or-ip\]|'"${my_hostname}"'|g' sepia-fw-http-${my_hostname}.conf
+		sed -i -e 's|\[my-sepia-path\]|'"$SEPIA_FOLDER"'|g' sepia-fw-http-latest.conf
+		sudo cp sepia-fw-http-latest.conf /etc/nginx/sites-enabled/sepia-fw-http.conf
 		
 		echo "Restarting NGINX to load new config ..."
 		sudo nginx -t
 		sudo nginx -s reload
 		
 		echo ""
-		ip_adr=""
-		if [ -x "$(command -v ip)" ]; then
-			# old: ifconfig
-			ip_adr=$(ip a | grep -E 'eth0|wlan0' | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' | head -1)
-		fi
-		if [ -z "$ip_adr" ]; then
-			ip_adr="[IP]"
-		fi
+		ip_adr="$get_ip"
 		echo "------------------------"
 		echo "DONE."
 		echo "You should be able to reach the server at: http://$ip_adr:20726 or http://$(hostname -s).local:20726"
@@ -114,16 +131,8 @@ while true; do
 		echo "Please confirm your [detected] hostname and IP address by pressing RETURN or enter new ones."
 		read -p "Hostname [$(hostname -s).local]: " my_hostname
 		my_hostname=${my_hostname:-$(hostname -s).local}
-		ip_adr=""
-		if [ -x "$(command -v ip)" ]; then
-			ip_adr=$(ip a | grep -E 'eth0|wlan0' | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' | head -1)
-		elif [ -x "$(command -v ifconfig)" ]; then
-			ip_adr=$(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' | head -1)
-		fi
-		if [ -z "$ip_adr" ]; then
-			ip_adr="[IP]"
-		fi
-		read -p "IP address [$ip_adr]: " my_ip_adr
+		ip_adr="$get_ip"
+		read -p "IP address (interf.: $net_interface) [$ip_adr]: " my_ip_adr
 		my_ip_adr=${my_ip_adr:-$ip_adr}
 		echo ""
 		echo "The 'openssl' tool will create new certificates now with $my_hostname as 'common name' and add"
@@ -134,7 +143,10 @@ while true; do
 		mkdir -p self-signed-ssl
 		openssl req -nodes -new -x509 -days 3650 -newkey rsa:2048 -keyout self-signed-ssl/key.pem -out self-signed-ssl/certificate.pem \
 			-subj "/CN=$my_hostname" \
-			-addext "subjectAltName=DNS:$my_hostname,DNS:$my_ip_adr,DNS:localhost"
+			-addext "subjectAltName=DNS:$my_hostname,DNS:$my_ip_adr,DNS:localhost" \
+			-addext "basicConstraints=CA:TRUE" \
+			-addext "keyUsage=digitalSignature,nonRepudiation,keyEncipherment,dataEncipherment" \
+			-addext "extendedKeyUsage=serverAuth"
 		# subj options: "/C=DE/ST=NRW/L=Essen/O=SEPIA OA Framework/OU=DEV/CN=yourdomain.com"
 		openssl x509 -text -in self-signed-ssl/certificate.pem -noout | grep "Subject:"
 		openssl x509 -text -in self-signed-ssl/certificate.pem -noout | grep "DNS:"
