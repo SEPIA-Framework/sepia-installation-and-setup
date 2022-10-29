@@ -7,9 +7,9 @@ SEPIA_FOLDER="$(dirname "$SCRIPT_PATH")"
 cd "$SEPIA_FOLDER"
 #
 # get IP
+ip_adr=""
 net_interface=""
 get_ip() {
-	local ip_adr=""
 	if [ -x "$(command -v route)" ]; then
 		net_interface="$(route | grep '^default' | grep -o '[^ ]*$')"
 	fi
@@ -24,7 +24,6 @@ get_ip() {
 	if [ -z "$ip_adr" ]; then
 		ip_adr="[IP]"
 	fi
-	echo "$ip_adr"
 }
 #
 echo ""
@@ -35,13 +34,15 @@ echo "https://github.com/SEPIA-Framework/sepia-docs/wiki/SSL-for-your-Server"
 echo "If you are not sure what option to choose install NGINX (1) and try the self-signed SSL certificate (4)."
 # stat menu loop
 while true; do
+	ip_adr=""
+	net_interface=""
 	echo ""
 	echo "What would you like to do? (recommended: 1 and 4)"
 	echo "1: Install NGINX"
 	echo "2: Set up NGINX without SSL certificate (very easy setup, recommended for testing)"
 	echo "3: Set up NGINX with Let's Encrypt SSL certificate (advanced setup for public servers, run AFTER dynamic DNS setup)"
 	echo "4: Set up NGINX with self-signed SSL certificate and non-SSL fallback (easy setup, works on most clients, may show warning messages)"
-	echo "5: Clean up and remove ALL old SEPIA configs from NGINX (use this before switching from HTTP to HTTPS or vice versa)"
+	echo "5: Clean up and remove ALL old SEPIA server configs from NGINX (use this before switching from HTTP to HTTPS or vice versa)"
 	echo ""
 	read -p 'Enter a number plz (0 to exit): ' option
 	echo ""
@@ -70,7 +71,7 @@ while true; do
 		sudo nginx -s reload
 		
 		echo ""
-		ip_adr="$get_ip"
+		get_ip
 		echo "------------------------"
 		echo "DONE."
 		echo "You should be able to reach the server at: http://$ip_adr:20726 or http://$(hostname -s).local:20726"
@@ -131,7 +132,7 @@ while true; do
 		echo "Please confirm your [detected] hostname and IP address by pressing RETURN or enter new ones."
 		read -p "Hostname [$(hostname -s).local]: " my_hostname
 		my_hostname=${my_hostname:-$(hostname -s).local}
-		ip_adr="$get_ip"
+		get_ip
 		read -p "IP address (interf.: $net_interface) [$ip_adr]: " my_ip_adr
 		my_ip_adr=${my_ip_adr:-$ip_adr}
 		echo ""
@@ -143,10 +144,10 @@ while true; do
 		mkdir -p self-signed-ssl
 		openssl req -nodes -new -x509 -days 3650 -newkey rsa:2048 -keyout self-signed-ssl/key.pem -out self-signed-ssl/certificate.pem \
 			-subj "/CN=$my_hostname" \
-			-addext "subjectAltName=DNS:$my_hostname,DNS:$my_ip_adr,DNS:localhost" \
-			-addext "basicConstraints=CA:TRUE" \
-			-addext "keyUsage=digitalSignature,nonRepudiation,keyEncipherment,dataEncipherment" \
-			-addext "extendedKeyUsage=serverAuth"
+			-addext "subjectAltName=DNS:$my_hostname,DNS:$my_ip_adr,DNS:localhost"
+			#-addext "basicConstraints=CA:TRUE" \
+			#-addext "keyUsage=digitalSignature,nonRepudiation,keyEncipherment,dataEncipherment" \
+			#-addext "extendedKeyUsage=serverAuth"
 		# subj options: "/C=DE/ST=NRW/L=Essen/O=SEPIA OA Framework/OU=DEV/CN=yourdomain.com"
 		openssl x509 -text -in self-signed-ssl/certificate.pem -noout | grep "Subject:"
 		openssl x509 -text -in self-signed-ssl/certificate.pem -noout | grep "DNS:"
