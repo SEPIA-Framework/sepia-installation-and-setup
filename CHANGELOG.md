@@ -81,7 +81,7 @@ Other servers, tools and common changes:
 * Tweaks and smaller fixes for SEPIA-Home build and run scripts
 * Updated Teach-Server to v2.3.0 and slightly improved common.json for Teach-UI
 * Updated WebSocket Chat-Server to v1.4.0 (no other changes except updated dependencies)
-* Updated SDK to support new SEPIA-Home v2.7.0
+* Updated SDK to support new SEPIA-Home v2.7.0 (NOTE: please run `mvn clean` once after update!)
 * Updated Mesh-Node to v0.10.0 (no other changes except updated dependencies)
 
 ### v2.6.2 - 2022.05.08
