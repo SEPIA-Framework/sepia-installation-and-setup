@@ -1,10 +1,15 @@
 #!/bin/bash
 set -e
 SCRIPT_PATH="$(realpath "$BASH_SOURCE")"
+# usage: 'bash run.sh' or with 1-2 arguments (respect order!): 'bash run.sh [source_name] [debug]'
 LOG="$(dirname "$SCRIPT_PATH")""/log-run.out"
-LOG_CLIENT="/dev/null"
-#LOG_CLIENT="$(dirname "$SCRIPT_PATH")""/log-client.out"
-NOW=$(date +'%Y_%m_%d_%H:%M:%S')
+if [ -n "$2" ] && [ "$2" = "debug" ]; then
+	# add additional log for chrome
+	LOG_CLIENT="$(dirname "$SCRIPT_PATH")""/log-client.out"
+	echo "Last run attempt: $(date +'%Y_%m_%d_%H:%M:%S') - via: run.sh" > "$LOG_CLIENT"
+else
+	LOG_CLIENT="/dev/null"
+fi
 echo "Last run attempt: $(date +'%Y_%m_%d_%H:%M:%S') - via: run.sh" > "$LOG"
 
 # Client mode

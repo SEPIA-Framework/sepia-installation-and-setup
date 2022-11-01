@@ -8,7 +8,7 @@ SEPIA_DATA="$HOME/sepia-home-data"
 autoconfirm=""
 silent=""
 skip_shutdown=""
-while getopts yhsup: opt; do
+while getopts ysup:h? opt; do
 	case $opt in
 		y) autoconfirm=1;;
 		p) SEPIA_DATA="$(realpath $OPTARG)";;

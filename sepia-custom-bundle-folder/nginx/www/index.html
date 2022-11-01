@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html>
+    <head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>SEPIA Server</title>
+		<meta name="description" content="S.E.P.I.A. Server start page to launch apps, get info and link to help pages.">
+		<meta name="theme-color" content="#000">
+		<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+		<style>
+			* {
+				box-sizing: border-box;
+				font-family: sans-serif;
+			}
+			html, body {
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+				overscroll-behavior: none;
+			}
+			body { 
+				padding: 0;
+				margin: 0;
+				display: flex;
+				flex-direction: column;
+				justify-content: flex-start;
+				align-items: center;
+			}
+			h3 {
+				width: 100%;
+			}
+			.page {
+				display: flex;
+				flex-direction: column;
+				justify-content: flex-start;
+				align-items: center;
+				text-align: center;
+				width: 100%;
+				/*max-width: 1280px;*/
+				max-height: 100vh;
+				padding: 16px;
+				overflow: auto;
+				overscroll-behavior: contain;
+			}
+			.sepia-logo {
+				background: url('sepia.png');
+				background-color: #000;
+				background-size: 85%;
+				background-position: center;
+				background-repeat: no-repeat;
+				height: 100px;
+				width: 100px;
+				flex: 0 0 100px;
+				border: 2px solid #000;
+				border-radius: 50%;
+				box-shadow: 0px 1px 0px 1px #ccc;
+				margin: 8px;
+				cursor: pointer;
+			}
+			.help-links {
+				display: flex;
+				flex-direction: column;
+				align-items: stretch;
+				max-width: 480px;
+			}
+			.help-links a,
+			.help-links button { 
+				padding: 8px 16px;
+				margin: 8px;
+				background: #000;
+				text-decoration: none;
+				color: #ceff1a;
+				text-align: center;
+				border: 0;
+				border-radius: 8px;
+				box-shadow: 0px 1px 0px 1px #ccc;
+				/*min-width: 300px;*/
+				font-size: 16px;
+				cursor: pointer;
+			}
+			.sections-group {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: center;
+				align-items: flex-start;
+			}
+			.subgroup {
+				width: 100%;
+				margin: 4px 0;
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: space-between;
+			}
+			.subgroup > * {
+				margin: 4px 0;
+			}
+			.subgroup label {
+				margin-right: 4px;
+				font-weight: bold;
+			}
+			.subgroup span.failed {
+				color: #f35;
+			}
+			.card-section {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: center;
+				align-items: center;
+			}
+			.link-card {
+				width: 140px;
+				height: 140px;
+				background: #fff;
+				color: #000;
+				border: 2px solid #000;
+				border-radius: 5px;
+				box-shadow: 0px 2px 0px 1px #ccc;
+				margin: 12px;
+				padding: 10px;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				cursor: pointer;
+			}
+			.link-card .icon {
+				background-size: contain;
+				background-position: center;
+				background-repeat: no-repeat;
+				width: 100%;
+				height: 80px;
+				flex: 1 1 80px;
+			}
+			.link-card .text {
+				flex: 0 0 auto;
+				width: 100%;
+				min-height: 42px;
+				font-size: 16px;
+				font-weight: bold;
+				padding: 6px;
+			}
+			.footer {
+				margin: 32px;
+			}
+			.footer a {
+				/*text-decoration: none;*/
+				color: #000;
+			}
+			.info-overlay {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: rgba(255, 255, 255, 0.5);
+				-webkit-backdrop-filter: blur(16px);
+				backdrop-filter: blur(16px);
+				z-index: 2;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				opacity: 0.0;
+				transition: opacity .5s;
+				overscroll-behavior: none;
+				overflow: hidden;
+			}
+			.info-overlay.open {
+				opacity: 1.0;
+			}
+			.info-popup {
+				position: relative;
+				width: 90%;
+				height: auto;
+				max-width: 512px;
+				max-height: 85%;
+				margin-bottom: 7%;
+				border-radius: 8px;
+				background: #000;
+				color: #ceff1a;
+				display: flex;
+				flex-direction: column;
+				overflow: hidden;
+			}
+			#info-popup-content {
+				padding: 28px 0 0 0;
+				display: flex;
+				flex-direction: column;
+				overflow: hidden;
+			}
+			#info-popup-actions {
+				position: absolute;
+				right: 0;
+				bottom: -50px;
+				width: 100%;
+				min-height: 50px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				background: rgba(50, 50, 50, 0.97);
+				border-radius: 0 0 8px 8px;
+				transition: all .5s;
+				z-index: 2;
+			}
+			#info-popup-actions.support-blur {
+				background: rgba(255, 255, 255, 0.2);
+				-webkit-backdrop-filter: blur(16px);
+				backdrop-filter: blur(16px);
+			}
+			#info-popup-actions.active {
+				bottom: 0px;
+			}
+			#info-popup-actions .link-button {
+				background: transparent;
+				color: #eee;
+				text-decoration: none;
+				border-radius: 4px;
+				border: 1px solid currentColor;
+				padding: 6px 12px;
+				font-size: 14px;
+			}
+			.info-popup-close-btn {
+				position: absolute;
+				top: 8px;
+				right: 8px;
+				width: 25px;
+				height: 25px;
+				flex: 0 0 25px;
+				padding: 0;
+				border-radius: 13px;
+				border: 0;
+				background: #eee;
+				color: #000;
+				cursor: pointer;
+				font-weight: bold;
+				font-size: 9px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+			.status-box {
+				padding: 0 32px 32px 32px;
+				color: #eee;
+				overflow: auto;
+			}
+			.status-box h3 {
+				color: #ceff1a;
+			}
+			.status-box label {
+				color: #4ec48f;
+			}
+			.status-box li {
+				margin: 8px 0;
+			}
+			.info-box {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				overscroll-behavior: none;
+				overflow: auto;
+			}
+			.info-box h3 {
+				color: #eee;
+				text-align: center;
+				max-width: calc(100% - 64px);
+				margin: 8px 32px 16px 32px;
+			}
+			.info-box img {
+				width: 100px;
+				margin: 8px;
+			}
+			.info-box .info-text {
+				background: #000;
+				color: #ceff1a;
+				width: 100%;
+				padding: 8px 32px 68px 32px;
+				overscroll-behavior: contain;
+				overflow: auto;
+			}
+			.info-box a {
+				color: #4ec48f;
+			}
+			.help-button {
+				display: inline-flex;
+				background: #eee;
+				color: #000;
+				border-radius: 15px;
+				width: 19px;
+				height: 19px;
+				padding: 0;
+				margin: 0 4px;
+				text-decoration: none;
+				font-size: 15px;
+				justify-content: center;
+				align-items: center;
+			}
+		</style>
+    </head>
+    <body>
+		<div class="page">
+			<h2>Welcome to your SEPIA Server</h2>
+			<div class="sepia-logo" onclick="openPopup('sepia');"></div>
+			<h3>Checks:</h3>
+			<div class="help-links">
+				<button onclick="runStatusCheck();">Status Check</button>
+			</div>
+			<h3>Places to visit:</h3>
+			<div class="sections-group">
+				<section id="sepia-client-section" class="card-section" onclick="openPopup('app');"></section>
+				<section id="sepia-control-hub-section" class="card-section" onclick="openPopup('cHub');"></section>
+				<section id="sepia-stt-server-section" class="card-section" onclick="openPopup('sttServer');"></section>
+			</div>
+			<h3>Info and Help:</h3>
+			<div class="help-links">
+				<a href='https://github.com/SEPIA-Framework/sepia-docs/wiki' target=_blank>SEPIA Wiki (Docs)</a>
+				<a href='https://github.com/SEPIA-Framework/sepia-docs/issues' target=_blank>Ask a question</a>
+				<a href='https://github.com/SEPIA-Framework/sepia-docs/discussions' target=_blank>Discussions about SEPIA</a>
+				<a href='https://github.com/SEPIA-Framework' target=_blank>SEPIA GitHub Repositories</a>
+				<a href='https://sepia-framework.github.io/' target=_blank>SEPIA Framework Homepage</a>
+			</div>
+			<div class="footer">
+				<a href="https://sepia-framework.github.io/#attributions" target=_blank>Credits & icon attributions</a>
+			</div>
+		</div>
+		<div id="info-popup-overlay" class="info-overlay" style="display: none;">
+			<div class="info-popup">
+				<button class="info-popup-close-btn" onclick="closePopup();">&#x2715;</button>
+				<div id="info-popup-content"></div>
+				<div id="info-popup-actions">
+					<a id="info-popup-open-btn" class="link-button" target=_blank>OPEN</a>
+				</div>
+			</div>
+		</div>
+		<script>
+			console.log("Welcome to the SEPIA Framework :-)");
+			
+			function makeCard(targetSection, icon, name){
+				var card = document.createElement("div");
+				card.className = "link-card";
+				var iconEle = document.createElement("div");
+				iconEle.className = "icon";
+				iconEle.style.backgroundImage = "url('" + icon + "')";
+				var textEle = document.createElement("div");
+				textEle.className = "text";
+				textEle.textContent = name;
+				card.appendChild(iconEle);
+				card.appendChild(textEle);
+				targetSection.appendChild(card);
+			}
+			
+			var infoPopupOverlay = document.getElementById("info-popup-overlay");
+			var infoPopupContent = document.getElementById("info-popup-content");
+			var infoPopupActions = document.getElementById("info-popup-actions");
+			if (!!window.chrome || navigator.userAgent.search("Safari") >= 0 || location.search.indexOf('ffo=true') > 0){
+				infoPopupActions.classList.add("support-blur");		//hack to prevent flicker in FF
+			}
+			var infoPopupOpenBtn = document.getElementById("info-popup-open-btn");
+			var popupBlendTimer;
+			
+			function closePopup(){
+				infoPopupOverlay.classList.remove("open");
+				infoPopupActions.classList.remove("active");
+				clearTimeout(popupBlendTimer);
+				popupBlendTimer = setTimeout(function(){
+					infoPopupOverlay.style.display = "none";
+				}, 510);
+			}
+			function openPopup(contentId){
+				clearTimeout(popupBlendTimer);
+				infoPopupContent.innerHTML = "";
+				if (typeof contentId == "string"){
+					//"places" button content
+					infoPopupContent.appendChild(infoContent[contentId]);
+					infoPopupOverlay.style.display = "";
+					var openLink = infoLinks[contentId];
+					if (openLink){
+						infoPopupActions.style.display = "";
+						infoPopupOpenBtn.href = openLink;
+					}else{
+						infoPopupActions.style.display = "none";
+						infoPopupOpenBtn.href = "";
+					}
+				}else{
+					//direct content
+					infoPopupOverlay.style.display = "";
+					infoPopupActions.style.display = "none";
+					infoPopupContent.appendChild(contentId);
+				}
+				popupBlendTimer = setTimeout(function(){
+					infoPopupActions.classList.add("active");
+					infoPopupOverlay.classList.add("open");
+				}, 0);
+			}
+			
+			//info
+			var serverLinks = {
+				hostname: location.origin + "/sepia",
+				assistCheck: location.origin + "/sepia/assist/validate",
+				sttUrl: location.origin + "/sepia/stt",
+				sttCheck: location.origin + "/sepia/stt/ping"
+			}			
+			function runStatusCheck(){
+				var content = document.createElement("div");
+				content.className = "status-box";
+				var mainServerHostname = document.createElement("div");
+				mainServerHostname.innerHTML = "<h3>SEPIA-Home Server (Required)</h3>";
+				var mainServerHostnameInfo = buildSubgroupForStatus(mainServerHostname, "Hostname (for client)", serverLinks["hostname"]);
+				var mainServerCheck = document.createElement("div");
+				var mainServerCheckInfo = buildSubgroupForStatus(mainServerCheck, "Status", "testing...");
+				var sttServerUrl = document.createElement("div");
+				sttServerUrl.innerHTML = "<h3>STT-Server (Optional)</h3>";
+				var sttServerUrlInfo = buildSubgroupForStatus(sttServerUrl, "URL (for client)", serverLinks["sttUrl"]);
+				var sttServerCheck = document.createElement("div");
+				var sttServerCheckInfo = buildSubgroupForStatus(sttServerCheck, "Status", "testing...");
+				var setupComments = document.createElement("div");
+				setupComments.innerHTML = "<h3>Comments</h3>";
+				var setupCommentsInfo = document.createElement("div"); //buildSubgroupForStatus(setupComments, undefined, "Running tests, please wait...");
+				setupCommentsInfo.textContent = "Running tests, please wait...";
+				setupComments.appendChild(setupCommentsInfo);
+				content.appendChild(mainServerHostname);
+				content.appendChild(mainServerCheck);
+				content.appendChild(sttServerUrl);
+				content.appendChild(sttServerCheck);
+				content.appendChild(setupComments);
+				openPopup(content);
+				//run checks
+				//-MAIN
+				var assistCheckProm = httpGet(serverLinks.assistCheck).then(function(json){
+					mainServerCheckInfo.textContent = "Success";
+					return {check: true, label: "Main server", info: ("Main server version: " + json.version)};
+				})
+				.catch(function(err){
+					mainServerCheckInfo.textContent = "Error: " + (err.message || err.name);
+					mainServerCheckInfo.classList.add("failed");
+					return {check: false, label: "Main server", helpLink: "https://github.com/SEPIA-Framework/sepia-installation-and-setup",
+						info: "Make sure the SEPIA-Home server is running."};
+				});
+				//-STT
+				var sttCheckProm = httpGet(serverLinks.sttCheck).then(function(json){
+					sttServerCheckInfo.textContent = "Success";
+					return {check: true, label: "STT server", info: ("STT-Server version: " + json.version)};
+				})
+				.catch(function(err){
+					sttServerCheckInfo.textContent = "Error: " + (err.message || err.name);
+					sttServerCheckInfo.classList.add("failed");
+					return {check: false, label: "STT server", helpLink: "https://github.com/SEPIA-Framework/sepia-stt-server#how-to-use-with-sepia-client",
+						info: "To use the STT-Server make sure it is installed and running and add the correct URL to your SEPIA-Home proxy config (e.g. Nginx)."};
+				});
+				//-SSL
+				var sslCheckProm = new Promise(function(resolve, reject){
+					if (location.hostname == "localhost" || location.protocol == "https:"){
+						resolve({check: true, label: "SSL check", info: "Origin is secure (SSL active)."});
+					}else{
+						resolve({check: false, label: "SSL check", helpLink: "https://github.com/SEPIA-Framework/sepia-docs/wiki/SSL-for-your-Server#securing-your-server-basic",
+							info: "Origin is NOT secure. Please add self-signed or official SSL certificates (e.g. via Nginx)."});
+					}
+				});
+				Promise.all([assistCheckProm, sttCheckProm, sslCheckProm]).then((results) => {
+					console.log("Checks done. Results:", results);		//DEBUG
+					var resHtml = document.createElement("ul");
+					resHtml.style.cssText = "margin: 0; padding-left: 28px;";
+					results.forEach(function(res){
+						var resItem = document.createElement("li");
+						resItem.textContent = res.info;
+						if (res.helpLink){
+							var hl = document.createElement("a");
+							hl.className = "help-button";
+							hl.href = res.helpLink;
+							hl.target = "_blank";
+							hl.textContent = "?";
+							resItem.appendChild(hl);
+						}
+						resHtml.appendChild(resItem);
+					});
+					setupCommentsInfo.innerHTML = "";
+					setupCommentsInfo.appendChild(resHtml);
+				});
+			}
+			function buildSubgroupForStatus(parentEle, labelName, infoText){
+				var sub = document.createElement("div");
+				sub.className = "subgroup";
+				if (labelName){
+					var label = document.createElement("label");
+					label.textContent = labelName + ":";
+					sub.appendChild(label);
+				}
+				if (infoText){
+					var info = document.createElement("span");
+					info.textContent = infoText;
+					sub.appendChild(info);
+				}
+				parentEle.appendChild(sub);
+				return info;
+			}
+			function httpGet(url, timeout){
+				var to = timeout || 8000;
+				var toController = new AbortController();
+				var isTimeout = false;
+				var timerId = setTimeout(function(){ isTimeout = true; toController.abort(); }, to);
+				return fetch(url, {
+					signal: toController.signal
+				})
+				.then(function(response){
+					clearTimeout(timerId);
+					if (response.ok){
+						console.log("httpGet", url, response);	//DEBUG
+						return response.json();
+					}else{
+						throw {name: "GetError", message: response.statusText, code: status};
+					}
+				})
+				.catch(function(err){
+					clearTimeout(timerId);
+					console.error("httpGet error for", url, err, isTimeout);
+					if (isTimeout){
+						throw {name: "TimeoutError", message: "Timeout"};
+					}else{
+						throw err;
+					}
+				});
+			}
+			
+			//places
+			var clientSec = document.getElementById("sepia-client-section");
+			makeCard(clientSec, "app.png", "SEPIA Client App");
+			
+			var controlHubSec = document.getElementById("sepia-control-hub-section");
+			makeCard(controlHubSec, "cHub.png", "SEPIA Control HUB");
+			
+			var sttServerSec = document.getElementById("sepia-stt-server-section");
+			makeCard(sttServerSec, "sttServer.png", "SEPIA STT-Server");
+			
+			function buildContent(headline, id, text){
+				var content = document.createElement("div");
+				content.className = "info-box";
+				var headlineEle = document.createElement("h3");
+				headlineEle.textContent = headline;
+				var iconEle = document.createElement("img");
+				iconEle.src = id + ".png";
+				if (id != "sepia"){
+					iconEle.style.filter = "invert(1)";
+				}
+				var textEle = document.createElement("div");
+				textEle.className = "info-text";
+				textEle.innerHTML = text;
+				content.appendChild(iconEle);
+				content.appendChild(headlineEle);
+				content.appendChild(textEle);
+				return content;
+			}
+			
+			var infoLinks = {
+				app: location.origin + "/sepia/assist/app/index.html",
+				cHub: location.origin + "/sepia/assist/tools/index.html",
+				sttServer: location.origin + "/sepia/stt/",
+				sepia: "https://sepia-framework.github.io"
+			}
+			var infoContent = {
+				sepia: buildContent("S.E.P.I.A. Framework", "sepia",
+					"S.E.P.I.A. is an acronym for: <u>s</u>elf-hosted, <u>e</u>xtendable, <u>p</u>ersonal, <u>i</u>ntelligent <u>a</u>ssistant. It is a modular, open-source framework equipped with all the required tools to build your own, full-fledged digital voice-assistant, including speech recognition (STT), wake-word detection, text-to-speech (TTS), natural-language-understanding, dialog-management, SDK(s), a cross-platform client app and much more."
+				),
+				app: buildContent("SEPIA Client App", "app",
+					"<a href='https://github.com/SEPIA-Framework/sepia-html-client-app' target=_blank>The SEPIA Client App</a> is the primary interface used to communicate with SEPIA assistant. It is written in Javascript/HTML and runs cross-platform on any modern browser (desktop PC, Android, iOS), as web and mobile app or even as <a href='https://github.com/SEPIA-Framework/sepia-installation-and-setup/tree/master/sepia-client-installation' target=_blank>smart-speaker (headless) and smart-display</a> on SBCs like the Raspberry Pi."
+				),
+				cHub: buildContent("SEPIA Control-HUB", "cHub",
+					"<a href='https://github.com/SEPIA-Framework/sepia-admin-tools/tree/master/admin-web-tools' target=_blank>The SEPIA Control-HUB</a> is a web-application that contains a collection of tools to help you set up your SEPIA servers remotely, create users, <a href='https://github.com/SEPIA-Framework/sepia-docs/wiki/Smart-Home-Controls' target=_blank>configure your smart home</a>, connect to your <a href='https://github.com/SEPIA-Framework/sepia-installation-and-setup/tree/master/sepia-client-installation' target=_blank>headless DIY clients</a>, edit settings and test things. The Code-UI to create, download and register custom smart-services and plugins is part of it as well."
+				),
+				sttServer: buildContent("SEPIA STT-Server", "sttServer",
+					"<a href='https://github.com/SEPIA-Framework/sepia-html-client-app' target=_blank>The SEPIA Speech-To-Text (STT) Server</a> is a cloud-free, full-duplex Python server for realtime automatic speech recognition (ASR) supporting multiple open-source ASR engines. It can receive a stream of audio chunks via the secure WebSocket connection and return transcribed text almost immediately as partial and final results.<br><br>"
+					+ "NOTE: The STT-Server needs to be <a href='https://github.com/SEPIA-Framework/sepia-stt-server#quick-start-with-python' target=_blank>installed</a> separately! If you can't open it from here please <a href='https://github.com/SEPIA-Framework/sepia-docs/wiki/Reverse-Proxy-Setup' target=_blank>check your proxy config</a> (created during setup) and make sure the server is actually running.",
+				)
+			}
+		</script>
+    </body>
+</html>

@@ -1,5 +1,89 @@
 ## Release history and changelog
 
+### v2.7.0 - 2022.10.31
+
+Updated client to v0.25.0:
+* New custom skin feature and theme editor, including one light and dark template
+* Added better support for safe-areas of display (e.g. iPhone notch) and ability to add new custom borders
+* New 'dialog_task' variable to be able to optimize client and services depending on defined 'tasks'
+* Added support for STT 'task'-based custom models and improved STT settings view
+* Improved widgets (custom views/frames) interface and added support for per-widget 'activitySettings' like language and task
+* New time-event card icons to indicate "next", "expired" and "faulty"
+* Optimized web-manifest and changed default PWA display mode from 'fullscreen' to 'standalone'
+* Android: Completely refactored and optimized build setup + set official target to Android 12L
+* Android: Added support for TTS native-engine voice selection
+* Android: New and improved in-app browser with theme support
+* Android: Prevent back-button action when login or pop-up is open
+* Android: Implemented several fixes required to support Android 12 (and potentially Android 13)
+* iOS PWA: Greatly improved PWA experience on iOS with fixes for splash-screen, safe-areas, overscrolling, sound initialization, error handling and more. Safari is still buggy though.
+* Improved 'notify' module, new close-button for web-based OS notifications and added features to prepare for PWA background support (wip)
+* Optimized landscape-mode for Teach-UI
+* Improved media-devices settings view
+* Renamed 'Big-screen mode' setting to "Limit screen-size", reversed logic and improved default setting
+* Allow abort of 'setup-mode' to enable on-screen login (e.g. via virtual keyboard) in DIY clients (usually in 'pseudo-headless' mode)
+* Split short-cuts 'fullscreen' button into two buttons. One for UI (will always show up) and screen (shows up when supported)
+* Set black theme and safe-area colors when entering AO mode
+* Further reduced background music volume during speech input (applies to browser clients only)
+* New UI framework functions like 'ui.build.helpButton' or 'tools.escapeHtmlAndSanitize' and several smaller bug fixes
+* A lot of smaller look and style fixes and tweaks (+ optimized background images etc.)
+
+Updated Control-HUB (admin-tools) to v1.5.0:
+* Smart-home: Improved UI, animations and device cards + new reload time indicator
+* Smart-home: Added 'Home Assistant' support (BETA) and new device types ('fan', 'garage_door', 'air_conditioner' and 'temperature_control')
+* Smart-home: Added new HUB interface device configuration option to handle more complex HUB APIs (e.g. HA uses several different endpoints to check and control devices)
+* Better handling of 'new login' and expired logins
+* New 'UI.showJsonPopup' for a better view of JSON data + tweaked pop-up size
+* Fixed a bug that could happen at reload after a logout
+* Smaller bug fixes
+
+Changes to all SEPIA-Home servers and core tools:
+* Java 11 is required now and Java 8 support has been dropped. Please UPDATE TO JAVA 11 if you're still using 8!
+* Updated all Maven plugins and dependencies to account for Java 11 changes
+* Updated all servers to core-tools v2.3.0
+* Added a nice start logo to be displayed inside log files :-)
+
+Updated Assist-server to v2.7.0:
+* Added 'Home Assistant' smart-home HUB interface (BETA) and improved existing interfaces (e.g. auto-detection of openHAB devices)
+* Support for new smart-home devices: 'fan', 'garage_door', 'air_conditioner' and 'temperature_control'
+* Updated 'SmartHomeHubConnector' to handle device type groups (first group: temperature). Allows to better handle similar devices like 'air_conditioner' + 'heater'
+* Introduced new smart-home interface device configuration to handle complex HUB APIs and complement 'set commands' to control devices
+* Improved code of several smart-home HUB integrations (openHAB, FHEM, ioBroker, test-HUB etc.)
+* Implemented new 'InterviewMetaData' feature with 'dialog_task' support enabling services to optimize client settings (e.g. switching task-based ASR models)
+* Fixed some news outlet RSS feed URLs
+* Several TTS pronunciation tweaks for example to better handle units like kWh, Wh, kW and W and fixes for 'txt2pho' engine
+* Several NLU tweaks and fixes, e.g for 'smart_device' parameters or 'Alarms' service and language switching
+* Improved 'action' NLU parameter by splitting 'open/close' from 'on/off' and adding 'cancel'
+* Improved parsing of Mary-TTS API compatible voices to support engines like Mimic3 + updated Mary-TTS INSTALL info
+* New server settings option 'languages_preload' (default: en, de), controlling for example what language files are pre-loaded at start-up
+* New server settings option 'allow_non_commercial_features' (default: false), to globally handle specific license restrictions. NOTE: Set to true to use 'MBROLA' and 'txt2pho' TTS engines
+* Added "isNextEvent" flag for time-events during load
+* Auto-adjust 'season' for OpenLigaWorker
+* Disable sentences import into DB by default during setup (can be run manually instead)
+* Added new calculator library and tool to parse mathematical expressions from strings (used e.g. for smart-home state calculations)
+* Updated Elasticsearch mappings for 'smart-devices' and 'smart-interfaces' to better handle meta data (NOTE: this will not automatically apply to old installations)
+* Fixed a bug in 'Alarms' service that allowed to create already expired events
+* Fixed a bug in weather service that could occasionally prevent results for forecasts 2+ days in the future
+* Better track and handle list-update errors
+* Fixed a localization bug in 'DateAndTime'
+* Added Italian translations of 'Assistant' files (answers, chats, teachIt) thanks to @giostark
+* Several smaller fixes, clean-ups and improved error messages
+
+Updated Core-tools to v2.3.0:
+* Improved private network detection
+* Updated spark-core to v2.9.4
+* Updated 'slf4j-simple' logger to v1.7.36
+* Code clean-ups + added a few convenience methods (e.g. SparkJavaFw.redirect)
+
+Other servers, tools and common changes:
+* New SEPIA-Home server start-page to quickly access apps, check status info and get help with issues. The page can be found at 'http(s)://[my-sepia-home-ip]:20726/sepia/' after Nginx has been set up
+* Improved Nginx and self-signed SSL installation scripts
+* Optimized Elasticsearch v5.3.3 package to run on Windows 11
+* Tweaks and smaller fixes for SEPIA-Home build and run scripts
+* Updated Teach-Server to v2.3.0 and slightly improved common.json for Teach-UI
+* Updated WebSocket Chat-Server to v1.4.0 (no other changes except updated dependencies)
+* Updated SDK to support new SEPIA-Home v2.7.0 (NOTE: please run `mvn clean` once after update!)
+* Updated Mesh-Node to v0.10.0 (no other changes except updated dependencies)
+
 ### v2.6.2 - 2022.05.08
 
 Updated client to v0.24.2:
@@ -42,7 +126,7 @@ Updated Assist-server to v2.6.2:
 * Added installer for 'txt2pho' TTS engine (German MBROLA only) + tweaked some voice speeds
 * Better checks for correct smart-home HUB authentication types + smaller smart-home interface tweaks
 * Added 'appRegionCode' and new 'defaultNewsRegion' to NluInput class (to be used in services)
-* Improved News service to support 'language' parameter (e.g.: "show me news in German") + 'defaultNewsRegion' and 'appRegionCode' to make news independant of user language
+* Improved news service to support 'language' parameter (e.g.: "show me news in German") + 'defaultNewsRegion' and 'appRegionCode' to make news independent of user language
 * Added a 'region' parameter to news-outlets.json
 * Improved settings loader and 'getConfig' endpoint with new 'PropertiesReader' that will return ALL settings (properties file + defaults)
 * Streamlined SDK endpoint responses to return JSON format and added more useful info

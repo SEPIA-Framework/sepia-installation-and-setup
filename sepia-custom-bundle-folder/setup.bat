@@ -27,7 +27,7 @@ echo Typically for a new installation what you should do is (4) then (1) to set 
 echo. 
 echo What would you like to do next?
 echo 1: Set up core components. Note: This will CLEAR ALL old data!
-echo 1b: Run automatic setup using 'SEPIA/auto-setup/config.yaml'
+echo 1b: Run automatic setup using 'SEPIA/automatic-setup/config.yaml'
 echo 2: Define new admin and assistant passwords
 echo 3: Set up dynamic DNS with DuckDNS
 echo 4: Start Elasticsearch (required for setup and accounts)

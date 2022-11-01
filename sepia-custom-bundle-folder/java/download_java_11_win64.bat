@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 echo.
 SET thispath=%~dp0
-SET javaurl="https://api.adoptopenjdk.net/v3/binary/latest/11/ga/windows/x64/jdk/hotspot/normal/adoptopenjdk"
+SET javaurl="https://api.adoptium.net/v3/binary/latest/11/ga/windows/x64/jdk/hotspot/normal/eclipse?project=jdk"
 echo Downloading Java OpenJDK 11. This might take a few minutes ...
 echo.
 echo URL: %javaurl%

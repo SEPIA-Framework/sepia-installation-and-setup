@@ -1,6 +1,4 @@
 #!/bin/bash
-ENGINE="vosk"
-echo "Engine: $ENGINE"
 PLATFORM=""
 if [ -n "$(uname -m | grep aarch64)" ]; then
 	PLATFORM=aarch64
@@ -16,4 +14,6 @@ else
 	exit 1
 fi
 echo "Platform: $PLATFORM"
-sudo docker run --rm --name=sepia-stt -p 20741:20741 -d sepia/stt-server:"${ENGINE}_${PLATFORM}"
+ENGINE="dynamic"
+echo "Engine: $ENGINE"
+sudo docker run --rm --name=sepia-stt -p 20741:20741 -d sepia/stt-server:latest
