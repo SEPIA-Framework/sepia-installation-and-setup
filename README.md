@@ -21,7 +21,7 @@ bash sepia-home-rpi.sh
 ```
   
 Installation without script (any platform):
-* Make sure you have **Java JDK 11** installed (Java 8 will work as well, for now). For Debian Linux use `sudo apt-get install openjdk-11-jdk-headless`, for other platforms check [Eclipse's Adoptium Project](https://adoptium.net/index.html?variant=openjdk11).
+* Make sure you have **Java JDK 11** installed. For Debian Linux use `sudo apt-get install openjdk-11-jdk-headless`, for other platforms check [Eclipse's Adoptium Project](https://adoptium.net/de/temurin/releases?version=11).
 * Place the content of the [SEPIA-Home bundle](https://github.com/SEPIA-Framework/sepia-installation-and-setup/releases) in any folder you like. On Linux "~/SEPIA/" (no root!) is highly recommended if you want to use the boot and SSL scripts later: `unzip SEPIA-Home.zip -d ~/SEPIA`.
 * Run `setup.bat` (Windows) or `bash setup.sh` (Mac, Linux) to setup your SEPIA servers
 * Inside the setup choose 4 to start Elasticsearch and then 1 to setup the SEPIA-Framework. Remember the passwords you set! Optionally install the TTS engine (recommended for Linux). You can skip the other options for now.
