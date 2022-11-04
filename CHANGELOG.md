@@ -10,7 +10,7 @@ Updated client to v0.25.0:
 * Improved widgets (custom views/frames) interface and added support for per-widget 'activitySettings' like language and task
 * New time-event card icons to indicate "next", "expired" and "faulty"
 * Optimized web-manifest and changed default PWA display mode from 'fullscreen' to 'standalone'
-* Android: Completely refactored and optimized build setup + set official target to Android 12L
+* Android: Completely refactored and optimized build setup + set official target to Android 12L (NOTE: min. Android is 5.1 now!)
 * Android: Added support for TTS native-engine voice selection
 * Android: New and improved in-app browser with theme support
 * Android: Prevent back-button action when login or pop-up is open
@@ -55,7 +55,7 @@ Updated Assist-server to v2.7.0:
 * Improved 'action' NLU parameter by splitting 'open/close' from 'on/off' and adding 'cancel'
 * Improved parsing of Mary-TTS API compatible voices to support engines like Mimic3 + updated Mary-TTS INSTALL info
 * New server settings option 'languages_preload' (default: en, de), controlling for example what language files are pre-loaded at start-up
-* New server settings option 'allow_non_commercial_features' (default: false), to globally handle specific license restrictions. NOTE: Set to true to use 'MBROLA' and 'txt2pho' TTS engines
+* New server settings option 'allow_non_commercial_features' (default: false), to globally handle specific license restrictions. NOTE: Please set it to true to use 'MBROLA' and 'txt2pho' TTS engines
 * Added "isNextEvent" flag for time-events during load
 * Auto-adjust 'season' for OpenLigaWorker
 * Disable sentences import into DB by default during setup (can be run manually instead)
@@ -76,8 +76,9 @@ Updated Core-tools to v2.3.0:
 
 Other servers, tools and common changes:
 * New SEPIA-Home server start-page to quickly access apps, check status info and get help with issues. The page can be found at 'http(s)://[my-sepia-home-ip]:20726/sepia/' after Nginx has been set up
+* Updated SEPIA STT-Server to v1.0.0 with support for Coqui-STT, task-based models and more
 * Improved Nginx and self-signed SSL installation scripts
-* Optimized Elasticsearch v5.3.3 package to run on Windows 11
+* Optimized Elasticsearch v5.3.3 database to run on Windows 11
 * Tweaks and smaller fixes for SEPIA-Home build and run scripts
 * Updated Teach-Server to v2.3.0 and slightly improved common.json for Teach-UI
 * Updated WebSocket Chat-Server to v1.4.0 (no other changes except updated dependencies)
