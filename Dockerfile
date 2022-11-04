@@ -14,14 +14,14 @@ RUN echo 'Installing SEPIA-Home...' && \
   mkdir -p /usr/share/man/man1 && \
 #
 # Get packages
-  apt-get install -y --no-install-recommends \
+  apt install -y --no-install-recommends \
   sudo git wget curl nano unzip zip procps \
   openjdk-11-jdk-headless ca-certificates-java \
   ntpdate nginx \
   espeak-ng espeak-ng-espeak libpopt0 && \
 #
 # Update time-sync - NOTE: not possible in Docker? will use host clock?
-# sudo timedatectl set-ntp true
+# timedatectl set-ntp true
 #
 # Clean up
   apt-get clean && apt-get autoclean && apt-get autoremove -y && \
@@ -62,7 +62,18 @@ RUN echo "Downloading SEPIA-Home (custom bundle) ..." && \
 # Run setup to install TTS engine
   bash setup.sh 7 && \
 #
+# Install non-commercial TTS systems (activate via server settings)
+  sudo apt install -y git make gcc g++ && \
+  cd ~/SEPIA/sepia-assist-server/Xtensions/TTS/espeak-ng-mbrola && \
+  sed -i -e "s|read -p \"Enter 'agree'.*|agreeornot=agree|g" install.sh && \
+  bash install.sh && \
+  cd ~/SEPIA/sepia-assist-server/Xtensions/TTS/txt2pho && \
+  bash install.sh && \
+  sudo apt remove -y make gcc g++ && \
+  sudo apt clean && sudo apt autoclean && sudo apt autoremove -y && \
+#
 # Set up Nginx (HTTP)
+  cd ~/SEPIA && \
   sudo cp nginx/sites-available/sepia-fw-http.conf /etc/nginx/sites-enabled/sepia-fw-http.conf && \
   sudo sed -i -e 's|\[my-sepia-path\]|'"/home/admin/SEPIA"'|g' /etc/nginx/sites-enabled/sepia-fw-http.conf && \
   sudo unlink /etc/nginx/sites-enabled/default && \
@@ -70,6 +81,8 @@ RUN echo "Downloading SEPIA-Home (custom bundle) ..." && \
 # Prepare automatic-setup and user1
   cd automatic-setup && \
   cp template.yaml config.yaml && \
+  sed -i '/- answers/d' config.yaml && \
+  sed -i '/- commands/d' config.yaml && \
   sed -i 's/nickname: Testy/nickname: Boss/' config.yaml && \
   sed -i 's/email: test@sepia.localhost/email: user1@sepia.localhost/' config.yaml && \
   sed -i 's/password: test12345/password: <random>/' config.yaml && \
