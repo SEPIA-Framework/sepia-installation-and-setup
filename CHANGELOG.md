@@ -75,7 +75,7 @@ Updated Core-tools to v2.3.0:
 * Code clean-ups + added a few convenience methods (e.g. SparkJavaFw.redirect)
 
 Other servers, tools and common changes:
-* New SEPIA-Home server start-page to quickly access apps, check status info and get help with issues. The page can be found at 'http(s)://[my-sepia-home-ip]:20726/sepia/' after Nginx has been set up
+* New SEPIA-Home server start-page to quickly access apps, check status info and get help with issues. The page can be found at 'http(s)://[my-sepia-home-ip]:20726' after Nginx has been set up
 * Updated SEPIA STT-Server to v1.0.0 with support for Coqui-STT, task-based models and more
 * Improved Nginx and self-signed SSL installation scripts
 * Optimized Elasticsearch v5.3.3 database to run on Windows 11
