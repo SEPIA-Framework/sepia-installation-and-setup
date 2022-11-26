@@ -6,8 +6,6 @@ tasks:
   - database
   - accounts
   - cluster
-  - answers
-  - commands
 #
 # Setup users
 # requires task: accounts
