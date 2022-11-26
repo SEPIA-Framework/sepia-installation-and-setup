@@ -144,9 +144,18 @@ if [ "$chromium_remote_debug" -eq "1" ]; then
 	echo "$(date +'%Y_%m_%d_%H:%M:%S') - REMOTE DEBUGGING for Chromium on port 9222 ACTIVE" >> "$LOG"
 fi
 # comma separated list of extensions:
-chrome_extensions="--load-extension=~/sepia-client/chromium-extensions/sepia-fw"
+sepia_chrome_extension="~/sepia-client/chromium-extensions/sepia-fw"
+chrome_extensions="--load-extension=$sepia_chrome_extension"
+echo "$(date +'%Y_%m_%d_%H:%M:%S') - SEPIA Chromium extension path: $sepia_chrome_extension" >> "$LOG"
 # headless or with display:
-pi_model=$(tr -d '\0' </proc/device-tree/model)
+pi_model="unknown"
+if [ -f "/proc/device-tree/model" ]; then
+	pi_model=$(tr -d '\0' </proc/device-tree/model)
+	echo "$(date +'%Y_%m_%d_%H:%M:%S') - Device model: $pi_model" >> "$LOG"
+else
+	echo "Device model is unknown, please check run flags manually!"
+	echo "$(date +'%Y_%m_%d_%H:%M:%S') - Device model is unknown, please check run flags manually!" >> "$LOG"
+fi
 is_pi4=0
 case "$pi_model" in *"Pi 4"*) is_pi4=1;; *) is_pi4=0;; esac
 echo "RPi model: $pi_model - Is Pi4: $is_pi4"

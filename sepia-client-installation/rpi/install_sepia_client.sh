@@ -97,7 +97,15 @@ echo "Installing app environment ..."
 echo "$(log_date) - Installing app environment (X-Server, Xvfb, Openbox, Chromium, etc.) ..." >> "$LOG"
 sudo apt-get install -y --no-install-recommends xserver-xorg x11-xserver-utils xinit openbox xvfb xterm xinput xdg-utils
 # NOTE: 'chromium' can be an alternative if 'chromium-browser' has issues but currently 'chromium' has graphic glitches :-/
-sudo apt-get install -y --no-install-recommends chromium-browser chromium-codecs-ffmpeg-extra
+if [ -n "$(command -v chromium-browser)" ]; then
+	echo "Already installed: chromium-browser"
+	echo "$(log_date) - Already installed: chromium-browser" >> "$LOG"
+elif [ -n "$(command -v chromium)" ]; then
+	echo "Already installed: chromium"
+	echo "$(log_date) - Already installed: chromium" >> "$LOG"
+else
+	sudo apt-get install -y --no-install-recommends chromium-browser chromium-codecs-ffmpeg-extra
+fi
 echo "$(log_date) - If you're having trouble with the current version of Chromium try: 'bash install_chromium_92_from_archive.sh'" >> "$LOG"
 if [ $(sudo apt-cache search unclutter | grep ^unclutter-xfixes | wc -l) -eq 0 ]; then
 	sudo apt-get install -y --no-install-recommends unclutter
@@ -142,6 +150,13 @@ else
 	echo "$(log_date) - Installed Node.js: $(node -v), npm: $(npm -v)" >> "$LOG"
 fi
 echo "Node.js: $(node -v) - npm: $(npm -v)"
+if [ -n "$(command -v npm)" ]; then
+	# Sometime npm is skipped during installation (idk why?)
+	echo "Still missing 'npm'! Trying to install package..."
+	sudo apt-get install -y npm
+	echo "npm: $(npm -v)"
+	echo "$(log_date) - Installed npm: $(npm -v)" >> "$LOG"
+fi
 echo "$(log_date) - Installing CLEXI" >> "$LOG"
 if [ -d ~/clexi ]; then
 	echo "Found CLEXI home folder, skipped download - To update CLEXI remove ~/clexi before running this script"
