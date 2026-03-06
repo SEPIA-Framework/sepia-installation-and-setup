@@ -10,10 +10,16 @@ git clone https://github.com/iqaudio/Pi-Codec.git
 cd Pi-Codec
 sudo alsactl restore -f IQaudIO_Codec_OnboardMIC_record_and_SPK_playback.state
 #DRIVER_FOLDER=$(pwd)
+systemctl --user restart pulseaudio.service
 echo ""
 echo "Some notes:"
 echo ""
 echo "Run 'pulsemixer' afterwards and change source setup (F3) to:"
 echo "Multichannel Duplex (or your preferred settings)"
 echo ""
-
+echo "If you experience problems try to modify your '/boot/config.txt':"
+echo ""
+echo "add: dtoverlay=iqaudio-codec"
+echo "set: dtoverlay=vc4-kms-v3d,noaudio"
+echo "set: dtparam=audio=off"
+echo ""

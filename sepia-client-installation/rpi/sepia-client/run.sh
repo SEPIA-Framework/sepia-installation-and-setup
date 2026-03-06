@@ -107,6 +107,12 @@ echo "$(date +'%Y_%m_%d_%H:%M:%S') - CLEXI ready" >> "$LOG"
 sleep 2
 
 # Start Chromium in kiosk mode
+#
+# Add Google API keys for Web Speech API support, if you have some (req. for all Chromium versions on RPi)
+#export GOOGLE_API_KEY=""
+#export GOOGLE_DEFAULT_CLIENT_ID=""
+#export GOOGLE_DEFAULT_CLIENT_SECRET=""
+#
 echo "$(date +'%Y_%m_%d_%H:%M:%S') - Preparing Chromium ..." >> "$LOG"
 client_url="http://localhost:8080/sepia/index.html"
 clexi_ws_url="ws://[IP]:9090/clexi"
