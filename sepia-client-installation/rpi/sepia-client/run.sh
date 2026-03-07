@@ -17,8 +17,17 @@ is_headless=1
 default_view=""  #(e.g.: aomode, <custom_data>/views/demo-view, <assist_server>/views/demo-view, etc.)
 chromium_remote_debug=0
 
-# Enable Pulseaudio support (1: on, 0: off = ALSA only)
-use_pulseaudio=1
+# Pulseaudio support (-1 = auto-detect, 0 = ALSA-only, 1 = enable Pulseaudio optimizations)
+use_pulseaudio=-1
+if [ "$use_pulseaudio" -eq "-1" ]; then
+    if command -v pactl &> /dev/null && pactl info &> /dev/null; then
+        use_pulseaudio=1
+        echo "$(date +'%Y_%m_%d_%H:%M:%S') - PulseAudio detected and active" >> "$LOG"
+    else
+        use_pulseaudio=0
+        echo "$(date +'%Y_%m_%d_%H:%M:%S') - PulseAudio not detected, using ALSA-only" >> "$LOG"
+    fi
+fi
 
 # Check sound devices
 sound_card_player_count=$(aplay -l | grep -E "^[[:alpha:]]+ [[:digit:]]" | wc -l)
