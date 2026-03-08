@@ -447,7 +447,7 @@
 				//-SSL
 				var sslCheckProm = new Promise(function(resolve, reject){
 					if (location.hostname == "localhost" || location.protocol == "https:"){
-						resolve({check: true, label: "SSL check", info: "Origin is secure (SSL active)."});
+						resolve({check: true, label: "SSL check", info: "Origin is secure (SSL active or localhost)."});
 					}else{
 						resolve({check: false, label: "SSL check", helpLink: "https://github.com/SEPIA-Framework/sepia-docs/wiki/SSL-for-your-Server#securing-your-server-basic",
 							info: "Origin is NOT secure. Please add self-signed or official SSL certificates (e.g. via Nginx)."});

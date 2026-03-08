@@ -2,13 +2,13 @@
 
 ## Common Instructions
 
-Tested with Raspberry Pi OS Buster (recommended) and Bullseye on RPi4 B 2GB and 4GB.  
+Tested with Raspberry Pi OS Trixie (recommended), Buster and Bullseye on RPi4 B 2GB and 4GB.  
 Works on RPi3 1GB and maybe even on RPi Zero 512GB if wake-word and display are disabled.
 
 ### 1) Install Raspberry Pi OS Lite
 
 * Download the official [Raspberry Pi Imager](https://www.raspberrypi.com/software/) and start it
-* Choose Raspberry Pi OS Lite (from 'other' menu) - Currently recommended: **32Bit Buster ('Legacy')**
+* Choose Raspberry Pi OS Lite (from 'other' menu) - Currently recommended: **64Bit Trixie**
 * Press 'Ctrl + Shift + X' to open Imager expert settings
 * Activate SSH (required), set your time zone (important for timers) and optionally configure Wifi, hostname, etc.
 * Flash the SD card

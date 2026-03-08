@@ -1,5 +1,15 @@
 #!/bin/bash
 set -e
+get_bootfile_path() {
+	if [ -f /boot/firmware/config.txt ]; then
+		echo "/boot/firmware/config.txt"
+	elif [ -f /boot/config.txt ] && ! grep -q "boot/firmware" /boot/config.txt; then
+		echo "/boot/config.txt"
+	else
+		echo "Error: config.txt not found!" >&2
+		return 1
+	fi
+}
 if [[ $EUID -eq 0 ]]; then
 	echo ""
 	echo "Setup for: Waveshare 7inch HDMI LCD (H) touchscreen"
@@ -31,7 +41,7 @@ else
 	echo "Ok, cu later :-)"
 	exit
 fi
-bootfile="/boot/config.txt"
+bootfile=$(get_bootfile_path) || exit 1
 echo "Updating $bootfile ..."
 # clean up
 sed -i 's/^dtoverlay=vc4-fkms-v3d/#dtoverlay=vc4-fkms-v3d/' $bootfile

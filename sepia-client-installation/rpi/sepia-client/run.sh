@@ -14,7 +14,20 @@ echo "Last run attempt: $(date +'%Y_%m_%d_%H:%M:%S') - via: run.sh" > "$LOG"
 
 # Client mode
 is_headless=1
+default_view=""  #(e.g.: aomode, <custom_data>/views/demo-view, <assist_server>/views/demo-view, etc.)
 chromium_remote_debug=0
+
+# Pulseaudio support (-1 = auto-detect, 0 = ALSA-only, 1 = enable Pulseaudio optimizations)
+use_pulseaudio=-1
+if [ "$use_pulseaudio" -eq "-1" ]; then
+    if command -v pactl &> /dev/null && pactl info &> /dev/null; then
+        use_pulseaudio=1
+        echo "$(date +'%Y_%m_%d_%H:%M:%S') - PulseAudio detected and active" >> "$LOG"
+    else
+        use_pulseaudio=0
+        echo "$(date +'%Y_%m_%d_%H:%M:%S') - PulseAudio not detected, using ALSA-only" >> "$LOG"
+    fi
+fi
 
 # Check sound devices
 sound_card_player_count=$(aplay -l | grep -E "^[[:alpha:]]+ [[:digit:]]" | wc -l)
@@ -75,14 +88,17 @@ fi
 #    echo "Note: Automatically set headphone input volume to 80%"
 # fi
 
-# Restore Pulseaudio settings
-#echo "$(date +'%Y_%m_%d_%H:%M:%S') - Loading Pulseaudio modules"
-#bash $HOME/install/pulseaudio/aec_only.sh
-#
-# Prevent Pulseaudio suspending - Improves reaction time of input/ouput but might lead to low vol constant white-noise in speaker
-if [ $(pactl list modules short | grep module-suspend-on-idle | wc -l) -gt 0 ]; then
-	pactl unload-module module-suspend-on-idle
-	echo "$(date +'%Y_%m_%d_%H:%M:%S') - Pulseaudio: unloaded module 'module-suspend-on-idle'" >> "$LOG"
+# Pulseaudio optimizations
+if [ "$use_pulseaudio" -eq "1" ]; then
+	# Restore Pulseaudio settings
+	#echo "$(date +'%Y_%m_%d_%H:%M:%S') - Loading Pulseaudio modules"
+	#bash $HOME/install/pulseaudio/aec_only.sh
+	#
+	# Prevent Pulseaudio suspending - Improves reaction time of input/ouput but might lead to low vol constant white-noise in speaker
+	if [ $(pactl list modules short | grep module-suspend-on-idle | wc -l) -gt 0 ]; then
+		pactl unload-module module-suspend-on-idle
+		echo "$(date +'%Y_%m_%d_%H:%M:%S') - Pulseaudio: unloaded module 'module-suspend-on-idle'" >> "$LOG"
+	fi
 fi
 
 # Notify user
@@ -107,15 +123,26 @@ echo "$(date +'%Y_%m_%d_%H:%M:%S') - CLEXI ready" >> "$LOG"
 sleep 2
 
 # Start Chromium in kiosk mode
+#
+# Add Google API keys for Web Speech API support, if you have some (req. for all Chromium versions on RPi)
+#export GOOGLE_API_KEY=""
+#export GOOGLE_DEFAULT_CLIENT_ID=""
+#export GOOGLE_DEFAULT_CLIENT_SECRET=""
+#
 echo "$(date +'%Y_%m_%d_%H:%M:%S') - Preparing Chromium ..." >> "$LOG"
 client_url="http://localhost:8080/sepia/index.html"
-clexi_ws_url="ws://[IP]:9090/clexi"
-# NOTE: 'chromium-browser' was replaced by 'chromium' because of version issues - Better keep an eye on this
+#set some default flags
+client_url="$client_url?isApp=true"
+#set the default view (applied AFTER login)
+if [ -n "$default_view" ]; then
+	client_url="$client_url&view=$default_view"
+fi
+# NOTE: the old 'chromium-browser' was replaced by 'chromium' a while ago, but we keep this check for now
 chromecmd=""
-if [ -n "$(command -v chromium-browser)" ]; then
-	chromecmd="chromium-browser"
-elif [ -n "$(command -v chromium)" ]; then
+if [ -n "$(command -v chromium)" ]; then
 	chromecmd="chromium"
+elif [ -n "$(command -v chromium-browser)" ]; then
+	chromecmd="chromium-browser"
 else
 	echo "$(date +'%Y_%m_%d_%H:%M:%S') - Chromium seems to be missing! Please reinstall browser!" >> "$LOG"
 	exit
@@ -134,8 +161,6 @@ fi
 audio_input_device='default'
 audio_output_device='default'
 default_chrome_flags="--user-data-dir=$chromedatadir --alsa-output-device=$audio_output_device --alsa-input-device=$audio_input_device --allow-insecure-localhost --autoplay-policy=no-user-gesture-required --disable-infobars --enable-features=OverlayScrollbar --hide-scrollbars --no-default-browser-check --check-for-update-interval=31536000"
-#NOTE: It seems there is a new fix for Chromium 98 required: '--use-gl=egl' (https://github.com/RPi-Distro/chromium-browser/issues/28)
-#default_chrome_flags="$default_chrome_flags --use-gl=egl"
 #If you can't resolve your self-signed SSL issues (and you know what you're doing ^^):
 #default_chrome_flags="$default_chrome_flags --ignore-certificate-errors --unsafely-treat-insecure-origin-as-secure=http://sepia-home.local"
 if [ "$chromium_remote_debug" -eq "1" ]; then
@@ -144,25 +169,41 @@ if [ "$chromium_remote_debug" -eq "1" ]; then
 	echo "$(date +'%Y_%m_%d_%H:%M:%S') - REMOTE DEBUGGING for Chromium on port 9222 ACTIVE" >> "$LOG"
 fi
 # comma separated list of extensions:
-chrome_extensions="--load-extension=~/sepia-client/chromium-extensions/sepia-fw"
+sepia_chrome_extension="~/sepia-client/chromium-extensions/sepia-fw"
+chrome_extensions="--load-extension=$sepia_chrome_extension"
+echo "$(date +'%Y_%m_%d_%H:%M:%S') - SEPIA Chromium extension path: $sepia_chrome_extension" >> "$LOG"
 # headless or with display:
-pi_model=$(tr -d '\0' </proc/device-tree/model)
-is_pi4=0
-case "$pi_model" in *"Pi 4"*) is_pi4=1;; *) is_pi4=0;; esac
-echo "RPi model: $pi_model - Is Pi4: $is_pi4"
-echo "$(date +'%Y_%m_%d_%H:%M:%S') - Starting Chromium - Mode: $is_headless - Is RPi4: $is_pi4" >> "$LOG"
+pi_model="unknown"
+if [ -f "/proc/device-tree/model" ]; then
+	pi_model=$(tr -d '\0' </proc/device-tree/model)
+	echo "$(date +'%Y_%m_%d_%H:%M:%S') - Device model: $pi_model" >> "$LOG"
+else
+	echo "Device model is unknown, please check run flags manually!"
+	echo "$(date +'%Y_%m_%d_%H:%M:%S') - Device model is unknown, please check run flags manually!" >> "$LOG"
+fi
+# NOTE: we use the '--disable-features=VizDisplayCompositor' for Pi4/5 because there was a bug in older Chromium versions
+# TODO: consider '--disable-dev-shm-usage' for more stability on RAM limited devices?
+is_modern_pi=0
+case "$pi_model" in *"Pi 4"* | *"Pi 5"*) is_modern_pi=1;; *) is_modern_pi=0;; esac
+echo "RPi model: $pi_model - Is Pi4/5: $is_modern_pi"
+echo "$(date +'%Y_%m_%d_%H:%M:%S') - Starting Chromium - Mode: $is_headless - Is RPi4/5: $is_modern_pi" >> "$LOG"
+clexi_ws_url="ws://[IP]:9090/clexi"
 if [ "$is_headless" -eq "0" ]; then
 	echo "Running SEPIA-Client in 'display' mode. Use SEPIA Control-HUB to connect and control via remote terminal, default URL is: $clexi_ws_url"
-	$chromecmd $default_chrome_flags $chrome_extensions --kiosk "$client_url?isApp=true&hasTouch=true" >"$LOG_CLIENT" 2>&1
+	client_url="$client_url&hasTouch=true"
+	$chromecmd $default_chrome_flags $chrome_extensions --kiosk "$client_url" >"$LOG_CLIENT" 2>&1
 elif [ "$is_headless" -eq "2" ]; then
 	echo "Running SEPIA-Client in 'pseudo-headless' mode. Use SEPIA Control-HUB to connect and control via remote terminal, default URL is: $clexi_ws_url"
-	$chromecmd $default_chrome_flags $chrome_extensions --kiosk "$client_url?isApp=true&isHeadless=true&hasTouch=true" >"$LOG_CLIENT" 2>&1
-elif [ "$is_pi4" = "1" ]; then
-	echo "Running SEPIA-Client in 'headless Pi4' mode. Use SEPIA Control-HUB to connect and control via remote terminal, default URL is: $clexi_ws_url"
-	xvfb-run -n 2072 --server-args="-screen 0 500x800x24" $chromecmd --disable-features=VizDisplayCompositor $default_chrome_flags $chrome_extensions --kiosk "$client_url?isApp=true&isHeadless=true" >"$LOG_CLIENT" 2>&1
+	client_url="$client_url&isHeadless=true&hasTouch=true"
+	$chromecmd $default_chrome_flags $chrome_extensions --kiosk "$client_url" >"$LOG_CLIENT" 2>&1
+elif [ "$is_modern_pi" = "1" ]; then
+	echo "Running SEPIA-Client in 'headless Pi4/5' mode. Use SEPIA Control-HUB to connect and control via remote terminal, default URL is: $clexi_ws_url"
+	client_url="$client_url&isHeadless=true"
+	xvfb-run -n 2072 --server-args="-screen 0 320x640x16" $chromecmd --disable-features=VizDisplayCompositor $default_chrome_flags $chrome_extensions --kiosk "$client_url" >"$LOG_CLIENT" 2>&1
 else
 	echo "Running SEPIA-Client in 'headless' mode. Use SEPIA Control-HUB to connect and control via remote terminal, default URL is: $clexi_ws_url"
-	xvfb-run -n 2072 --server-args="-screen 0 320x480x16" $chromecmd $default_chrome_flags $chrome_extensions --kiosk "$client_url?isApp=true&isHeadless=true" >"$LOG_CLIENT" 2>&1
+	client_url="$client_url&isHeadless=true&isTiny=true"
+	xvfb-run -n 2072 --server-args="-screen 0 240x320x8" $chromecmd $default_chrome_flags $chrome_extensions --kiosk "$client_url" >"$LOG_CLIENT" 2>&1
 fi
 echo "Closed SEPIA-Client. Cu later :-)"
 echo "$(date +'%Y_%m_%d_%H:%M:%S') - Closed SEPIA-Client" >> "$LOG"
