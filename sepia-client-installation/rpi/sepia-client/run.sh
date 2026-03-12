@@ -45,18 +45,22 @@ if [ $sound_card_recorder_count -eq 0 ]; then
 	fi
 fi
 
-# Source and XServer check
+# Source, X11 and Wayland check
 script_source=""
 is_xserver_running=0
+is_wayland_running=0
 if [ -n "$1" ]; then
 	script_source=$1
 fi
 if [ "$script_source" = "xserver" ] || [ -n "$DISPLAY" ]; then
 	is_xserver_running=1
 fi
-if [ "$is_xserver_running" -eq "0" ]; then
+if [ "$script_source" = "wayland" ] || [ -n "$WAYLAND_DISPLAY" ]; then
+	is_wayland_running=1
+fi
+if [ "$is_xserver_running" -eq "0" ] && [ "$is_wayland_running" -eq "0" ]; then
 	if [ "$is_headless" -eq "0" ] || [ "$is_headless" -eq "2" ]; then
-		if [[ ! $DISPLAY && $XDG_VTNR -eq 1 ]]; then
+		if [[ ! $DISPLAY && ! $WAYLAND_DISPLAY && $XDG_VTNR -eq 1 ]]; then
 			# On device call
 			echo "Starting X-Server to support display ..."
 			echo "$(date +'%Y_%m_%d_%H:%M:%S') - Starting X-Server to support display ..." >> "$LOG"
@@ -64,9 +68,9 @@ if [ "$is_xserver_running" -eq "0" ]; then
 			exit
 		else
 			# Call from SSH terminal
-			echo "Cannot start client in display-mode via SSH terminal (no X-Server support)."
+			echo "Cannot start client in display-mode via SSH terminal (no display server support)."
 			echo "Please use reboot + auto-login or call directly on device."
-			echo "$(date +'%Y_%m_%d_%H:%M:%S') - Cannot start client in display-mode via SSH terminal (no X-Server support) - Use reboot + auto-login or call directly on device." >> "$LOG"
+			echo "$(date +'%Y_%m_%d_%H:%M:%S') - Cannot start client in display-mode via SSH terminal (no display server support) - Use reboot + auto-login or call directly on device." >> "$LOG"
 			exit
 		fi
 	fi
@@ -168,6 +172,11 @@ if [ "$chromium_remote_debug" -eq "1" ]; then
 	echo "Remote debugging on port 9222 ACTIVE! To access externally use SSH tunnel or proxy port."
 	echo "$(date +'%Y_%m_%d_%H:%M:%S') - REMOTE DEBUGGING for Chromium on port 9222 ACTIVE" >> "$LOG"
 fi
+# Add Wayland flag if running under Wayland
+if [ "$is_wayland_running" -eq "1" ]; then
+	default_chrome_flags="$default_chrome_flags --ozone-platform=wayland"
+	echo "$(date +'%Y_%m_%d_%H:%M:%S') - Wayland mode: added --ozone-platform=wayland flag" >> "$LOG"
+fi
 # comma separated list of extensions:
 sepia_chrome_extension="~/sepia-client/chromium-extensions/sepia-fw"
 chrome_extensions="--load-extension=$sepia_chrome_extension"
@@ -186,7 +195,7 @@ fi
 is_modern_pi=0
 case "$pi_model" in *"Pi 4"* | *"Pi 5"*) is_modern_pi=1;; *) is_modern_pi=0;; esac
 echo "RPi model: $pi_model - Is Pi4/5: $is_modern_pi"
-echo "$(date +'%Y_%m_%d_%H:%M:%S') - Starting Chromium - Mode: $is_headless - Is RPi4/5: $is_modern_pi" >> "$LOG"
+echo "$(date +'%Y_%m_%d_%H:%M:%S') - Starting Chromium - Mode: $is_headless - Is RPi4/5: $is_modern_pi - X11: $is_xserver_running - Wayland: $is_wayland_running" >> "$LOG"
 clexi_ws_url="ws://[IP]:9090/clexi"
 if [ "$is_headless" -eq "0" ]; then
 	echo "Running SEPIA-Client in 'display' mode. Use SEPIA Control-HUB to connect and control via remote terminal, default URL is: $clexi_ws_url"
