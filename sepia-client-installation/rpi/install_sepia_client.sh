@@ -148,6 +148,9 @@ install_wayland() {
 		xterm \
 		xdg-utils \
 		wlr-randr
+	# Set DISPLAY_MODE in on-login.sh
+	echo "$(log_date) - Setting DISPLAY_MODE=wayland in on-login.sh ..." >> "$LOG"
+	sed -i 's/^DISPLAY_MODE="xserver"/DISPLAY_MODE="wayland"/' ~/sepia-client/on-login.sh
 	# Copy labwc autostart
 	mkdir -p ~/.config/labwc
 	echo "$(log_date) - Copying labwc autostart to ~/.config/labwc/autostart" >> "$LOG"
