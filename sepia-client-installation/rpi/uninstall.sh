@@ -5,7 +5,8 @@ echo "This will backup some settings and then remove:"
 echo "- SEPIA entry in '~/.bashrc'"
 echo "- SEPIA client folder"
 echo "- CLEXI folder"
-echo "- Openbox and '~/.config/openbox'"
+echo "- Openbox and '~/.config/openbox' (X11 mode)"
+echo "- labwc and '~/.config/labwc' (Wayland mode)"
 echo "- Chromium"
 echo "- Nginx with SEPIA config"
 echo "- '~/.asoundrc'"
@@ -27,6 +28,14 @@ fi
 cp -r "sepia-client/chromium" "sepia-client_bck_$NOW/"
 mkdir -p "sepia-client_bck_$NOW/nginx"
 cp /etc/nginx/sites-enabled/sepia* "sepia-client_bck_$NOW/nginx/"
+if [ -d ".config/openbox" ]; then
+	mkdir -p "sepia-client_bck_$NOW/openbox"
+	cp -r ".config/openbox" "sepia-client_bck_$NOW/openbox/"
+fi
+if [ -d ".config/labwc" ]; then
+	mkdir -p "sepia-client_bck_$NOW/labwc"
+	cp -r ".config/labwc" "sepia-client_bck_$NOW/labwc/"
+fi
 echo ""
 echo "Removing .bashrc entries ..."
 sed -i '/^# Run SEPIA-Client/,+4d' ".bashrc"
@@ -35,10 +44,11 @@ echo "Removing SEPIA client and CLEXI folders ..."
 rm -rf sepia-client
 rm -rf clexi
 echo ""
-echo "Removing Openbox, Nginx and Chromium ..."
+echo "Removing display server, Nginx and Chromium ..."
 rm -rf ".config/openbox"
+rm -rf ".config/labwc"
 sudo rm -rf /etc/nginx/sites-enabled/sepia*
-sudo apt-get remove openbox nginx chromium chromium-browser
+sudo apt-get remove openbox labwc wlr-randr nginx chromium chromium-browser
 sudo service nginx restart
 echo ""
 if [ -f ".asoundrc" ]; then
