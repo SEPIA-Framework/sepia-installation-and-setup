@@ -186,7 +186,7 @@ install_wayland() {
 	sudo apt install -y --no-install-recommends \
 		labwc \
 		xvfb \
-		xterm \
+		foot \
 		xdg-utils \
 		wlr-randr
 	# Copy labwc autostart

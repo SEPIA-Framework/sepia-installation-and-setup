@@ -2,9 +2,9 @@
 <labwc_config>
   <keyboard>
     <default />
-    <!-- Open terminal with Ctrl+Alt+T -->
+    <!-- Open terminal with Ctrl+Alt+T (uses foot - native Wayland terminal) -->
     <keybind key="C-A-T">
-      <action name="Execute" command="xterm" />
+      <action name="Execute" command="foot" />
     </keybind>
   </keyboard>
 </labwc_config>
