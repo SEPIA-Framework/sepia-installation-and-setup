@@ -1,6 +1,8 @@
 #!/bin/bash
 # labwc autostart for SEPIA Client
-# NOTE: screen saver / blanking / power management / keyboard options are configured via ~/.config/labwc/rc.xml
+# NOTE: keyboard options are configured via ~/.config/labwc/environment
+# NOTE: keybindings are configured via ~/.config/labwc/rc.xml
+# NOTE: DPMS/screen blanking is disabled by default in labwc - no action needed
 
 # Scale the screen
 # use 'wlr-randr' to list available outputs and resolutions
