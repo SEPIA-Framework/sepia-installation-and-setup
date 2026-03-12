@@ -1,8 +1,16 @@
 #!/bin/bash
-#usage examples: 
-#bash install_sepia_client.sh dev 			-> CLIENT_BRANCH=dev, 		SKIP_BLE=false
-#bash install_sepia_client.sh skipBLE 		-> CLIENT_BRANCH=master, 	SKIP_BLE=true
-#bash install_sepia_client.sh dev skipBLE 	-> CLIENT_BRANCH=dev, 		SKIP_BLE=true
+#usage examples:
+#bash install_sepia_client.sh                                                       -> defaults: master, auto-display, pulseaudio, BLE enabled
+#bash install_sepia_client.sh --branch=dev                                          -> CLIENT_BRANCH=dev
+#bash install_sepia_client.sh --display=wayland                                     -> DISPLAY_MODE=wayland
+#bash install_sepia_client.sh --audio=alsa                                          -> AUDIO_MODE=alsa (no pulseaudio)
+#bash install_sepia_client.sh --skipBLE                                             -> SKIP_BLE=true
+#bash install_sepia_client.sh --branch=dev --display=wayland --audio=alsa --skipBLE -> all combined
+#
+# Legacy positional arguments still supported:
+#bash install_sepia_client.sh dev 		-> CLIENT_BRANCH=dev
+#bash install_sepia_client.sh skipBLE 		-> SKIP_BLE=true
+#bash install_sepia_client.sh dev skipBLE 	-> CLIENT_BRANCH=dev, SKIP_BLE=true
 set -e
 SCRIPT_PATH="$(realpath "$BASH_SOURCE")"
 LOG="$(dirname "$SCRIPT_PATH")""/log-install.out"
@@ -43,24 +51,57 @@ this_folder="$(dirname "$SCRIPT_PATH")"
 cd "$this_folder"
 echo "Installation started: $(log_date)" > "$LOG"
 #
-# kind of clumsy but easy way to allow combination of arguments CLIENT_BRANCH, SKIP_BLE
+# Parse arguments - named flags (--branch=dev, --display=wayland, --skipBLE)
+# Legacy positional arguments (dev, skipBLE) are still supported for backwards compatibility
 CLIENT_BRANCH="master"
 SKIP_BLE="false"
 # Display mode: "xserver" (X11 + Openbox) or "wayland" (Wayland + labwc)
-DISPLAY_MODE="xserver"
-if [ -n "$1" ]; then
-	if [ "$1" = "skipBLE" ]; then
-		SKIP_BLE="true"
+# Leave empty for auto-detection based on Pi model and OS version
+DISPLAY_MODE=""
+# Audio mode: "pulseaudio" (default), "alsa" (no pulseaudio), "pipewire" (future)
+AUDIO_MODE="pulseaudio"
+for arg in "$@"; do
+	case "$arg" in
+		--branch=*)   CLIENT_BRANCH="${arg#--branch=}" ;;
+		--display=*)  DISPLAY_MODE="${arg#--display=}" ;;
+		--audio=*)    AUDIO_MODE="${arg#--audio=}" ;;
+		--skipBLE)    SKIP_BLE="true" ;;
+		# legacy positional support:
+		skipBLE)      SKIP_BLE="true" ;;
+		dev|master)   CLIENT_BRANCH="$arg" ;;
+		*)            echo "WARNING: Unknown argument '$arg' - ignoring" ;;
+	esac
+done
+# Auto-detect DISPLAY_MODE if not set by user via --display= flag
+if [ -z "$DISPLAY_MODE" ]; then
+	pi_model="unknown"
+	if [ -f "/proc/device-tree/model" ]; then
+		pi_model=$(tr -d '\0' </proc/device-tree/model)
+	fi
+	os_version=$(grep "^VERSION_ID" /etc/os-release | cut -d'=' -f2 | tr -d '"')
+
+	# Pi 3 and Zero don't have reliable Wayland/KMS support - use X11
+	is_legacy_pi=0
+	case "$pi_model" in *"Pi 3"* | *"Pi Zero"*) is_legacy_pi=1 ;; esac
+
+	# Wayland on Pi 4/5+ requires at least Bookworm (Debian 12) - older OS versions use X11
+	is_modern_os=0
+	if [ -n "$os_version" ] && [ "$os_version" -ge "12" ] 2>/dev/null; then
+		is_modern_os=1
+	fi
+
+	# Use Wayland only on modern Pi (4/5/6+) with modern OS (Bookworm+)
+	# Everything else (older Pi or older OS) falls back to X11
+	if [ "$is_legacy_pi" -eq "0" ] && [ "$is_modern_os" -eq "1" ]; then
+		DISPLAY_MODE="wayland"
 	else
-		CLIENT_BRANCH="$1"
+		DISPLAY_MODE="xserver"
 	fi
+	echo "$(log_date) - Auto-detected DISPLAY_MODE=$DISPLAY_MODE (pi_model='$pi_model', os_version='$os_version')" >> "$LOG"
+else
+	echo "$(log_date) - User-specified DISPLAY_MODE=$DISPLAY_MODE" >> "$LOG"
 fi
-if [ -n "$2" ]; then
-	if [ "$2" = "skipBLE" ]; then
-		SKIP_BLE="true"
-	fi
-fi
-echo "$(log_date) - Branch: $CLIENT_BRANCH, skipBLE=$SKIP_BLE, displayMode=$DISPLAY_MODE" >> "$LOG"
+echo "$(log_date) - Branch: $CLIENT_BRANCH, skipBLE=$SKIP_BLE, displayMode=$DISPLAY_MODE, audioMode=$AUDIO_MODE" >> "$LOG"
 #
 # Prepare
 echo "Preparing installation of SEPIA Client for Raspberry Pi ..."
@@ -148,9 +189,6 @@ install_wayland() {
 		xterm \
 		xdg-utils \
 		wlr-randr
-	# Set DISPLAY_MODE in on-login.sh
-	echo "$(log_date) - Setting DISPLAY_MODE=wayland in on-login.sh ..." >> "$LOG"
-	sed -i 's/^DISPLAY_MODE="xserver"/DISPLAY_MODE="wayland"/' ~/sepia-client/on-login.sh
 	# Copy labwc autostart
 	mkdir -p ~/.config/labwc
 	echo "$(log_date) - Copying labwc autostart to ~/.config/labwc/autostart" >> "$LOG"
@@ -186,10 +224,13 @@ else
 	sudo apt install -y --no-install-recommends chromium
 fi
 echo "$(log_date) - If you're having trouble with the current version of Chromium try: 'bash install_chromium_92_from_archive.sh'" >> "$LOG"
-if [ $(sudo apt-cache search unclutter | grep ^unclutter-xfixes | wc -l) -eq 0 ]; then
-	sudo apt install -y --no-install-recommends unclutter
-else
-	sudo apt install -y --no-install-recommends unclutter-xfixes unclutter-startup
+if [ "$DISPLAY_MODE" = "xserver" ]; then
+	# unclutter hides the mouse cursor - X11 only, not needed under Wayland
+	if [ $(sudo apt-cache search unclutter | grep ^unclutter-xfixes | wc -l) -eq 0 ]; then
+		sudo apt install -y --no-install-recommends unclutter
+	else
+		sudo apt install -y --no-install-recommends unclutter-xfixes unclutter-startup
+	fi
 fi
 # Some fixes:
 # - GTK3 for chromium
@@ -199,10 +240,26 @@ else
 	sudo apt install -y --no-install-recommends libgtk-3-0t64
 fi
 # - pulseaudio was needed in the past to fix Chromium IPC semaphore errors (probably resolved as it is working with ALSA on RPI OS 13)
-sudo apt install -y --no-install-recommends upower pulseaudio pulsemixer
+if [ "$AUDIO_MODE" = "pulseaudio" ]; then
+	echo "$(log_date) - Installing PulseAudio ..." >> "$LOG"
+	sudo apt install -y --no-install-recommends upower pulseaudio pulsemixer
+elif [ "$AUDIO_MODE" = "pipewire" ]; then
+	# TODO: add pipewire installation when ready
+	echo "$(log_date) - WARNING: pipewire support not yet implemented, falling back to pulseaudio ..." >> "$LOG"
+	sudo apt install -y --no-install-recommends upower pulseaudio pulsemixer
+else
+	# alsa-only: skip pulseaudio
+	echo "$(log_date) - ALSA-only mode: skipping PulseAudio installation ..." >> "$LOG"
+	sudo apt install -y --no-install-recommends upower
+fi
 mkdir -p ~/sepia-client/chromium
 mkdir -p ~/sepia-client/chromium-extensions
 cp sepia-client/* ~/sepia-client/
+# Set DISPLAY_MODE in on-login.sh after files have been copied
+if [ "$DISPLAY_MODE" = "wayland" ]; then
+	echo "$(log_date) - Setting DISPLAY_MODE=wayland in on-login.sh ..." >> "$LOG"
+	sed -i 's/^DISPLAY_MODE="xserver"/DISPLAY_MODE="wayland"/' ~/sepia-client/on-login.sh
+fi
 #
 # Auto-login setup
 echo "$(log_date) - Setting up auto-login ..." >> "$LOG"
