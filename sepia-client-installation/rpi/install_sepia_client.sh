@@ -46,6 +46,8 @@ echo "Installation started: $(log_date)" > "$LOG"
 # kind of clumsy but easy way to allow combination of arguments CLIENT_BRANCH, SKIP_BLE
 CLIENT_BRANCH="master"
 SKIP_BLE="false"
+# Display mode: "xserver" (X11 + Openbox) or "wayland" (Wayland + labwc)
+DISPLAY_MODE="xserver"
 if [ -n "$1" ]; then
 	if [ "$1" = "skipBLE" ]; then
 		SKIP_BLE="true"
@@ -58,7 +60,7 @@ if [ -n "$2" ]; then
 		SKIP_BLE="true"
 	fi
 fi
-echo "$(log_date) - Branch: $CLIENT_BRANCH, skipBLE=$SKIP_BLE" >> "$LOG"
+echo "$(log_date) - Branch: $CLIENT_BRANCH, skipBLE=$SKIP_BLE, displayMode=$DISPLAY_MODE" >> "$LOG"
 #
 # Prepare
 echo "Preparing installation of SEPIA Client for Raspberry Pi ..."
@@ -113,10 +115,59 @@ else
 fi
 echo "=========================================="
 #
-# Openbox with Chromium
-echo "Installing app environment ..."
-echo "$(log_date) - Installing app environment (X-Server, Xvfb, Openbox, Chromium, etc.) ..." >> "$LOG"
-sudo apt install -y --no-install-recommends xserver-xorg x11-xserver-utils xinit openbox xvfb xterm xinput xdg-utils
+# Display server installation
+install_xserver() {
+	echo "Installing X11 display server environment (Openbox) ..."
+	echo "$(log_date) - Installing app environment (X-Server, Xvfb, Openbox, Chromium, etc.) ..." >> "$LOG"
+	# NOTE: using xserver-xorg-core instead of xserver-xorg meta-package to avoid pulling in
+	# xserver-xorg-video-fbdev which conflicts with vc4-kms-v3d on Pi 5
+	# old: sudo apt install -y --no-install-recommends xserver-xorg x11-xserver-utils xinit openbox xvfb xterm xinput xdg-utils
+	sudo apt install -y --no-install-recommends \
+		xserver-xorg-core \
+		xserver-xorg-input-all \
+		xserver-xorg-legacy \
+		x11-xserver-utils \
+		xinit \
+		openbox \
+		xvfb \
+		xterm \
+		xinput \
+		xdg-utils
+	# Copy Openbox autostart
+	mkdir -p ~/.config/openbox
+	echo "$(log_date) - Copying Openbox autostart to ~/.config/openbox/autostart" >> "$LOG"
+	cp openbox ~/.config/openbox/autostart
+}
+
+install_wayland() {
+	echo "Installing Wayland display server environment (labwc) ..."
+	echo "$(log_date) - Installing app environment (Wayland, labwc, Chromium, etc.) ..." >> "$LOG"
+	sudo apt install -y --no-install-recommends \
+		labwc \
+		xvfb \
+		xterm \
+		xdg-utils \
+		wlr-randr
+	# Copy labwc autostart
+	mkdir -p ~/.config/labwc
+	echo "$(log_date) - Copying labwc autostart to ~/.config/labwc/autostart" >> "$LOG"
+	cp labwc-autostart ~/.config/labwc/autostart
+	chmod +x ~/.config/labwc/autostart
+	# Copy labwc config
+	echo "$(log_date) - Copying labwc rc.xml to ~/.config/labwc/rc.xml" >> "$LOG"
+	cp labwc-rc.xml ~/.config/labwc/rc.xml
+}
+
+echo "Installing display server: $DISPLAY_MODE ..."
+echo "$(log_date) - Installing display server: $DISPLAY_MODE ..." >> "$LOG"
+if [ "$DISPLAY_MODE" = "wayland" ]; then
+	install_wayland
+else
+	install_xserver
+fi
+#
+# Chromium
+echo "$(log_date) - Installing Chromium ..." >> "$LOG"
 # NOTE: 'chromium' is the default package but in the past it had graphic glitches :-/. In this case you might need to try the old 'chromium-browser'
 # TODO: check graphic glitches
 if [ -n "$(command -v chromium)" ]; then
@@ -146,9 +197,9 @@ sudo apt install -y --no-install-recommends upower pulseaudio pulsemixer
 mkdir -p ~/sepia-client/chromium
 mkdir -p ~/sepia-client/chromium-extensions
 cp sepia-client/* ~/sepia-client/
-mkdir -p ~/.config/openbox
-echo "$(log_date) - Copying Openbox autostart to ~/.config/openbox/autostart" >> "$LOG"
-cp openbox ~/.config/openbox/autostart
+#
+# Auto-login setup
+echo "$(log_date) - Setting up auto-login ..." >> "$LOG"
 startfile=~/.bashrc
 echo "$(log_date) - Updating $startfile ..." >> "$LOG"
 if grep -q "sepia_run_on_login" $startfile; then
@@ -290,7 +341,7 @@ echo "'$HOME/sepia-client/' and run 'bash setup.sh'."
 echo ""
 echo "NOTE: Headless clients can be started using the 'run.sh' script, but for other setups"
 echo "(display, pseudo-headless) please make sure that your OS uses the automatic login"
-echo "(sudo raspi-config -> boot -> Desktop -> ...) to always start 'kiosk' mode after boot."
+echo "(sudo raspi-config -> system options -> auto-login) to always start 'kiosk' mode after boot."
 echo ""
 echo "When the client is loading you should hear a voice saying 'just a second' followed"
 echo "by 'ready for setup' after the start-up was completed. Then you can use the touchscreen"
