@@ -2,7 +2,7 @@
 
 ## Common Instructions
 
-Tested with Raspberry Pi OS Trixie (recommended), Buster and Bullseye on RPi4 B 2GB and 4GB.  
+Tested with Raspberry Pi OS Trixie (recommended) on RPi4/5 and Bullseye on RPi4 (2GB).  
 Works on RPi3 1GB and maybe even on RPi Zero 512GB if wake-word and display are disabled.
 
 ### 1) Install Raspberry Pi OS Lite
