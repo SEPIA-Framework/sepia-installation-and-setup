@@ -1,8 +1,16 @@
 #!/bin/bash
-#usage examples: 
-#bash install_sepia_client.sh dev 			-> CLIENT_BRANCH=dev, 		SKIP_BLE=false
-#bash install_sepia_client.sh skipBLE 		-> CLIENT_BRANCH=master, 	SKIP_BLE=true
-#bash install_sepia_client.sh dev skipBLE 	-> CLIENT_BRANCH=dev, 		SKIP_BLE=true
+#usage examples:
+#bash install_sepia_client.sh                                                       -> defaults: master, auto-display, pulseaudio, BLE enabled
+#bash install_sepia_client.sh --branch=dev                                          -> CLIENT_BRANCH=dev
+#bash install_sepia_client.sh --display=wayland                                     -> DISPLAY_MODE=wayland
+#bash install_sepia_client.sh --audio=alsa                                          -> AUDIO_MODE=alsa (no pulseaudio)
+#bash install_sepia_client.sh --skipBLE                                             -> SKIP_BLE=true
+#bash install_sepia_client.sh --branch=dev --display=wayland --audio=alsa --skipBLE -> all combined
+#
+# Legacy positional arguments still supported:
+#bash install_sepia_client.sh dev 		-> CLIENT_BRANCH=dev
+#bash install_sepia_client.sh skipBLE 		-> SKIP_BLE=true
+#bash install_sepia_client.sh dev skipBLE 	-> CLIENT_BRANCH=dev, SKIP_BLE=true
 set -e
 SCRIPT_PATH="$(realpath "$BASH_SOURCE")"
 LOG="$(dirname "$SCRIPT_PATH")""/log-install.out"
@@ -43,22 +51,57 @@ this_folder="$(dirname "$SCRIPT_PATH")"
 cd "$this_folder"
 echo "Installation started: $(log_date)" > "$LOG"
 #
-# kind of clumsy but easy way to allow combination of arguments CLIENT_BRANCH, SKIP_BLE
+# Parse arguments - named flags (--branch=dev, --display=wayland, --skipBLE)
+# Legacy positional arguments (dev, skipBLE) are still supported for backwards compatibility
 CLIENT_BRANCH="master"
 SKIP_BLE="false"
-if [ -n "$1" ]; then
-	if [ "$1" = "skipBLE" ]; then
-		SKIP_BLE="true"
+# Display mode: "xserver" (X11 + Openbox) or "wayland" (Wayland + labwc)
+# Leave empty for auto-detection based on Pi model and OS version
+DISPLAY_MODE=""
+# Audio mode: "pulseaudio" (default), "alsa" (no pulseaudio), "pipewire" (future)
+AUDIO_MODE="pulseaudio"
+for arg in "$@"; do
+	case "$arg" in
+		--branch=*)   CLIENT_BRANCH="${arg#--branch=}" ;;
+		--display=*)  DISPLAY_MODE="${arg#--display=}" ;;
+		--audio=*)    AUDIO_MODE="${arg#--audio=}" ;;
+		--skipBLE)    SKIP_BLE="true" ;;
+		# legacy positional support:
+		skipBLE)      SKIP_BLE="true" ;;
+		dev|master)   CLIENT_BRANCH="$arg" ;;
+		*)            echo "WARNING: Unknown argument '$arg' - ignoring" ;;
+	esac
+done
+# Auto-detect DISPLAY_MODE if not set by user via --display= flag
+if [ -z "$DISPLAY_MODE" ]; then
+	pi_model="unknown"
+	if [ -f "/proc/device-tree/model" ]; then
+		pi_model=$(tr -d '\0' </proc/device-tree/model)
+	fi
+	os_version=$(grep "^VERSION_ID" /etc/os-release | cut -d'=' -f2 | tr -d '"')
+
+	# Pi 3 and Zero don't have reliable Wayland/KMS support - use X11
+	is_legacy_pi=0
+	case "$pi_model" in *"Pi 3"* | *"Pi Zero"*) is_legacy_pi=1 ;; esac
+
+	# Wayland on Pi 4/5+ requires at least Bookworm (Debian 12) - older OS versions use X11
+	is_modern_os=0
+	if [ -n "$os_version" ] && [ "$os_version" -ge "12" ] 2>/dev/null; then
+		is_modern_os=1
+	fi
+
+	# Use Wayland only on modern Pi (4/5/6+) with modern OS (Bookworm+)
+	# Everything else (older Pi or older OS) falls back to X11
+	if [ "$is_legacy_pi" -eq "0" ] && [ "$is_modern_os" -eq "1" ]; then
+		DISPLAY_MODE="wayland"
 	else
-		CLIENT_BRANCH="$1"
+		DISPLAY_MODE="xserver"
 	fi
+	echo "$(log_date) - Auto-detected DISPLAY_MODE=$DISPLAY_MODE (pi_model='$pi_model', os_version='$os_version')" >> "$LOG"
+else
+	echo "$(log_date) - User-specified DISPLAY_MODE=$DISPLAY_MODE" >> "$LOG"
 fi
-if [ -n "$2" ]; then
-	if [ "$2" = "skipBLE" ]; then
-		SKIP_BLE="true"
-	fi
-fi
-echo "$(log_date) - Branch: $CLIENT_BRANCH, skipBLE=$SKIP_BLE" >> "$LOG"
+echo "$(log_date) - Branch: $CLIENT_BRANCH, skipBLE=$SKIP_BLE, displayMode=$DISPLAY_MODE, audioMode=$AUDIO_MODE" >> "$LOG"
 #
 # Prepare
 echo "Preparing installation of SEPIA Client for Raspberry Pi ..."
@@ -113,10 +156,60 @@ else
 fi
 echo "=========================================="
 #
-# Openbox with Chromium
-echo "Installing app environment ..."
-echo "$(log_date) - Installing app environment (X-Server, Xvfb, Openbox, Chromium, etc.) ..." >> "$LOG"
-sudo apt install -y --no-install-recommends xserver-xorg x11-xserver-utils xinit openbox xvfb xterm xinput xdg-utils
+# Display server installation
+install_xserver() {
+	echo "Installing X11 display server environment (Openbox) ..."
+	echo "$(log_date) - Installing app environment (X-Server, Xvfb, Openbox, Chromium, etc.) ..." >> "$LOG"
+	# NOTE: using xserver-xorg-core instead of xserver-xorg meta-package to avoid pulling in
+	# xserver-xorg-video-fbdev which conflicts with vc4-kms-v3d on Pi 5
+	# old: sudo apt install -y --no-install-recommends xserver-xorg x11-xserver-utils xinit openbox xvfb xterm xinput xdg-utils
+	sudo apt install -y --no-install-recommends \
+		xserver-xorg-core \
+		xserver-xorg-input-all \
+		xserver-xorg-legacy \
+		x11-xserver-utils \
+		xinit \
+		openbox \
+		xvfb \
+		xterm \
+		xinput \
+		xdg-utils
+	# Copy Openbox autostart
+	mkdir -p ~/.config/openbox
+	echo "$(log_date) - Copying Openbox autostart to ~/.config/openbox/autostart" >> "$LOG"
+	cp openbox ~/.config/openbox/autostart
+}
+
+install_wayland() {
+	echo "Installing Wayland display server environment (labwc) ..."
+	echo "$(log_date) - Installing app environment (Wayland, labwc, Chromium, etc.) ..." >> "$LOG"
+	sudo apt install -y --no-install-recommends \
+		labwc \
+		xvfb \
+		foot \
+		xdg-utils \
+		wlr-randr
+	# Copy labwc autostart
+	mkdir -p ~/.config/labwc
+	echo "$(log_date) - Copying labwc autostart to ~/.config/labwc/autostart" >> "$LOG"
+	cp labwc-autostart ~/.config/labwc/autostart
+	chmod +x ~/.config/labwc/autostart
+	# Copy labwc config
+	echo "$(log_date) - Copying labwc rc.xml to ~/.config/labwc/rc.xml" >> "$LOG"
+	cp labwc-rc.xml ~/.config/labwc/rc.xml
+
+}
+
+echo "Installing display server: $DISPLAY_MODE ..."
+echo "$(log_date) - Installing display server: $DISPLAY_MODE ..." >> "$LOG"
+if [ "$DISPLAY_MODE" = "wayland" ]; then
+	install_wayland
+else
+	install_xserver
+fi
+#
+# Chromium
+echo "$(log_date) - Installing Chromium ..." >> "$LOG"
 # NOTE: 'chromium' is the default package but in the past it had graphic glitches :-/. In this case you might need to try the old 'chromium-browser'
 # TODO: check graphic glitches
 if [ -n "$(command -v chromium)" ]; then
@@ -129,10 +222,13 @@ else
 	sudo apt install -y --no-install-recommends chromium
 fi
 echo "$(log_date) - If you're having trouble with the current version of Chromium try: 'bash install_chromium_92_from_archive.sh'" >> "$LOG"
-if [ $(sudo apt-cache search unclutter | grep ^unclutter-xfixes | wc -l) -eq 0 ]; then
-	sudo apt install -y --no-install-recommends unclutter
-else
-	sudo apt install -y --no-install-recommends unclutter-xfixes unclutter-startup
+if [ "$DISPLAY_MODE" = "xserver" ]; then
+	# unclutter hides the mouse cursor - X11 only, not needed under Wayland
+	if [ $(sudo apt-cache search unclutter | grep ^unclutter-xfixes | wc -l) -eq 0 ]; then
+		sudo apt install -y --no-install-recommends unclutter
+	else
+		sudo apt install -y --no-install-recommends unclutter-xfixes unclutter-startup
+	fi
 fi
 # Some fixes:
 # - GTK3 for chromium
@@ -142,13 +238,29 @@ else
 	sudo apt install -y --no-install-recommends libgtk-3-0t64
 fi
 # - pulseaudio was needed in the past to fix Chromium IPC semaphore errors (probably resolved as it is working with ALSA on RPI OS 13)
-sudo apt install -y --no-install-recommends upower pulseaudio pulsemixer
+if [ "$AUDIO_MODE" = "pulseaudio" ]; then
+	echo "$(log_date) - Installing PulseAudio ..." >> "$LOG"
+	sudo apt install -y --no-install-recommends upower pulseaudio pulsemixer
+elif [ "$AUDIO_MODE" = "pipewire" ]; then
+	# TODO: add pipewire installation when ready
+	echo "$(log_date) - WARNING: pipewire support not yet implemented, falling back to pulseaudio ..." >> "$LOG"
+	sudo apt install -y --no-install-recommends upower pulseaudio pulsemixer
+else
+	# alsa-only: skip pulseaudio
+	echo "$(log_date) - ALSA-only mode: skipping PulseAudio installation ..." >> "$LOG"
+	sudo apt install -y --no-install-recommends upower
+fi
 mkdir -p ~/sepia-client/chromium
 mkdir -p ~/sepia-client/chromium-extensions
 cp sepia-client/* ~/sepia-client/
-mkdir -p ~/.config/openbox
-echo "$(log_date) - Copying Openbox autostart to ~/.config/openbox/autostart" >> "$LOG"
-cp openbox ~/.config/openbox/autostart
+# Set DISPLAY_MODE in on-login.sh after files have been copied
+if [ "$DISPLAY_MODE" = "wayland" ]; then
+	echo "$(log_date) - Setting DISPLAY_MODE=wayland in on-login.sh ..." >> "$LOG"
+	sed -i 's/^DISPLAY_MODE="xserver"/DISPLAY_MODE="wayland"/' ~/sepia-client/on-login.sh
+fi
+#
+# Auto-login setup
+echo "$(log_date) - Setting up auto-login ..." >> "$LOG"
 startfile=~/.bashrc
 echo "$(log_date) - Updating $startfile ..." >> "$LOG"
 if grep -q "sepia_run_on_login" $startfile; then
@@ -290,7 +402,7 @@ echo "'$HOME/sepia-client/' and run 'bash setup.sh'."
 echo ""
 echo "NOTE: Headless clients can be started using the 'run.sh' script, but for other setups"
 echo "(display, pseudo-headless) please make sure that your OS uses the automatic login"
-echo "(sudo raspi-config -> boot -> Desktop -> ...) to always start 'kiosk' mode after boot."
+echo "(sudo raspi-config -> system options -> auto-login) to always start 'kiosk' mode after boot."
 echo ""
 echo "When the client is loading you should hear a voice saying 'just a second' followed"
 echo "by 'ready for setup' after the start-up was completed. Then you can use the touchscreen"

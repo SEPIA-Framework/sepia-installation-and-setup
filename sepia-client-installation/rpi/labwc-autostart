@@ -1,0 +1,25 @@
+#!/bin/bash
+# labwc autostart for SEPIA Client
+# NOTE: keybindings (Ctrl+Alt+T, Ctrl+Alt+Backspace) are configured via ~/.config/labwc/rc.xml
+# NOTE: DPMS/screen blanking is disabled by default in labwc - no action needed
+
+# Hide cursor at startup - requires labwc >= 0.8.2
+# Since 0.8.2 the cursor is automatically hidden on touch input and reappears only on mouse movement
+# Since 0.8.4 the HideCursor action is available to hide it immediately at startup
+# This is the Wayland equivalent of 'unclutter' for touchscreen kiosk setups
+labwc --action HideCursor 2>/dev/null || true
+
+# Scale the screen
+# use 'wlr-randr' to list available outputs and resolutions
+#wlr-randr --output DSI-1 --scale 1.081
+
+# Rotate screen
+# values: normal, 90, 180, 270, flipped, flipped-90, flipped-180, flipped-270
+#wlr-randr --output DSI-1 --transform 180
+
+# Rotate touch matrix
+# use 'libinput list-devices' to find touch device name
+# TODO: add libinput equivalent for xinput set-prop coordinate transformation
+
+# Run SEPIA-Client
+bash ~/sepia-client/run.sh wayland
