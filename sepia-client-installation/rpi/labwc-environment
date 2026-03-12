@@ -1,0 +1,3 @@
+# labwc environment for SEPIA Client
+# Keyboard options - equivalent to: setxkbmap -option terminate:ctrl_alt_bksp
+XKB_DEFAULT_OPTIONS=terminate:ctrl_alt_bksp

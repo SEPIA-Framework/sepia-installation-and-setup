@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <labwc_config>
   <keyboard>
-    <!-- Allow quitting the Wayland compositor with Ctrl+Alt+Backspace -->
-    <!-- equivalent to: setxkbmap -option terminate:ctrl_alt_bksp -->
-    <keybind key="C-A-BackSpace">
-      <action name="Exit" />
+    <default />
+    <!-- Open terminal with Ctrl+Alt+T -->
+    <keybind key="C-A-T">
+      <action name="Execute" command="xterm" />
     </keybind>
   </keyboard>
 </labwc_config>
