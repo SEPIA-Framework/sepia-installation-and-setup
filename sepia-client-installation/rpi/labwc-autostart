@@ -1,0 +1,18 @@
+#!/bin/bash
+# labwc autostart for SEPIA Client
+# NOTE: screen saver / blanking / power management / keyboard options are configured via ~/.config/labwc/rc.xml
+
+# Scale the screen
+# use 'wlr-randr' to list available outputs and resolutions
+#wlr-randr --output DSI-1 --scale 1.081
+
+# Rotate screen
+# values: normal, 90, 180, 270, flipped, flipped-90, flipped-180, flipped-270
+#wlr-randr --output DSI-1 --transform 180
+
+# Rotate touch matrix
+# use 'libinput list-devices' to find touch device name
+# TODO: add libinput equivalent for xinput set-prop coordinate transformation
+
+# Run SEPIA-Client
+bash ~/sepia-client/run.sh wayland
