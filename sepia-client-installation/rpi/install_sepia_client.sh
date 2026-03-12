@@ -197,9 +197,7 @@ install_wayland() {
 	# Copy labwc config
 	echo "$(log_date) - Copying labwc rc.xml to ~/.config/labwc/rc.xml" >> "$LOG"
 	cp labwc-rc.xml ~/.config/labwc/rc.xml
-	# Copy labwc environment
-	echo "$(log_date) - Copying labwc environment to ~/.config/labwc/environment" >> "$LOG"
-	cp labwc-environment ~/.config/labwc/environment
+
 }
 
 echo "Installing display server: $DISPLAY_MODE ..."

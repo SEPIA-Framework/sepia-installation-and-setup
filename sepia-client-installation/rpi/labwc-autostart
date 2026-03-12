@@ -1,7 +1,6 @@
 #!/bin/bash
 # labwc autostart for SEPIA Client
-# NOTE: keyboard options are configured via ~/.config/labwc/environment
-# NOTE: keybindings are configured via ~/.config/labwc/rc.xml
+# NOTE: keybindings (Ctrl+Alt+T, Ctrl+Alt+Backspace) are configured via ~/.config/labwc/rc.xml
 # NOTE: DPMS/screen blanking is disabled by default in labwc - no action needed
 
 # Hide cursor at startup - requires labwc >= 0.8.2

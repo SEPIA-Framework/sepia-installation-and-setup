@@ -2,6 +2,10 @@
 <labwc_config>
   <keyboard>
     <default />
+    <!-- Exit labwc compositor with Ctrl+Alt+Backspace -->
+    <keybind key="C-A-BackSpace">
+      <action name="Exit" />
+    </keybind>
     <!-- Open terminal with Ctrl+Alt+T (uses foot - native Wayland terminal) -->
     <keybind key="C-A-T">
       <action name="Execute" command="foot" />
